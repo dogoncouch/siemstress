@@ -40,6 +40,9 @@ class LiveParser:
 
     def parselog()
         recent_datestamp = '9999999999'
+        # NOTE: The following password is on a publicly available git repo.
+        # This should only be used for development purposes on closed
+        # systems.
         con = mdb.connect('localhost', 'siemstress', 'siems2bfine',
                 'siemstressdb')
 
