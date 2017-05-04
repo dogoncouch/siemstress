@@ -30,7 +30,7 @@ import MySQLdb as mdb
 
 class LiveParser:
     def __init__:
-        self.sqlstatement = 'INSERT INTO Entries (DateStamp, Host, Process, PID, Message) VALUES (?, ?, ?, ?, ?)'
+        self.sqlstatement = 'INSERT INTO Auth (DateStamp, Host, Process, PID, Message) VALUES (?, ?, ?, ?, ?)'
 
         self.date_format = \
                 re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\s+\S+\[?\d*?\]?):")
