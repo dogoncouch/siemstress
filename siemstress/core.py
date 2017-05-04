@@ -48,7 +48,7 @@ class LiveParser:
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute('CREATE TABLE IF NOT EXISTS Entries(Id INT PRIMARY KEY AUTO_INCREMENT, DateStamp DECIMAL(20,6) UNSIGNED, Host NVARCHAR(25), Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, Message NVARCHAR(1000))'
+            cur.execute('CREATE TABLE IF NOT EXISTS Entries(Id INT PRIMARY KEY AUTO_INCREMENT, DateStamp BIGINT(14) UNSIGNED, Host NVARCHAR(25), Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, Message NVARCHAR(2000))'
 
             while true:
                 lines = fileinput.input()
@@ -103,6 +103,7 @@ class LiveParser:
                             cur.execute(self.sqlstatement,
                                     (datestamp, sourceproc, sourcehost,
                                         sourcepid, message))
+                            con.commit()
                 
                         else:
                             # No match!?
