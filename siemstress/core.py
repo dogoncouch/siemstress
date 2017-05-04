@@ -104,7 +104,7 @@ class LiveParser:
 
                     else:
                         # No match!?
-                        pass
+                        # To Do: raise an error here.
                         print('No Match: ' + ourline)
                 
                 else:
