@@ -30,7 +30,7 @@ import MySQLdb as mdb
 
 class LiveParser:
     def __init__:
-        self.sqlstatement = 'INSERT INTO Auth (DateStamp, Host, Process, PID, Message) VALUES (?, ?, ?, ?, ?)'
+        self.sqlstatement = 'INSERT INTO Entries (DateStamp, Host, Process, PID, Message) VALUES (?, ?, ?, ?, ?)'
 
         self.date_format = \
                 re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\s+\S+\[?\d*?\]?):")
@@ -48,6 +48,7 @@ class LiveParser:
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
+            cur.execute('CREATE TABLE IF NOT EXISTS Entries(Id INT PRIMARY KEY AUTO_INCREMENT, DateStamp DECIMAL(20,6) UNSIGNED, Host NVARCHAR(25), Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, Message NVARCHAR(1000))'
 
             while true:
                 lines = fileinput.input()
