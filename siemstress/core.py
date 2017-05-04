@@ -23,14 +23,15 @@
 #_SOFTWARE.
 
 from datetime import datetime
-import fileinput
+import re
+import sys
 import MySQLdb as mdb
 
 
 
 class LiveParser:
-    def __init__:
-        self.sqlstatement = 'INSERT INTO Entries (DateStamp, Host, Process, PID, Message) VALUES (?, ?, ?, ?, ?)'
+    def __init__(self):
+        self.sqlstatement = 'INSERT INTO Entries (DateStamp, Host, Process, PID, Message) VALUES (%s, %s, %s, %s, %s)'
 
         self.date_format = \
                 re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\s+\S+\[?\d*?\]?):")
@@ -38,7 +39,7 @@ class LiveParser:
         #         re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\[?\d*\]?):")
 
 
-    def parselog()
+    def parselog(self):
         recent_datestamp = '9999999999'
         # NOTE: The following password is on a publicly available git repo.
         # This should only be used for development purposes on closed
@@ -48,74 +49,76 @@ class LiveParser:
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute('CREATE TABLE IF NOT EXISTS Entries(Id INT PRIMARY KEY AUTO_INCREMENT, DateStamp BIGINT(14) UNSIGNED, Host NVARCHAR(25), Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, Message NVARCHAR(2000))'
+            cur.execute('CREATE TABLE IF NOT EXISTS Entries(Id INT PRIMARY KEY AUTO_INCREMENT, DateStamp BIGINT(14) UNSIGNED, Host NVARCHAR(25), Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, Message NVARCHAR(2000))')
 
-            while true:
-                lines = fileinput.input()
-                if lines:
-                    for line in lines:
-                        # Do the parsing
-                        ourline = line.rstrip()
-                        # if options.nohost:
-                        #     match = re.findall(nohost_format, ourline)
-                        # else:
-                        #     match = re.findall(self.date_format, ourline)
-                        match = re.findall(self.date_format, ourline)
-                        if match:
-                            attr_list = str(match[0]).split(' ')
-                            try:
-                                attr_list.remove('')
-                            except ValueError:
-                                pass
-                
-                            # Account for lack of source host:
-                            # if options.nohost: attr_list.insert(3, None)
-                
-                            # Get the date stamp (without year)
-                            months = {'Jan':'01', 'Feb':'02', 'Mar':'03', \
-                                    'Apr':'04', 'May':'05', 'Jun':'06', \
-                                    'Jul':'07', 'Aug':'08', 'Sep':'09', \
-                                    'Oct':'10', 'Nov':'11', 'Dec':'12'}
-                            int_month = months[attr_list[0].strip()]
-                            daydate = str(attr_list[1].strip()).zfill(2)
-                            timelist = str(str(attr_list[2]).replace(':',''))
-                            datestamp_noyear = str(int_month) + str(daydate) + \
-                                    str(timelist)
-                            
-                            # Check for Dec-Jan jump and set the year:
-                            if int(datestamp_noyear) < int(recent_datestamp):
-                                entryyear = str(datetime.now().year)
-                            recent_datestamp = datestamp_noyear
-                            
-                            # Split source process/PID
-                            sourceproclist = attr_list[4].split('[')
-                            
-                            # Set our attributes:
-                            message = rawtext[len(match):]
-                            sourcehost = attr_list[3]
-                            sourceproc = sourceproclist[0]
-                            if len(sourceproclist) > 1:
-                                sourcepid = sourceproclist[1].strip(']')
-                            datestamp_noyear = date_stamp_noyear
-                            datestamp = entryyear + datestamp_noyear
-                            
-                            # Put our attributes in our table:
-                            cur.execute(self.sqlstatement,
-                                    (datestamp, sourceproc, sourcehost,
-                                        sourcepid, message))
-                            con.commit()
-                
+            while True:
+                # lines = fileinput.input()
+                line = sys.stdin.readline()
+                if line:
+                    print(line)
+                    # for line in lines:
+                    # Do the parsing
+                    ourline = line.rstrip()
+                    # if options.nohost:
+                    #     match = re.findall(nohost_format, ourline)
+                    # else:
+                    #     match = re.findall(self.date_format, ourline)
+                    match = re.findall(self.date_format, ourline)
+                    if match:
+                        attr_list = str(match[0]).split(' ')
+                        try:
+                            attr_list.remove('')
+                        except ValueError:
+                            pass
+                    
+                        # Account for lack of source host:
+                        # if options.nohost: attr_list.insert(3, None)
+                    
+                        # Get the date stamp (without year)
+                        months = {'Jan':'01', 'Feb':'02', 'Mar':'03', \
+                                'Apr':'04', 'May':'05', 'Jun':'06', \
+                                'Jul':'07', 'Aug':'08', 'Sep':'09', \
+                                'Oct':'10', 'Nov':'11', 'Dec':'12'}
+                        int_month = months[attr_list[0].strip()]
+                        daydate = str(attr_list[1].strip()).zfill(2)
+                        timelist = str(str(attr_list[2]).replace(':',''))
+                        datestamp_noyear = str(int_month) + str(daydate) + \
+                                str(timelist)
+                        
+                        # Check for Dec-Jan jump and set the year:
+                        if int(datestamp_noyear) < int(recent_datestamp):
+                            entryyear = str(datetime.now().year)
+                        recent_datestamp = datestamp_noyear
+                        
+                        # Split source process/PID
+                        sourceproclist = attr_list[4].split('[')
+                        
+                        # Set our attributes:
+                        message = ourline[len(match):]
+                        sourcehost = attr_list[3]
+                        sourceproc = sourceproclist[0]
+                        if len(sourceproclist) > 1:
+                            sourcepid = sourceproclist[1].strip(']')
                         else:
-                            # No match!?
-                            # To Do: raise an error here.
-                            print('No Match: ' + ourline)
+                            sourcepid = '0'
+                        # datestamp_noyear = date_stamp_noyear
+                        datestamp = entryyear + datestamp_noyear
+                        
+                        # Put our attributes in our table:
+                        cur.execute(self.sqlstatement,
+                                (datestamp, sourceproc, sourcehost,
+                                    sourcepid, message))
+                        print('Datestamp: ' + datestamp)
+                        print('Message: ' + message)
+                        con.commit()
                     
                     else:
-                        # No lines
-                        pass
+                        # No match!?
+                        # To Do: raise an error here.
+                        print('No Match: ' + ourline)
+                    
 
 
-
-if __name__ = "__main__":
+if __name__ == "__main__":
     parser = LiveParser()
     parser.parselog()
