@@ -50,66 +50,67 @@ class LiveParser:
             cur = con.cursor(mdb.cursors.DictCursor)
 
             while true:
-                line = fileinput.input()
-                if line:
-                    # Do the parsing
-                    ourline = line.rstrip()
-                    # if options.nohost:
-                    #     match = re.findall(nohost_format, ourline)
-                    # else:
-                    #     match = re.findall(self.date_format, ourline)
-                    match = re.findall(self.date_format, ourline)
-                    if match:
-                        attr_list = str(match[0]).split(' ')
-                        try:
-                            attr_list.remove('')
-                        except ValueError:
-                            pass
-
-                        # Account for lack of source host:
-                        # if options.nohost: attr_list.insert(3, None)
-
-                        # Get the date stamp (without year)
-                        months = {'Jan':'01', 'Feb':'02', 'Mar':'03', \
-                                'Apr':'04', 'May':'05', 'Jun':'06', \
-                                'Jul':'07', 'Aug':'08', 'Sep':'09', \
-                                'Oct':'10', 'Nov':'11', 'Dec':'12'}
-                        int_month = months[attr_list[0].strip()]
-                        daydate = str(attr_list[1].strip()).zfill(2)
-                        timelist = str(str(attr_list[2]).replace(':',''))
-                        datestamp_noyear = str(int_month) + str(daydate) + \
-                                str(timelist)
-                        
-                        # Check for Dec-Jan jump and set the year:
-                        if int(datestamp_noyear) < int(recent_datestamp):
-                            entryyear = str(datetime.now().year)
-                        recent_datestamp = datestamp_noyear
-                        
-                        # Split source process/PID
-                        sourceproclist = attr_list[4].split('[')
-                        
-                        # Set our attributes:
-                        message = rawtext[len(match):]
-                        sourcehost = attr_list[3]
-                        sourceproc = sourceproclist[0]
-                        if len(sourceproclist) > 1:
-                            sourcepid = sourceproclist[1].strip(']')
-                        datestamp_noyear = date_stamp_noyear
-                        datestamp = entryyear + datestamp_noyear
-                        
-                        # Put our attributes in our table:
-                        cur.execute(self.sqlstatement,
-                                (datestamp, sourceproc, sourcehost,
-                                    sourcepid, message))
-
-                    else:
-                        # No match!?
-                        # To Do: raise an error here.
-                        print('No Match: ' + ourline)
+                lines = fileinput.input()
+                if lines:
+                    for line in lines:
+                        # Do the parsing
+                        ourline = line.rstrip()
+                        # if options.nohost:
+                        #     match = re.findall(nohost_format, ourline)
+                        # else:
+                        #     match = re.findall(self.date_format, ourline)
+                        match = re.findall(self.date_format, ourline)
+                        if match:
+                            attr_list = str(match[0]).split(' ')
+                            try:
+                                attr_list.remove('')
+                            except ValueError:
+                                pass
                 
-                else:
-                    # No line
-                    pass
+                            # Account for lack of source host:
+                            # if options.nohost: attr_list.insert(3, None)
+                
+                            # Get the date stamp (without year)
+                            months = {'Jan':'01', 'Feb':'02', 'Mar':'03', \
+                                    'Apr':'04', 'May':'05', 'Jun':'06', \
+                                    'Jul':'07', 'Aug':'08', 'Sep':'09', \
+                                    'Oct':'10', 'Nov':'11', 'Dec':'12'}
+                            int_month = months[attr_list[0].strip()]
+                            daydate = str(attr_list[1].strip()).zfill(2)
+                            timelist = str(str(attr_list[2]).replace(':',''))
+                            datestamp_noyear = str(int_month) + str(daydate) + \
+                                    str(timelist)
+                            
+                            # Check for Dec-Jan jump and set the year:
+                            if int(datestamp_noyear) < int(recent_datestamp):
+                                entryyear = str(datetime.now().year)
+                            recent_datestamp = datestamp_noyear
+                            
+                            # Split source process/PID
+                            sourceproclist = attr_list[4].split('[')
+                            
+                            # Set our attributes:
+                            message = rawtext[len(match):]
+                            sourcehost = attr_list[3]
+                            sourceproc = sourceproclist[0]
+                            if len(sourceproclist) > 1:
+                                sourcepid = sourceproclist[1].strip(']')
+                            datestamp_noyear = date_stamp_noyear
+                            datestamp = entryyear + datestamp_noyear
+                            
+                            # Put our attributes in our table:
+                            cur.execute(self.sqlstatement,
+                                    (datestamp, sourceproc, sourcehost,
+                                        sourcepid, message))
+                
+                        else:
+                            # No match!?
+                            # To Do: raise an error here.
+                            print('No Match: ' + ourline)
+                    
+                    else:
+                        # No lines
+                        pass
 
 
 
