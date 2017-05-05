@@ -40,10 +40,11 @@ class LiveParser:
 
 
     def parselog(self):
-        recent_datestamp = '9999999999'
+        recent_datestamp = '0000000000'
         # NOTE: The following password is on a publicly available git repo.
         # This should only be used for development purposes on closed
         # systems.
+        entryyear = str(datetime.now().year)
         con = mdb.connect('localhost', 'siemstress', 'siems2bfine',
                 'siemstressdb')
 
@@ -55,7 +56,6 @@ class LiveParser:
                 # lines = fileinput.input()
                 line = sys.stdin.readline()
                 if line:
-                    print(line)
                     # for line in lines:
                     # Do the parsing
                     ourline = line.rstrip()
@@ -94,7 +94,7 @@ class LiveParser:
                         sourceproclist = attr_list[4].split('[')
                         
                         # Set our attributes:
-                        message = ourline[len(match):]
+                        message = ourline[len(match[0]) + 2:]
                         sourcehost = attr_list[3]
                         sourceproc = sourceproclist[0]
                         if len(sourceproclist) > 1:
@@ -106,10 +106,8 @@ class LiveParser:
                         
                         # Put our attributes in our table:
                         cur.execute(self.sqlstatement,
-                                (datestamp, sourceproc, sourcehost,
+                                (datestamp, sourcehost, sourceproc,
                                     sourcepid, message))
-                        print('Datestamp: ' + datestamp)
-                        print('Message: ' + message)
                         con.commit()
                     
                     else:
