@@ -35,7 +35,6 @@ import ConfigParser
 
 class LiveParser:
     def __init__(self):
-        self.sqlstatement = 'INSERT INTO Entries (DateStamp, Host, Process, PID, Message) VALUES (%s, %s, %s, %s, %s)'
 
         self.date_format = \
                 re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\s+\S+\[?\d*?\]?):")
@@ -58,19 +57,23 @@ class LiveParser:
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
         self.arg_parser.add_argument('-s',
-                action = 'store', dest = 'sqlserver',
+                action = 'store', dest = 'server',
                 default = config.get('siemstress', 'server'),
                 help = ('set the SQL server'))
         self.arg_parser.add_argument('-d',
-                action = 'store', dest = 'sqldb',
+                action = 'store', dest = 'database',
                 default = config.get('siemstress', 'db'),
                 help = ('set the SQL database'))
+        self.arg_parser.add_argument('-t',
+                action = 'store', dest = 'table',
+                default = config.get('siemstress', 'table'),
+                help = ('set the SQL table')),
         self.arg_parser.add_argument('-u',
-                action = 'store', dest = 'sqluser',
+                action = 'store', dest = 'username',
                 default = config.get('siemstress', 'user'),
                 help = ('set the SQL username'))
         self.arg_parser.add_argument('-p',
-                action = 'store', dest = 'sqlp',
+                action = 'store', dest = 'password',
                 default = config.get('siemstress', 'pwd'),
                 help = ('set the SQL password'))
 
@@ -93,8 +96,11 @@ class LiveParser:
         # This should only be used for development purposes on closed
         # systems.
         entryyear = str(datetime.now().year)
-        con = mdb.connect(self.args.sqlserver, self.args.sqluser,
-                self.args.sqldb, self.args.sqlp)
+        self.sqlstatement = 'INSERT INTO ' + self.args.table + \
+                ' (DateStamp, Host, Process, PID, Message) VALUES ' + \
+                '(%s, %s, %s, %s, %s)'
+        con = mdb.connect(self.args.server, self.args.username,
+                self.args.database, self.args.password)
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
