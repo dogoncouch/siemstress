@@ -18,4 +18,4 @@ siemstress is a tool to parse syslog lines from standard input into an SQL datab
       -p PASSWORD  set the SQL password
 
 # Example
-tail -f /var/log/auth.log | ./siemstress.py
+tail -n 0 -f /var/log/auth.log | ./siemstress.py
