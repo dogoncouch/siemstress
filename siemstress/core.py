@@ -22,10 +22,14 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
+from siemstress import __version__
 from datetime import datetime
 import re
 import sys
+import os
 import MySQLdb as mdb
+from argparse import ArgumentParser
+import ConfigParser
 
 
 
@@ -37,16 +41,60 @@ class LiveParser:
                 re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\s+\S+\[?\d*?\]?):")
         # nohost_format = \
         #         re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\[?\d*\]?):")
+        self.args = None
+        self.arg_parser = ArgumentParser()
 
 
-    def parselog(self):
+
+    def get_args(self):
+        """Set config options"""
+
+        config = ConfigParser.ConfigParser()
+        if os.path.isfile('/etc/siemstress.conf'):
+            myconf = ('/etc/siemstress.conf')
+        else: myconf = 'siemstress.conf'
+        config.read(myconf)
+
+        self.arg_parser.add_argument('--version', action = 'version',
+                version = '%(prog)s ' + str(__version__))
+        self.arg_parser.add_argument('-s',
+                action = 'store', dest = 'sqlserver',
+                default = config.get('siemstress', 'server'),
+                help = ('set the SQL server'))
+        self.arg_parser.add_argument('-d',
+                action = 'store', dest = 'sqldb',
+                default = config.get('siemstress', 'db'),
+                help = ('set the SQL database'))
+        self.arg_parser.add_argument('-u',
+                action = 'store', dest = 'sqluser',
+                default = config.get('siemstress', 'user'),
+                help = ('set the SQL username'))
+        self.arg_parser.add_argument('-p',
+                action = 'store', dest = 'sqlp',
+                default = config.get('siemstress', 'pwd'),
+                help = ('set the SQL password'))
+
+        self.args = self.arg_parser.parse_args()
+
+
+
+    def run_parse(self):
+        try:
+            self.get_args()
+            self.parse_log()
+        except Exception as err:
+            print('Error: ' + err)
+
+    
+    
+    def parse_log(self):
         recent_datestamp = '0000000000'
         # NOTE: The following password is on a publicly available git repo.
         # This should only be used for development purposes on closed
         # systems.
         entryyear = str(datetime.now().year)
-        con = mdb.connect('localhost', 'siemstress', 'siems2bfine',
-                'siemstressdb')
+        con = mdb.connect(self.args.sqlserver, self.args.sqluser,
+                self.args.sqldb, self.args.sqlp)
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -114,9 +162,9 @@ class LiveParser:
                         # No match!?
                         # To Do: raise an error here.
                         print('No Match: ' + ourline)
-                    
+
 
 
 if __name__ == "__main__":
     parser = LiveParser()
-    parser.parselog()
+    parser.run_parse()

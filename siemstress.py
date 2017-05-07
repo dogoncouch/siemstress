@@ -25,4 +25,4 @@
 from siemstress.core import LiveParser
 
 parser = LiveParser()
-parser.parselog()
+parser.run_parse()
