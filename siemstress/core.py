@@ -104,7 +104,11 @@ class LiveParser:
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute('CREATE TABLE IF NOT EXISTS Entries(Id INT PRIMARY KEY AUTO_INCREMENT, DateStamp BIGINT(14) UNSIGNED, Host NVARCHAR(25), Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, Message NVARCHAR(2000))')
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.args.table + \
+                    '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'DateStamp BIGINT(14) UNSIGNED, Host NVARCHAR(25), ' + \
+                    'Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, ' + \
+                    'Message NVARCHAR(2000))')
 
             while True:
                 # lines = fileinput.input()
