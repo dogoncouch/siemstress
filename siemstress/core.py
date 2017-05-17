@@ -23,6 +23,7 @@
 #_SOFTWARE.
 
 from siemstress import __version__
+import time
 from datetime import datetime
 import re
 import sys
@@ -34,14 +35,18 @@ import ConfigParser
 
 
 class LiveParser:
-    def __init__(self):
 
-        self.date_format = \
-                re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\s+\S+\[?\d*?\]?):")
-        # nohost_format = \
-        #         re.compile(r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\[?\d*\]?):")
+    def __init__(self):
+        """Initialize live parser"""
+
         self.args = None
         self.arg_parser = ArgumentParser()
+        self.parser = None
+        self.server = None
+        self.database = None
+        self.table = None
+        self.user = None
+        self.password = None
 
 
 
@@ -56,118 +61,161 @@ class LiveParser:
 
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
+        self.arg_parser.add_argument('-c',
+                action = 'store', dest = 'config',
+                default = '/etc/siemstress.conf',
+                help = ('set the config file'))
         self.arg_parser.add_argument('-s',
-                action = 'store', dest = 'server',
-                default = config.get('siemstress', 'server'),
-                help = ('set the SQL server'))
-        self.arg_parser.add_argument('-d',
-                action = 'store', dest = 'database',
-                default = config.get('siemstress', 'db'),
-                help = ('set the SQL database'))
-        self.arg_parser.add_argument('-t',
-                action = 'store', dest = 'table',
-                default = config.get('siemstress', 'table'),
-                help = ('set the SQL table')),
-        self.arg_parser.add_argument('-u',
-                action = 'store', dest = 'username',
-                default = config.get('siemstress', 'user'),
-                help = ('set the SQL username'))
-        self.arg_parser.add_argument('-p',
-                action = 'store', dest = 'password',
-                default = config.get('siemstress', 'pwd'),
-                help = ('set the SQL password'))
+                action = 'store', dest = 'confsection',
+                default = 'siemstress',
+                help = ('set the config section'))
+        self.arg_parser.add_argument('-z',
+                action = 'store', dest = 'tzone',
+                help = ("set the offset to UTC (e.g. '+0500'"))
+
+
+
+    def get_config(self):
+        """Read the config file"""
 
         self.args = self.arg_parser.parse_args()
+
+        config = ConfigParser.ConfigParser()
+        if os.path.isfile(self.args.config):
+            myconf = (config))
+        else: myconf = 'siemstress.conf'
+        config.read(myconf)
+
+        self.server = config.get('siemstress', 'server')
+        self.database = config.get('siemstress', 'database')
+        self.user = config.get('siemstress', 'user')
+        self.password = config.get('siemstress', 'password')
+        self.table = config.get(self.args.confsection, 'table')
+        self.parser = config.get(self.args.confsection, 'parser')
+
+
+        if self.args.parser == 'syslogbsd':
+            self.parser = logdissect.parsers.syslogbsd.ParseModule()
+        elif self.args.parser == 'syslogiso':
+            self.parser = logdissect.parsers.syslogiso.ParseModule()
+        elif self.args.parser == 'nohost':
+            self.parser = logdissect.parsers.nohost.ParseModule()
+        elif self.args.parser == 'tcpdump':
+            self.parser = logdissect.parsers.tcpdump.ParseModule()
 
 
 
     def run_parse(self):
         try:
             self.get_args()
-            self.parse_log()
+            self.parse_entries()
         except Exception as err:
             print('Error: ' + err)
 
     
     
-    def parse_log(self):
+    def parse_entries(self):
+        """Parse log entries from standard input"""
         recent_datestamp = '0000000000'
-        # NOTE: The following password is on a publicly available git repo.
-        # This should only be used for development purposes on closed
+        # NOTE: The default password is on a publicly available git repo.
+        # It should only be used for development purposes on closed
         # systems.
-        entryyear = str(datetime.now().year)
-        self.sqlstatement = 'INSERT INTO ' + self.args.table + \
-                ' (DateStamp, Host, Process, PID, Message) VALUES ' + \
-                '(%s, %s, %s, %s, %s)'
-        con = mdb.connect(self.args.server, self.args.username,
-                self.args.database, self.args.password)
+        self.sqlstatement = 'INSERT INTO ' + self.table + \
+                ' (IntDateStamp, DateStamp, Year, Month, Day, TimeStamp, ' + \
+                'TZone, RawStamp, Facility, Severity, SourceHost, ' + \
+                'SourcePort, DestHost, DestPort, Process, PID, Protocol, ' + \
+                'Message) VALUES ' + \
+                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
+                '%s, %s, %s, %s, %s)'
+        con = mdb.connect(self.server, self.user,
+                self.database, self.password)
+        
+        if not args.tzone:
+            if time.daylight:
+                tzone = \
+                        str(int(float(time.altzone) / 60 // 60)).rjust(2,
+                                '0') + \
+                        str(int(float(time.altzone) / 60 % 60)).ljust(2, '0')
+            else:
+                tzone = \
+                        str(int(float(time.timezone) / 60 // 60)).rjust(2,
+                                '0') + \
+                        str(int(float(time.timezone) / 60 % 60)).ljust(2, '0')
+            if not '-' in self.tzone:
+                tzone = '+' + tzone
 
+        
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.args.table + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'DateStamp BIGINT(14) UNSIGNED, Host NVARCHAR(25), ' + \
-                    'Process NVARCHAR(25), PID MEDIUMINT UNSIGNED, ' + \
+                    'IntDateStamp TIMESTAMP, ' + \
+                    'DateStamp FLOAT(20, 6) UNSIGNED, ' + \
+                    'Year SMALLINT(4) UNSIGNED, ' + \
+                    'Month TINYINT(2) UNSIGNED, ' + \
+                    'Day TINYINT(4) UNSIGNED, ' + \
+                    'TimeStamp DECIMAL(12, 6), ' + \
+                    'TZone NVARCHAR(5), '+ \
+                    'RawStamp NVARCHAR(80), ' + \
+                    'Facility NVARCHAR(15), ' + \
+                    'Severity NVARCHAR(10), ' + \
+                    'SourceHost NVARCHAR(25), ' + \
+                    'SourcePort NVARCHAR(25), ' + \
+                    'DestHost NVARCHAR(25), ' + \
+                    'DestPort NVARCHAR(25), ' + \
+                    'Process NVARCHAR(25), ' + \
+                    'PID MEDIUMINT UNSIGNED, ' + \
+                    'Protocol NVARCHAR(5), ' + \
                     'Message NVARCHAR(2000))')
 
+
             while True:
-                # lines = fileinput.input()
+
                 line = sys.stdin.readline()
+
                 if line:
-                    # for line in lines:
                     # Do the parsing
                     ourline = line.rstrip()
-                    # if options.nohost:
-                    #     match = re.findall(nohost_format, ourline)
-                    # else:
-                    #     match = re.findall(self.date_format, ourline)
-                    match = re.findall(self.date_format, ourline)
-                    if match:
-                        attr_list = str(match[0]).split(' ')
-                        try:
-                            attr_list.remove('')
-                        except ValueError:
-                            pass
                     
-                        # Account for lack of source host:
-                        # if options.nohost: attr_list.insert(3, None)
+                    entry = parser.parse_line(ourline)
+
+                    if entry:
+
+                        if float(entry['tstamp']) < oldtnum:
+                            ymdstamp = datetime.now().strftime('%Y%m%d')
+                        oldtnum = float(entry['tstamp'])
+                        
                     
-                        # Get the date stamp (without year)
-                        months = {'Jan':'01', 'Feb':'02', 'Mar':'03', \
-                                'Apr':'04', 'May':'05', 'Jun':'06', \
-                                'Jul':'07', 'Aug':'08', 'Sep':'09', \
-                                'Oct':'10', 'Nov':'11', 'Dec':'12'}
-                        int_month = months[attr_list[0].strip()]
-                        daydate = str(attr_list[1].strip()).zfill(2)
-                        timelist = str(str(attr_list[2]).replace(':',''))
-                        datestamp_noyear = str(int_month) + str(daydate) + \
-                                str(timelist)
-                        
-                        # Check for Dec-Jan jump and set the year:
-                        if int(datestamp_noyear) < int(recent_datestamp):
-                            entryyear = str(datetime.now().year)
-                        recent_datestamp = datestamp_noyear
-                        
-                        # Split source process/PID
-                        sourceproclist = attr_list[4].split('[')
-                        
-                        # Set our attributes:
-                        message = ourline[len(match[0]) + 2:]
-                        sourcehost = attr_list[3]
-                        sourceproc = sourceproclist[0]
-                        if len(sourceproclist) > 1:
-                            sourcepid = sourceproclist[1].strip(']')
+                        # Set datestamp
+                        if not entry['year']:
+                            entry['year'] = ymdstamp[0:4]
+                        if not entry['month']:
+                            entry['month'] = ymdstamp[4:6]
+                        if not entry['day']:
+                            entry['day'] = ymdstamp[6:8]
+                        if args.tzone:
+                            entry['tzone'] = args.tzone
                         else:
-                            sourcepid = '0'
-                        # datestamp_noyear = date_stamp_noyear
-                        datestamp = entryyear + datestamp_noyear
-                        
+                            if not entry['tzone']:
+                                entry['tzone'] = tzone
+                    
+                        datestamp = ymdstamp + entry['tstamp']
+                        intdatestamp = datestamp.split('.')[0]
+
+
                         # Put our attributes in our table:
                         cur.execute(self.sqlstatement,
-                                (datestamp, sourcehost, sourceproc,
-                                    sourcepid, message))
+                                (intdatestamp, datestamp, entry['year'],
+                                    entry['month'], entry['day'], entry['tstamp'],
+                                    entry['tzone'], entry['raw_stamp'], 
+                                    entry['facility'], entry['severity'],
+                                    entry['source_host'], entry['source_process'],
+                                    entry['source_pid'], entry['dest_host'],
+                                    entry['dest_port'], entry['protocol'],
+                                    entry['message']))
                         con.commit()
-                    
+
+
                     else:
                         # No match!?
                         # To Do: raise an error here.
