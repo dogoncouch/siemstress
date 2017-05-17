@@ -67,7 +67,7 @@ class LiveParser:
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'confsection',
-                default = 'siemstress',
+                default = 'default',
                 help = ('set the config section'))
         self.arg_parser.add_argument('-z',
                 action = 'store', dest = 'tzone',
@@ -87,9 +87,9 @@ class LiveParser:
         config.read(myconf)
 
         self.server = config.get('siemstress', 'server')
-        self.database = config.get('siemstress', 'database')
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
+        self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.confsection, 'table')
         self.parser = config.get(self.args.confsection, 'parser')
 
