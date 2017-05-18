@@ -23,6 +23,7 @@
 #_SOFTWARE.
 
 from siemstress import __version__
+import logdissect.parsers
 import time
 from datetime import datetime
 import re
@@ -42,6 +43,7 @@ class LiveParser:
         self.args = None
         self.arg_parser = ArgumentParser()
         self.parser = None
+        self.parsername = None
         self.server = None
         self.database = None
         self.table = None
@@ -53,17 +55,11 @@ class LiveParser:
     def get_args(self):
         """Set config options"""
 
-        config = ConfigParser.ConfigParser()
-        if os.path.isfile('/etc/siemstress.conf'):
-            myconf = ('/etc/siemstress.conf')
-        else: myconf = 'siemstress.conf'
-        config.read(myconf)
-
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
-                default = '/etc/siemstress.conf',
+                default = '/etc/siemstress/siemstress.conf',
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'confsection',
@@ -73,17 +69,17 @@ class LiveParser:
                 action = 'store', dest = 'tzone',
                 help = ("set the offset to UTC (e.g. '+0500'"))
 
+        self.args = self.arg_parser.parse_args()
+
 
 
     def get_config(self):
         """Read the config file"""
 
-        self.args = self.arg_parser.parse_args()
-
         config = ConfigParser.ConfigParser()
         if os.path.isfile(self.args.config):
-            myconf = (config))
-        else: myconf = 'siemstress.conf'
+            myconf = (config)
+        else: myconf = 'config/siemstress.conf'
         config.read(myconf)
 
         self.server = config.get('siemstress', 'server')
@@ -91,32 +87,36 @@ class LiveParser:
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.confsection, 'table')
-        self.parser = config.get(self.args.confsection, 'parser')
+        self.parsername = config.get(self.args.confsection, 'parser')
 
 
-        if self.args.parser == 'syslogbsd':
+        if self.parsername == 'syslogbsd':
             self.parser = logdissect.parsers.syslogbsd.ParseModule()
-        elif self.args.parser == 'syslogiso':
+        elif self.parsername == 'syslogiso':
             self.parser = logdissect.parsers.syslogiso.ParseModule()
-        elif self.args.parser == 'nohost':
+        elif self.parsername == 'nohost':
             self.parser = logdissect.parsers.nohost.ParseModule()
-        elif self.args.parser == 'tcpdump':
+        elif self.parsername == 'tcpdump':
             self.parser = logdissect.parsers.tcpdump.ParseModule()
 
 
 
     def run_parse(self):
-        try:
-            self.get_args()
-            self.parse_entries()
-        except Exception as err:
-            print('Error: ' + err)
+        # try:
+        self.get_args()
+        self.get_config()
+        self.parse_entries()
+        # except Exception as err:
+        #     print('Error: ' + str(err))
 
     
     
     def parse_entries(self):
         """Parse log entries from standard input"""
         recent_datestamp = '0000000000'
+        oldtnum = 0
+        ymdstamp = datetime.now().strftime('%Y%m%d')
+
         # NOTE: The default password is on a publicly available git repo.
         # It should only be used for development purposes on closed
         # systems.
@@ -127,10 +127,11 @@ class LiveParser:
                 'Message) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
                 '%s, %s, %s, %s, %s)'
+
         con = mdb.connect(self.server, self.user,
-                self.database, self.password)
+                self.password, self.database)
         
-        if not args.tzone:
+        if not self.args.tzone:
             if time.daylight:
                 tzone = \
                         str(int(float(time.altzone) / 60 // 60)).rjust(2,
@@ -141,13 +142,13 @@ class LiveParser:
                         str(int(float(time.timezone) / 60 // 60)).rjust(2,
                                 '0') + \
                         str(int(float(time.timezone) / 60 % 60)).ljust(2, '0')
-            if not '-' in self.tzone:
+            if not '-' in tzone:
                 tzone = '+' + tzone
 
         
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.args.table + \
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'IntDateStamp TIMESTAMP, ' + \
                     'DateStamp FLOAT(20, 6) UNSIGNED, ' + \
@@ -177,7 +178,7 @@ class LiveParser:
                     # Do the parsing
                     ourline = line.rstrip()
                     
-                    entry = parser.parse_line(ourline)
+                    entry = self.parser.parse_line(ourline)
 
                     if entry:
 
@@ -193,7 +194,7 @@ class LiveParser:
                             entry['month'] = ymdstamp[4:6]
                         if not entry['day']:
                             entry['day'] = ymdstamp[6:8]
-                        if args.tzone:
+                        if self.args.tzone:
                             entry['tzone'] = args.tzone
                         else:
                             if not entry['tzone']:
@@ -209,10 +210,10 @@ class LiveParser:
                                     entry['month'], entry['day'], entry['tstamp'],
                                     entry['tzone'], entry['raw_stamp'], 
                                     entry['facility'], entry['severity'],
-                                    entry['source_host'], entry['source_process'],
-                                    entry['source_pid'], entry['dest_host'],
-                                    entry['dest_port'], entry['protocol'],
-                                    entry['message']))
+                                    entry['source_host'], entry['source_port'],
+                                    entry['dest_host'], entry['dest_port'],
+                                    entry['source_process'], entry['source_pid'],
+                                    entry['protocol'], entry['message']))
                         con.commit()
 
 
