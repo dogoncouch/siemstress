@@ -82,7 +82,8 @@ class SiemQueryCore:
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.section, 'table')
-        # self.parser = config.get(self.args.section, 'parser')
+        self.queryfields = [int(x) for x in config.get(
+            'default', 'queryfields').split(',')]
 
 
 
@@ -101,12 +102,30 @@ class SiemQueryCore:
     
             desc = cur.description
 
-            print "%4s %20s %10s %10s %10s %s" % (desc[0][0], desc[1][0],
-                    desc[11][0], desc[15][0], desc[16][0], desc[18][0])
+            print "%4s %20s %10s %10s %7s %s" % (
+                    desc[self.queryfields[0]][0],
+                    desc[self.queryfields[1]][0],
+                    desc[self.queryfields[2]][0],
+                    desc[self.queryfields[3]][0],
+                    desc[self.queryfields[4]][0],
+                    desc[self.queryfields[5]][0])
 
             for row in rows:
-                print "%4s %20s %10s %10s %10s %s" % (row[0], row[1],
-                        row[11], row[15], row[16], row[18])
+                print "%4s %20s %10s %10s %7s %s" % (
+                        row[self.queryfields[0]],
+                        row[self.queryfields[1]],
+                        row[self.queryfields[2]],
+                        row[self.queryfields[3]],
+                        row[self.queryfields[4]],
+                        row[self.queryfields[5]])
+            
+            
+            # print "%4s %20s %10s %10s %7s %s" % (desc[0][0], desc[1][0],
+            #         desc[11][0], desc[15][0], desc[16][0], desc[18][0])
+
+            # for row in rows:
+            #     print "%4s %20s %10s %10s %7s %s" % (row[0], row[1],
+            #             row[11], row[15], row[16], row[18])
 
     def run_job(self):
         """Run the siemquery job"""
