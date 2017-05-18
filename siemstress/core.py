@@ -224,6 +224,11 @@ class LiveParser:
 
 
 
+def main():
+    parser = LiveParser()
+    parser.run_parse()
+
+
 if __name__ == "__main__":
     parser = LiveParser()
     parser.run_parse()
