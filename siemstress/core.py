@@ -62,12 +62,12 @@ class LiveParser:
                 default = '/etc/siemstress/siemstress.conf',
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
-                action = 'store', dest = 'confsection',
+                action = 'store', dest = 'section',
                 default = 'default',
                 help = ('set the config section'))
         self.arg_parser.add_argument('-z',
                 action = 'store', dest = 'tzone',
-                help = ("set the offset to UTC (e.g. '+0500'"))
+                help = ("set the offset to UTC (e.g. '+0500')"))
 
         self.args = self.arg_parser.parse_args()
 
@@ -86,8 +86,8 @@ class LiveParser:
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
-        self.table = config.get(self.args.confsection, 'table')
-        self.parsername = config.get(self.args.confsection, 'parser')
+        self.table = config.get(self.args.section, 'table')
+        self.parsername = config.get(self.args.section, 'parser')
 
 
         if self.parsername == 'syslogbsd':
