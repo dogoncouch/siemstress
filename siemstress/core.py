@@ -42,24 +42,30 @@ class LiveParser:
 
         self.args = None
         self.arg_parser = ArgumentParser()
+        self.config = None
+
         self.parser = None
         self.parsername = None
         self.server = None
-        self.database = None
-        self.table = None
         self.user = None
         self.password = None
+        self.database = None
+        self.table = None
+        self.queryfields = None
 
 
 
     def get_args(self):
-        """Set config options"""
+        """Set argument options"""
 
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
         self.arg_parser.add_argument('--clear',
                 action = 'store_true', dest = 'clearsiem',
                 help = ('delete the SQL table for selected section'))
+        self.arg_parser.add_argument('-q',
+                action = 'store_true', dest = 'querysiem',
+                help = ('query the SQL table for selected section'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -73,19 +79,6 @@ class LiveParser:
                 help = ("set the offset to UTC (e.g. '+0500')"))
 
         self.args = self.arg_parser.parse_args()
-
-
-
-    def clear_siem(self):
-        """Clear SQL table specified in section"""
-
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
-
-        with con:
-            cur = con.cursor()
-
-            cur.execute('DROP TABLE IF EXISTS ' + self.table)
 
 
 
@@ -104,6 +97,7 @@ class LiveParser:
         self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.section, 'table')
         self.parsername = config.get(self.args.section, 'parser')
+        self.queryfields = [int(x) for x in config.get(
 
 
         if self.parsername == 'syslogbsd':
@@ -114,6 +108,53 @@ class LiveParser:
             self.parser = logdissect.parsers.nohost.ParseModule()
         elif self.parsername == 'tcpdump':
             self.parser = logdissect.parsers.tcpdump.ParseModule()
+
+
+
+    def clear_siem(self):
+        """Clear SQL table specified in section"""
+
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute('DROP TABLE IF EXISTS ' + self.table)
+
+
+
+    def query_siem(self):
+        """Query SQL database for log events"""
+        
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database);
+        
+        with con: 
+        
+            cur = con.cursor()
+            cur.execute("SELECT * FROM " + self.table)
+
+            rows = cur.fetchall()
+    
+            desc = cur.description
+
+            print "%4s %20s %10s %10s %7s %s" % (
+                    desc[self.queryfields[0]][0],
+                    desc[self.queryfields[1]][0],
+                    desc[self.queryfields[2]][0],
+                    desc[self.queryfields[3]][0],
+                    desc[self.queryfields[4]][0],
+                    desc[self.queryfields[5]][0])
+
+            for row in rows:
+                print "%4s %20s %10s %10s %7s %s" % (
+                        row[self.queryfields[0]],
+                        row[self.queryfields[1]],
+                        row[self.queryfields[2]],
+                        row[self.queryfields[3]],
+                        row[self.queryfields[4]],
+                        row[self.queryfields[5]])
 
 
 
@@ -239,6 +280,8 @@ class LiveParser:
             self.get_config()
             if self.args.clearsiem:
                 self.clear_siem()
+            elif self.args.querysiem:
+                self.query_siem()
             else:
                 self.parse_entries()
 
