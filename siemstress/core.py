@@ -98,6 +98,7 @@ class LiveParser:
         self.table = config.get(self.args.section, 'table')
         self.parsername = config.get(self.args.section, 'parser')
         self.queryfields = [int(x) for x in config.get(
+            'default', 'queryfields').split(',')]
 
 
         if self.parsername == 'syslogbsd':
