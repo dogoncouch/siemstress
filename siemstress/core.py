@@ -57,6 +57,9 @@ class LiveParser:
 
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
+        self.arg_parser.add_argument('--clear',
+                action = 'store_true', dest = 'clearsiem',
+                help = ('delete the SQL table for selected section'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -70,6 +73,19 @@ class LiveParser:
                 help = ("set the offset to UTC (e.g. '+0500')"))
 
         self.args = self.arg_parser.parse_args()
+
+
+
+    def clear_siem(self):
+        """Clear SQL table specified in section"""
+
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute('DROP TABLE IF EXISTS ' + self.table)
 
 
 
@@ -101,16 +117,6 @@ class LiveParser:
 
 
 
-    def run_parse(self):
-        # try:
-        self.get_args()
-        self.get_config()
-        self.parse_entries()
-        # except Exception as err:
-        #     print('Error: ' + str(err))
-
-    
-    
     def parse_entries(self):
         """Parse log entries from standard input"""
         recent_datestamp = '0000000000'
@@ -207,12 +213,14 @@ class LiveParser:
                         # Put our attributes in our table:
                         cur.execute(self.sqlstatement,
                                 (intdatestamp, datestamp, entry['year'],
-                                    entry['month'], entry['day'], entry['tstamp'],
+                                    entry['month'], entry['day'],
+                                    entry['tstamp'],
                                     entry['tzone'], entry['raw_stamp'], 
                                     entry['facility'], entry['severity'],
                                     entry['source_host'], entry['source_port'],
                                     entry['dest_host'], entry['dest_port'],
-                                    entry['source_process'], entry['source_pid'],
+                                    entry['source_process'],
+                                    entry['source_pid'],
                                     entry['protocol'], entry['message']))
                         con.commit()
 
@@ -224,6 +232,23 @@ class LiveParser:
 
 
 
+    def run_parse(self):
+        # try:
+        try:
+            self.get_args()
+            self.get_config()
+            if self.args.clearsiem:
+                self.clear_siem()
+            else:
+                self.parse_entries()
+
+        except KeyboardInterrupt:
+            pass
+        # except Exception as err:
+        #     print('Error: ' + str(err))
+
+    
+    
 def main():
     parser = LiveParser()
     parser.run_parse()
