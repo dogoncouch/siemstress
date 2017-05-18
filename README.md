@@ -23,11 +23,9 @@ optional arguments:
 ```
 
 ## Examples
-tail -n 0 -f /var/log/messages | ./siemstress.py
-tcpdump | ./siemstress.py -s tcpdump
-siemstress.py -q -s tcpdump
+    tail -n 0 -f /var/log/messages | ./siemstress.py
+    tcpdump | ./siemstress.py -s tcpdump
+    siemstress.py -q -s tcpdump
 
 ## Config
-The default siemstress config file is at `/etc/siemstress.conf`.
-
-
+The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).

@@ -68,7 +68,7 @@ class LiveParser:
                 help = ('query the SQL table for selected section'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
-                default = '/etc/siemstress/siemstress.conf',
+                default = '/etc/siemstress.conf',
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'section',
