@@ -72,7 +72,7 @@ setup(name = 'siemstress', version = str(__version__),
             'cli', 'secops', 'sysadmin', 'forensic-analysis',
             'log-analysis', 'log-analyzer', 'log-viewer', 'log-analytics',
             'log-management', 'log-collector', 'log-monitoring'],
-        packages = ['siemstress']
+        packages = ['siemstress'],
         entry_points = \
                 { 'console_scripts': [ 'siemstress = siemstress.core:main' ]},
         data_files = ourdata,

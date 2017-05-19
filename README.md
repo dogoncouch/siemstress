@@ -8,8 +8,8 @@ siemstress is a CLI tool to parse syslog lines from standard input into an SQL d
 
 ```
 
-usage: siemstress.py [-h] [--version] [--clear] [-q] [-c CONFIG] [-s SECTION]
-                     [-z TZONE]
+usage: siemstress [-h] [--version] [--clear] [-q] [-c CONFIG] [-s SECTION]
+                  [-z TZONE]
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -23,9 +23,9 @@ optional arguments:
 ```
 
 ## Examples
-    tail -n 0 -f /var/log/messages | ./siemstress.py
-    tcpdump | ./siemstress.py -s tcpdump
-    siemstress.py -q -s tcpdump
+    tail -n 0 -f /var/log/messages | siemstress
+    tcpdump | siemstress -s tcpdump
+    siemstress -q -s tcpdump
 
 ## Config
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).

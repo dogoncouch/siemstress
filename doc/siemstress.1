@@ -24,9 +24,9 @@ siemstress - A very basic Security Information and Event Management system
     -z TZONE    set the offset to UTC (e.g. '+0500')
 
 .SH EXAMPLES
-    tail -n 0 -f /var/log/messages | ./siemstress.py
-    tcpdump | ./siemstress.py -s tcpdump
-    siemstress.py -q -s tcpdump
+    tail -n 0 -f /var/log/messages | siemstress
+    tcpdump | siemstress -s tcpdump
+    siemstress -q -s tcpdump
 
 .SH FILES
     /etc/siemstress.conf
