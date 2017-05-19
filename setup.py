@@ -59,6 +59,7 @@ from sys import prefix
 from siemstress import __version__
 
 ourdata = [(join(prefix, 'share/man/man1'), ['doc/siemstress.1']),
+        ('/etc', ['config/siemstress.conf']),
         (join(prefix, 'share/doc/siemstress'), ['README.md', 'LICENSE',
             'CHANGELOG.md'])]
 
