@@ -23,7 +23,7 @@
 Siemstress
 ----------
 
-Siemstress is a command line tool to parse syslog lines from standard input into an SQL database, and query the data.
+Siemstress is a very basic Security Information and Event Management system (SIEM). It can parse syslog lines from standard input into an SQL database, and query the data.
 
 Options
 ```````
@@ -63,7 +63,7 @@ ourdata = [(join(prefix, 'share/man/man1'), ['doc/siemstress.1']),
             'CHANGELOG.md'])]
 
 setup(name = 'siemstress', version = str(__version__),
-        description = 'A very basic SIEM',
+        description = 'A very basic Security Information and Event Management system (SIEM)',
         long_description = __doc__,
         author = 'Dan Persons', author_email = 'dpersonsdev@gmail.com',
         url = 'https://github.com/dogoncouch/siemstress',
