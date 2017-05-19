@@ -76,7 +76,7 @@ setup(name = 'siemstress', version = str(__version__),
         entry_points = \
                 { 'console_scripts': [ 'siemstress = siemstress.core:main' ]},
         data_files = ourdata,
-        classifiers = ["Development Status :: 3 - Alpha",
+        classifiers = ["Development Status :: 2 - Pre-Alpha",
             "Environment :: Console",
             "Intended Audience :: System Administrators",
             "License :: OSI Approved :: MIT License",
