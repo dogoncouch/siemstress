@@ -42,7 +42,6 @@ class SiemTrigger:
 
         self.args = None
         self.arg_parser = ArgumentParser()
-        self.config = None
 
         # self.parser = None
         # self.parsername = None
@@ -97,7 +96,50 @@ class SiemTrigger:
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
-        self.table = config.get(self.args.section, 'table')
+        
+        # Each section is a rule.
+        # self.sections = {}
+        self.tables = {}
+        for section in config.sections():
+            if section = 'siemstress':
+                continue
+            else:
+
+                # self.sections[section] = {}
+                table = config.get(section, 'table')
+                # self.sections[section]['table'] = table
+                
+                # Add section to table's list
+                try:
+                    self.tables[table][section] = {}
+                except KeyError:
+                    self.tables[table] = {}
+                    self.tables[table][section] = {}
+            
+                
+                self.tables[table][section]['trigger'] = \
+                        config.get(section, 'trigger')
+                self.tables[table][section]['maxcount'] = \
+                        config.get(section, 'maxcount')
+                self.tables[table][section]['response'] = \
+                        config.get(section, 'response')
+                self.tables[table][section]['facility'] = \
+                        config.get(section, 'facility')
+                self.tables[table][section]['severity'] = \
+                        config.get(section, 'severity')
+
+            # self.sections[section]['trigger'] = \
+            #         config.get(section, 'trigger')
+            # self.sections[section]['maxcount'] = \
+            #         config.get(section, 'maxcount')
+            # self.sections[section]['response'] = \
+            #         config.get(section, 'response')
+            # self.sections[section]['facility'] = \
+            #         config.get(section, 'facility')
+            # self.sections[section]['severity'] = \
+            #         config.get(section, 'severity')
+            
+        # self.table = config.get(self.args.section, 'table')
         # self.parsername = config.get(self.args.section, 'parser')
         # self.queryfields = [int(x) for x in config.get(
         #     'default', 'queryfields').split(',')]
@@ -129,6 +171,16 @@ class SiemTrigger:
 
     def check_triggers(self):
         """Query SQL database for log events"""
+
+        # To Do: start one thread per table
+        # Outside function for threads
+
+        for table in self.tables:
+            # Start a thread
+            pass
+        
+        
+        
         
         con = mdb.connect(self.server, self.user, self.password,
                 self.database);
