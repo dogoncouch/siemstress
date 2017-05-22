@@ -119,10 +119,17 @@ class SiemTrigger:
                 
                 self.tables[table][section]['trigger'] = \
                         config.get(section, 'trigger')
+                self.tables[table][section]['searchfield'] = \
+                        config.get(section, 'searchfield')
+                # Search field: message, source host, dest host, etc.
+                self.tables[table][section]['searchtype'] = \
+                        config.get(section, 'searchtype')
+                # Search types: match full field or partial field
                 self.tables[table][section]['maxcount'] = \
                         config.get(section, 'maxcount')
                 self.tables[table][section]['response'] = \
                         config.get(section, 'response')
+                # Response: message to log
                 self.tables[table][section]['facility'] = \
                         config.get(section, 'facility')
                 self.tables[table][section]['severity'] = \
