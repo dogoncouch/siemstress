@@ -98,53 +98,57 @@ class SiemTrigger:
         self.database = config.get('siemstress', 'database')
         
         # Each section is a rule.
-        # self.sections = {}
-        self.tables = {}
+        self.sections = {}
+        # self.tables = {}
         for section in config.sections():
             if section = 'siemstress':
                 continue
             else:
 
-                # self.sections[section] = {}
-                table = config.get(section, 'table')
-                # self.sections[section]['table'] = table
+                self.sections[section] = {}
+                # table = config.get(section, 'table')
+                self.sections[section]['table'] = table
                 
                 # Add section to table's list
-                try:
-                    self.tables[table][section] = {}
-                except KeyError:
-                    self.tables[table] = {}
-                    self.tables[table][section] = {}
+                # try:
+                #     self.tables[table][section] = {}
+                # except KeyError:
+                #     self.tables[table] = {}
+                #     self.tables[table][section] = {}
             
                 
-                self.tables[table][section]['trigger'] = \
-                        config.get(section, 'trigger')
-                self.tables[table][section]['searchfield'] = \
-                        config.get(section, 'searchfield')
+                # self.tables[table][section]['trigger'] = \
+                #         config.get(section, 'trigger')
+                # self.tables[table][section]['searchfield'] = \
+                #         config.get(section, 'searchfield')
                 # Search field: message, source host, dest host, etc.
-                self.tables[table][section]['searchtype'] = \
-                        config.get(section, 'searchtype')
+                # self.tables[table][section]['searchtype'] = \
+                #         config.get(section, 'searchtype')
                 # Search types: match full field or partial field
-                self.tables[table][section]['maxcount'] = \
-                        config.get(section, 'maxcount')
-                self.tables[table][section]['response'] = \
-                        config.get(section, 'response')
+                # self.tables[table][section]['maxcount'] = \
+                #         config.get(section, 'maxcount')
+                # self.tables[table][section]['response'] = \
+                #         config.get(section, 'response')
                 # Response: message to log
-                self.tables[table][section]['facility'] = \
-                        config.get(section, 'facility')
-                self.tables[table][section]['severity'] = \
-                        config.get(section, 'severity')
+                # self.tables[table][section]['facility'] = \
+                #         config.get(section, 'facility')
+                # self.tables[table][section]['severity'] = \
+                #         config.get(section, 'severity')
 
-            # self.sections[section]['trigger'] = \
-            #         config.get(section, 'trigger')
-            # self.sections[section]['maxcount'] = \
-            #         config.get(section, 'maxcount')
-            # self.sections[section]['response'] = \
-            #         config.get(section, 'response')
-            # self.sections[section]['facility'] = \
-            #         config.get(section, 'facility')
-            # self.sections[section]['severity'] = \
-            #         config.get(section, 'severity')
+                self.sections[section]['trigger'] = \
+                        config.get(section, 'trigger')
+                # Add types (one-off, maxcount, evaluate)
+                # Evaluate triggers a check on data (bad IPs, etc)
+                # Check can be added externally
+                self.sections[section]['maxcount'] = \
+                        config.get(section, 'maxcount')
+                self.sections[section]['response'] = \
+                        config.get(section, 'response')
+                self.sections[section]['facility'] = \
+                        config.get(section, 'facility')
+                self.sections[section]['severity'] = \
+                        config.get(section, 'severity')
+                # Add interval (in seconds)
             
         # self.table = config.get(self.args.section, 'table')
         # self.parsername = config.get(self.args.section, 'parser')
@@ -179,7 +183,7 @@ class SiemTrigger:
     def check_triggers(self):
         """Query SQL database for log events"""
 
-        # To Do: start one thread per table
+        # To Do: start one thread per section
         # Outside function for threads
 
         for table in self.tables:
