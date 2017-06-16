@@ -69,7 +69,6 @@ class SiemTrigger:
         #         help = ('query the SQL table for selected section'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
-                default = '/etc/siemstress/siemtrigger.conf',
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'section',
@@ -87,10 +86,14 @@ class SiemTrigger:
         """Read the config file"""
 
         config = ConfigParser.ConfigParser()
-        if os.path.isfile(self.args.config):
-            myconf = (config)
-        else: myconf = 'config/siemstress.conf'
-        config.read(myconf)
+        if self.args.config:
+            if os.path.isfile(self.args.config):
+                myconf = (config)
+            else: myconf = 'config/siemstress.conf'
+            config.read(myconf)
+
+        else:
+            # Read /etc/triggers.d/*.conf in a for loop
 
         self.server = config.get('siemstress', 'server')
         self.user = config.get('siemstress', 'user')
