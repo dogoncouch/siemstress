@@ -169,7 +169,7 @@ class LiveParser:
         # It should only be used for development purposes on closed
         # systems.
         self.sqlstatement = 'INSERT INTO ' + self.table + \
-                ' (IntDateStamp, DateStamp, Year, Month, Day, TimeStamp, ' + \
+                ' (DateStamp, FDateStamp, Year, Month, Day, TimeStamp, ' + \
                 'TZone, RawStamp, Facility, Severity, SourceHost, ' + \
                 'SourcePort, DestHost, DestPort, Process, PID, Protocol, ' + \
                 'Message) VALUES ' + \
@@ -198,8 +198,8 @@ class LiveParser:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'IntDateStamp TIMESTAMP, ' + \
-                    'DateStamp FLOAT(20, 6) UNSIGNED, ' + \
+                    'DateStamp TIMESTAMP, ' + \
+                    'FDateStamp FLOAT(20, 6) UNSIGNED, ' + \
                     'Year SMALLINT(4) UNSIGNED, ' + \
                     'Month TINYINT(2) UNSIGNED, ' + \
                     'Day TINYINT(4) UNSIGNED, ' + \
