@@ -129,7 +129,7 @@ class LiveParser:
         """Query SQL database for log events"""
         
         con = mdb.connect(self.server, self.user, self.password,
-                self.database);
+                self.database)
         
         with con: 
         
