@@ -134,7 +134,9 @@ class LiveParser:
         with con: 
         
             cur = con.cursor()
-            cur.execute("SELECT * FROM " + self.table)
+            cur.execute("SELECT * FROM " + self.table + \
+                        " WHERE DateStamp >= timestamp(date_sub(now(), " + \
+                        "interval 24 hour))")
 
             rows = cur.fetchall()
     
