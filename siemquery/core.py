@@ -28,7 +28,7 @@ from siemstress import __version__
 #from datetime import datetime
 #import re
 #import sys
-#import os
+import os
 #import MySQLdb as mdb
 from argparse import ArgumentParser
 import ConfigParser
