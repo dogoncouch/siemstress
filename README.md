@@ -5,7 +5,7 @@ A very basic Security Information and Event Management system (SIEM)
 siemstress is a CLI tool to parse syslog lines from standard input into an SQL database, and query the data.
 
 ## Installing
-Requirements: git, python-setuptools, python-sql, logdissect (>=2.0)
+Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
 
     git clone https://github.com/dogoncouch/siemstress.git
     cd siemstress
@@ -42,14 +42,12 @@ optional arguments:
 
 ```
 
-usage: siemquery [-h] [--version] [--clear] [-c CONFIG] [-s SECTION]
-                 [--last LAST] [--shost SHOST] [--process PROCESS]
-                 [--grep GREP]
+usage: siemquery.py [-h] [--version] [-c CONFIG] [-s SECTION] [--last LAST]
+                    [--shost SHOST] [--process PROCESS] [--grep GREP]
 
 optional arguments:
   -h, --help         show this help message and exit
   --version          show program's version number and exit
-  --clear            delete the SQL table for selected section
   -c CONFIG          set the config file
   -s SECTION         set the config section
   --last LAST        set the preceeding time range (5m, 24h, etc)
@@ -61,7 +59,7 @@ optional arguments:
 
 ### Examples
     siemquery --last 6h
-    siemquery --process sshd
+    siemquery --last 20m --process sshd
 
 ## Config
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).

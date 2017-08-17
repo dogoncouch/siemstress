@@ -61,9 +61,9 @@ class QueryCore:
 
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
-        self.arg_parser.add_argument('--clear',
-                action = 'store_true', dest = 'clearsiem',
-                help = ('delete the SQL table for selected section'))
+        #self.arg_parser.add_argument('--clear',
+        #        action = 'store_true', dest = 'clearsiem',
+        #        help = ('delete the SQL table for selected section'))
         #self.arg_parser.add_argument('-q',
         #        action = 'store_true', dest = 'querysiem',
         #        help = ('query the SQL table for selected section'))

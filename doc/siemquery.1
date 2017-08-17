@@ -1,31 +1,31 @@
-.TH SIEMSTRESS 1
+.TH SIEMQUERY 1
 .SH NAME
-siemstress - A very basic Security Information and Event Management system (SIEM)
+siemquery - A CLI query tool for siemstress
 
 .SH SYNOPSIS
 
-\fBsiemstress\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB-q\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
+\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fb--last \fILAST\fR] [\fb--shost \fISHOST\fR] [\fb--process \fIPROCESS\fR] [\fb--grep \fIGREP\fR] 
 
 .SH DESCRIPTION
-\fBsiemstress\fR is a CLI tool to parse syslog lines from standard input into an SQL database, and query the data.
+\fBsiemquery\fR is a CLI tool to query a siemstress database.
 
 .SH OPTIONS
 
-  usage: \fBsiemstress\fR [\fBoptions\fR]
+  usage: \fBsiemquery\fR [\fBoptions\fR]
   
   optional arguments:
-    -h, --help  show this help message and exit
-    --version   show program's version number and exit
-    --clear     delete the SQL table for selected section
-    -q          query the SQL table for selected section
-    -c CONFIG   set the config file
-    -s SECTION  set the config section
-    -z TZONE    set the offset to UTC (e.g. '+0500')
-
+    -h, --help         show this help message and exit
+    --version          show program's version number and exit
+    -c CONFIG          set the config file
+    -s SECTION         set the config section
+    --last LAST        set the preceeding time range (5m, 24h, etc)
+    --shost SHOST      match a source host
+    --process PROCESS  match a source process
+    --grep GREP        match a pattern
+  
 .SH EXAMPLES
-    tail -n 0 -f /var/log/messages | siemstress
-    tcpdump | siemstress -s tcpdump
-    siemstress -q -s tcpdump
+    siemquery --last 6h
+    siemquery --last 20m --process sshd
 
 .SH FILES
     /etc/siemstress.conf

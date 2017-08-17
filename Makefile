@@ -28,7 +28,7 @@ all: install clean
 default: all
 
 install:
-	python setup.py install
+	python2 setup.py install
 
 clean:
 	rm -rf build dist siemstress.egg-info
