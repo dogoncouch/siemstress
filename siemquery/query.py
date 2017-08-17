@@ -47,7 +47,7 @@ class SiemQuery:
         """Query SQL database for log events"""
 
         qstatement = []
-        qstatement[0] = "SELECT * FROM " + table
+        qstatement.append = "SELECT * FROM " + table
         
         if last[-1:] == 'm': timeint = 'minute'
         elif last[-1:] == 's': timeint = 'second'
