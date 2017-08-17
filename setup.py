@@ -23,7 +23,7 @@
 Siemstress
 ----------
 
-Siemstress is a very basic Security Information and Event Management system (SIEM). It can parse syslog lines from standard input into an SQL database, and query the data.
+Siemstress is a very basic Security Information and Event Management system (SIEM). It parses syslog lines from standard input into an SQL database. Siemquery is a CLI tool to query the data.
 
 Options
 ```````
@@ -42,6 +42,19 @@ Options
       -s SECTION  set the config section
       -z TZONE    set the offset to UTC (e.g. '+0500')
 
+    usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--last LAST]
+                    [--shost SHOST] [--process PROCESS] [--grep GREP]
+    
+    optional arguments:
+      -h, --help         show this help message and exit
+      --version          show program's version number and exit
+      -c CONFIG          set the config file
+      -s SECTION         set the config section
+      --last LAST        set the preceeding time range (5m, 24h, etc)
+      --shost SHOST      match a source host
+      --process PROCESS  match a source process
+      --grep GREP        match a pattern
+
 
 Links
 `````
@@ -58,7 +71,8 @@ from os.path import join
 from sys import prefix
 from siemstress import __version__
 
-ourdata = [(join(prefix, 'share/man/man1'), ['doc/siemstress.1']),
+ourdata = [(join(prefix, 'share/man/man1'),
+        ['doc/siemstress.1', 'doc/siemquery.1']),
         ('/etc/siemstress', ['config/siemstress.conf']),
         (join(prefix, 'share/doc/siemstress'), ['README.md', 'LICENSE',
             'CHANGELOG.md'])]
