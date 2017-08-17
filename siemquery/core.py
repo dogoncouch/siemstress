@@ -61,12 +61,6 @@ class QueryCore:
 
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
-        #self.arg_parser.add_argument('--clear',
-        #        action = 'store_true', dest = 'clearsiem',
-        #        help = ('delete the SQL table for selected section'))
-        #self.arg_parser.add_argument('-q',
-        #        action = 'store_true', dest = 'querysiem',
-        #        help = ('query the SQL table for selected section'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -75,9 +69,6 @@ class QueryCore:
                 action = 'store', dest = 'section',
                 default = 'default',
                 help = ('set the config section'))
-        #self.arg_parser.add_argument('-z',
-        #        action = 'store', dest = 'tzone',
-        #        help = ("set the offset to UTC (e.g. '+0500')"))
         self.arg_parser.add_argument('--last',
                 action = 'store', dest = 'last', default = '24h',
                 help = ("set the preceeding time range (5m, 24h, etc)"))
@@ -109,19 +100,8 @@ class QueryCore:
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.section, 'table')
-        #self.parsername = config.get(self.args.section, 'parser')
         self.queryfields = [int(x) for x in config.get(
             'default', 'queryfields').split(',')]
-
-
-        #if self.parsername == 'syslogbsd':
-        #    self.parser = logdissect.parsers.syslogbsd.ParseModule()
-        #elif self.parsername == 'syslogiso':
-        #    self.parser = logdissect.parsers.syslogiso.ParseModule()
-        #elif self.parsername == 'nohost':
-        #    self.parser = logdissect.parsers.nohost.ParseModule()
-        #elif self.parsername == 'tcpdump':
-        #    self.parser = logdissect.parsers.tcpdump.ParseModule()
 
 
 
@@ -149,20 +129,6 @@ class QueryCore:
                 last = self.args.last, shost = self.args.shost,
                 process = self.args.process, grep = self.args.grep)
 
-        #con = mdb.connect(self.server, self.user, self.password,
-        #        self.database)
-        
-        #with con: 
-        
-        #    cur = con.cursor()
-        #    cur.execute("SELECT * FROM " + self.table + \
-        #                " WHERE DateStamp >= timestamp(date_sub(now(), " + \
-        #                "interval 24 hour))")
-
-        #    rows = cur.fetchall()
-    
-        #    desc = cur.description
-
         print "%7s %20s %10s %10s %7s %s" % (
                 desc[self.queryfields[0]][0],
                 desc[self.queryfields[1]][0],
@@ -183,16 +149,10 @@ class QueryCore:
 
 
     def run_query(self):
-        # try:
         try:
             self.get_args()
             self.get_config()
-            #if self.args.clearsiem:
-            #    self.clear_siem()
-            #else
             self.query_siem()
-            #else:
-            #    self.parse_entries()
 
         except KeyboardInterrupt:
             pass

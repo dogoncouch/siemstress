@@ -271,7 +271,6 @@ class LiveParser:
 
 
     def run_parse(self):
-        # try:
         try:
             self.get_args()
             self.get_config()

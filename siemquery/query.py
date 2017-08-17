@@ -59,7 +59,7 @@ class SiemQuery:
         
         if shost: qstatement.append("AND SourceHost LIKE \"" + shost + "\"")
         if process: qstatement.append("AND Process LIKE \"" + process + "\"")
-        if grep: qstatement.append("AND Message LIKE \"%" + grep + "%\"") # To Do
+        if grep: qstatement.append("AND Message LIKE \"%" + grep + "%\"")
 
         sqlstatement = " ".join(qstatement)
         con = mdb.connect(self.server, self.user, self.password,
