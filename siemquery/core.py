@@ -32,7 +32,7 @@ import os
 #import MySQLdb as mdb
 from argparse import ArgumentParser
 import ConfigParser
-import siemquery
+from siemquery import SiemQuery
 
 
 
@@ -142,7 +142,7 @@ class QueryCore:
         """Query SQL database for log events"""
         
 
-        query = siemquery.SiemQuery(server = self.server, user = self.user,
+        query = SiemQuery(server = self.server, user = self.user,
                 password = self.password, database = self.database)
 
         desc, rows = query.simple_query(table = self.table,
