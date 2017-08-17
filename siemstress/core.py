@@ -171,11 +171,11 @@ class LiveParser:
         # It should only be used for development purposes on closed
         # systems.
         self.sqlstatement = 'INSERT INTO ' + self.table + \
-                ' (DateStamp, FDateStamp, Year, Month, Day, TimeStamp, ' + \
+                ' (DateStamp, FDateStamp, ' + \
                 'TZone, RawStamp, Facility, Severity, SourceHost, ' + \
                 'SourcePort, DestHost, DestPort, Process, PID, Protocol, ' + \
                 'Message) VALUES ' + \
-                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
+                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
                 '%s, %s, %s, %s, %s)'
 
         con = mdb.connect(self.server, self.user,
@@ -202,10 +202,6 @@ class LiveParser:
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
                     'FDateStamp FLOAT(20, 6) UNSIGNED, ' + \
-                    'Year SMALLINT(4) UNSIGNED, ' + \
-                    'Month TINYINT(2) UNSIGNED, ' + \
-                    'Day TINYINT(4) UNSIGNED, ' + \
-                    'TimeStamp DECIMAL(12, 6), ' + \
                     'TZone NVARCHAR(5), '+ \
                     'RawStamp NVARCHAR(80), ' + \
                     'Facility NVARCHAR(15), ' + \
@@ -256,9 +252,7 @@ class LiveParser:
 
                         # Put our attributes in our table:
                         cur.execute(self.sqlstatement,
-                                (intdatestamp, datestamp, entry['year'],
-                                    entry['month'], entry['day'],
-                                    entry['tstamp'],
+                                (intdatestamp, datestamp,
                                     entry['tzone'], entry['raw_stamp'], 
                                     entry['facility'], entry['severity'],
                                     entry['source_host'], entry['source_port'],
