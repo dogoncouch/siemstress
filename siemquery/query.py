@@ -58,7 +58,7 @@ class SiemQuery:
                 "interval " + str(int(last[:-1])) + " " + timeint + "))")
         
         if shost: qstatement.append("WITH SourceHost LIKE " + shost)
-        if processt: qstatement.append("WITH Process LIKE " + shost)
+        if process: qstatement.append("WITH Process LIKE " + process)
         if grep: qstatement.append("") # To Do
 
         sqlstatement = " ".join(qstatement)
