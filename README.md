@@ -34,7 +34,6 @@ optional arguments:
 ### Examples
     tail -n 0 -f /var/log/messages | siemstress
     tcpdump | siemstress -s tcpdump
-    siemstress -q -s tcpdump
 
 ## Siemquery
 
