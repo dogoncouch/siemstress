@@ -46,11 +46,11 @@ class SiemQuery:
             process=None, grep=None):
         """Query SQL database for log events"""
 
-        qstatement[0] = "SELECT * FROM " + self.table + \
+        qstatement[0] = "SELECT * FROM " + self.table
         
-        if last[-1:] = 'm': timeint = 'minute'
-        elif last[-1:] = 's': timeint = 'second'
-        elif last[-1:] = 'd': timeint = 'day'
+        if last[-1:] == 'm': timeint = 'minute'
+        elif last[-1:] == 's': timeint = 'second'
+        elif last[-1:] == 'd': timeint = 'day'
         else: timeint = 'hour'
 
         qstatement.append("WHERE DateStamp >= timestamp(date_sub(now(), " + \
