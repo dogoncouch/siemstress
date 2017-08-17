@@ -11,7 +11,9 @@ Requirements: git, python-setuptools, python-sql, logdissect (>=2.0)
     cd siemstress
     sudo make all
 
-## Usage
+## Siemstress
+
+### Usage
 
 ```
 
@@ -29,10 +31,37 @@ optional arguments:
 
 ```
 
-## Examples
+### Examples
     tail -n 0 -f /var/log/messages | siemstress
     tcpdump | siemstress -s tcpdump
     siemstress -q -s tcpdump
+
+## Siemquery
+
+### Usage
+
+```
+
+usage: siemquery [-h] [--version] [--clear] [-c CONFIG] [-s SECTION]
+                 [--last LAST] [--shost SHOST] [--process PROCESS]
+                 [--grep GREP]
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --version          show program's version number and exit
+  --clear            delete the SQL table for selected section
+  -c CONFIG          set the config file
+  -s SECTION         set the config section
+  --last LAST        set the preceeding time range (5m, 24h, etc)
+  --shost SHOST      match a source host
+  --process PROCESS  match a source process
+  --grep GREP        match a pattern
+
+```
+
+### Examples
+    siemquery --last 6h
+    siemquery --process sshd
 
 ## Config
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
