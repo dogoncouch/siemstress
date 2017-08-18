@@ -127,7 +127,7 @@ class LiveParser:
         
                 cur.execute('DROP TABLE IF EXISTS ' + self.table)
         else: print("Use --force if you really want to drop table (" + \
-                self.table + ")"
+                self.table + ")")
 
 
 
