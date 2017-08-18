@@ -32,7 +32,7 @@ import os
 #import MySQLdb as mdb
 from argparse import ArgumentParser
 import ConfigParser
-from siemquery.query import SiemQuery
+from siemstress.query import SiemQuery
 
 
 

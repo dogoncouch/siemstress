@@ -22,7 +22,7 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
-from siemquery.core import QueryCore
+from siemstress.querycore import QueryCore
 
 query = QueryCore()
 query.run_query()
