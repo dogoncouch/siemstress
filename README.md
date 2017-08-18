@@ -35,7 +35,6 @@ optional arguments:
 ### Examples
     tail -n 0 -f /var/log/messages | siemstress
     tail -n 0 -f /var/log/auth.log | siemstress -s auth
-    tcpdump | siemstress -s tcpdump
 
 ## Siemquery
 
