@@ -69,6 +69,10 @@ class QueryCore:
                 action = 'store', dest = 'section',
                 default = 'default',
                 help = ('set the config section'))
+        self.arg_parser.add_argument('--table',
+                action = 'store', dest = 'table',
+                default = None,
+                help = ('set the table to query'))
         self.arg_parser.add_argument('--last',
                 action = 'store', dest = 'last', default = '24h',
                 help = ("set the preceeding time range (5m, 24h, etc)"))
