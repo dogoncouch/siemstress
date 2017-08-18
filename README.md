@@ -5,11 +5,15 @@ A very basic Security Information and Event Management system (SIEM)
 siemstress is a CLI tool to parse syslog lines from standard input into an SQL database. Siemquery is a CLI tool to query the data.
 
 ## Installing
+
 Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
 
     git clone https://github.com/dogoncouch/siemstress.git
     cd siemstress
     sudo make all
+
+### Database Setup
+siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
 
 ## Siemstress
 
