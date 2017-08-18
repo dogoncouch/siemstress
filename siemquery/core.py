@@ -136,7 +136,7 @@ class QueryCore:
                 last = self.args.last, shost = self.args.shost,
                 process = self.args.process, grep = self.args.grep)
 
-        print "%7s %20s %10s %10s %7s %s" % (
+        print "%7s %20s %14s %14s %7s %s" % (
                 desc[self.queryfields[0]][0],
                 desc[self.queryfields[1]][0],
                 desc[self.queryfields[2]][0],
@@ -145,7 +145,7 @@ class QueryCore:
                 desc[self.queryfields[5]][0])
 
         for row in rows:
-            print "%7s %20s %10s %10s %7s %s" % (
+            print "%7s %20s %14s %14s %7s %s" % (
                     row[self.queryfields[0]],
                     row[self.queryfields[1]],
                     row[self.queryfields[2]],
