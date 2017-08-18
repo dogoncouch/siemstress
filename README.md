@@ -17,13 +17,14 @@ Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
 
 ```
 
-usage: siemstress [-h] [--version] [--clear] [-q] [-c CONFIG] [-s SECTION]
-                  [-z TZONE]
+usage: siemstress [-h] [--version] [--clear] [--force] [-q] [-c CONFIG]
+                  [-s SECTION] [-z TZONE]
 
 optional arguments:
   -h, --help  show this help message and exit
   --version   show program's version number and exit
   --clear     delete the SQL table for selected section
+  --force     really delete the table
   -q          query the SQL table for selected section
   -c CONFIG   set the config file
   -s SECTION  set the config section
@@ -33,6 +34,7 @@ optional arguments:
 
 ### Examples
     tail -n 0 -f /var/log/messages | siemstress
+    tail -n 0 -f /var/log/auth.log | siemstress -s auth
     tcpdump | siemstress -s tcpdump
 
 ## Siemquery
@@ -41,14 +43,16 @@ optional arguments:
 
 ```
 
-usage: siemquery.py [-h] [--version] [-c CONFIG] [-s SECTION] [--last LAST]
-                    [--shost SHOST] [--process PROCESS] [--grep GREP]
+usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--table TABLE]
+                 [--last LAST] [--shost SHOST] [--process PROCESS]
+                 [--grep GREP]
 
 optional arguments:
   -h, --help         show this help message and exit
   --version          show program's version number and exit
   -c CONFIG          set the config file
   -s SECTION         set the config section
+  --table TABLE      set the table to query
   --last LAST        set the preceeding time range (5m, 24h, etc)
   --shost SHOST      match a source host
   --process PROCESS  match a source process
@@ -58,7 +62,7 @@ optional arguments:
 
 ### Examples
     siemquery --last 6h
-    siemquery --last 20m --process sshd
+    siemquery --last 20m -s auth --process sshd --grep fail
 
 ## Config
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).

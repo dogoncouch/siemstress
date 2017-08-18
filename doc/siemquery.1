@@ -4,7 +4,7 @@ siemquery - A CLI query tool for siemstress
 
 .SH SYNOPSIS
 
-\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fb--last \fILAST\fR] [\fb--shost \fISHOST\fR] [\fb--process \fIPROCESS\fR] [\fb--grep \fIGREP\fR] 
+\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB--table \fITABLE\fR] [\fB--last \fILAST\fR] [\fB--shost \fISHOST\fR] [\fB--process \fIPROCESS\fR] [\fB--grep \fIGREP\fR] 
 
 .SH DESCRIPTION
 \fBsiemquery\fR is a CLI tool to query a siemstress database.
@@ -18,6 +18,7 @@ siemquery - A CLI query tool for siemstress
     --version          show program's version number and exit
     -c CONFIG          set the config file
     -s SECTION         set the config section
+    --table TABLE      set the table to query
     --last LAST        set the preceeding time range (5m, 24h, etc)
     --shost SHOST      match a source host
     --process PROCESS  match a source process
@@ -25,7 +26,7 @@ siemquery - A CLI query tool for siemstress
   
 .SH EXAMPLES
     siemquery --last 6h
-    siemquery --last 20m --process sshd
+    siemquery --last 20m -s auth --process sshd --grep fail
 
 .SH FILES
     /etc/siemstress.conf

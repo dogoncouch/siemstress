@@ -4,7 +4,7 @@ siemstress - A very basic Security Information and Event Management system (SIEM
 
 .SH SYNOPSIS
 
-\fBsiemstress\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB-q\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
+\fBsiemstress\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB-q\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
 
 .SH DESCRIPTION
 \fBsiemstress\fR is a CLI tool to parse syslog lines from standard input into an SQL database, and query the data.
@@ -16,6 +16,7 @@ siemstress - A very basic Security Information and Event Management system (SIEM
   optional arguments:
     -h, --help  show this help message and exit
     --version   show program's version number and exit
+    --force     really delete the table
     --clear     delete the SQL table for selected section
     -q          query the SQL table for selected section
     -c CONFIG   set the config file
@@ -24,6 +25,7 @@ siemstress - A very basic Security Information and Event Management system (SIEM
 
 .SH EXAMPLES
     tail -n 0 -f /var/log/messages | siemstress
+    tail -n 0 -f /var/log/auth.log | siemstress -s auth
     tcpdump | siemstress -s tcpdump
 
 .SH FILES
