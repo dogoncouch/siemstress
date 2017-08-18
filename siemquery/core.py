@@ -99,9 +99,12 @@ class QueryCore:
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
-        self.table = config.get(self.args.section, 'table')
+        if self.args.table:
+            self.table = self.args.table
+        else:
+            self.table = config.get(self.args.section, 'table')
         self.queryfields = [int(x) for x in config.get(
-            'default', 'queryfields').split(',')]
+            self.args.section, 'queryfields').split(',')]
 
 
 

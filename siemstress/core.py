@@ -63,6 +63,9 @@ class LiveParser:
         self.arg_parser.add_argument('--clear',
                 action = 'store_true', dest = 'clearsiem',
                 help = ('delete the SQL table for selected section'))
+        self.arg_parser.add_argument('--force',
+                action = 'store_true', dest = 'force',
+                help = ('really delete the table'))
         self.arg_parser.add_argument('-q',
                 action = 'store_true', dest = 'querysiem',
                 help = ('query the SQL table for selected section'))
@@ -98,7 +101,7 @@ class LiveParser:
         self.table = config.get(self.args.section, 'table')
         self.parsername = config.get(self.args.section, 'parser')
         self.queryfields = [int(x) for x in config.get(
-            'default', 'queryfields').split(',')]
+            self.args.section, 'queryfields').split(',')]
 
 
         if self.parsername == 'syslogbsd':
@@ -115,13 +118,16 @@ class LiveParser:
     def clear_siem(self):
         """Clear SQL table specified in section"""
 
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
-
-        with con:
-            cur = con.cursor()
-
-            cur.execute('DROP TABLE IF EXISTS ' + self.table)
+        if self.args.force:
+            con = mdb.connect(self.server, self.user, self.password,
+                    self.database)
+        
+            with con:
+                cur = con.cursor()
+        
+                cur.execute('DROP TABLE IF EXISTS ' + self.table)
+        else: print("Use --force if you really want to drop table (" + \
+                self.table + ")"
 
 
 
