@@ -4,7 +4,7 @@ siemquery - A CLI query tool for siemstress
 
 .SH SYNOPSIS
 
-\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB--table \fITABLE\fR] [\fB--last \fILAST\fR] [\fB--shost \fISHOST\fR] [\fB--process \fIPROCESS\fR] [\fB--grep \fIGREP\fR] 
+\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB--table \fITABLE\fR] [\fB--last \fILAST\fR] [\fB--shost \fIHOST\fR] [\fB--sport \fIPORT\fR] [\fB--dhost \fIHOST\fR] [\fB--dport \fIPORT\fR] [\fB--process \fIPROCESS\fR] [\fB--protocol \fIPROTOCOL\fR] [\fB--pid \fIPID\fR] [\fB--grep \fIPATTERN\fR] [\fB--rshost \fIHOST\fR] [\fB--rsport \fIPORT\fR] [\fB--rdhost \fIHOST\fR] [\fB--rdport \fIPORT\fR] [\fB--rprocess \fIPROCESS\fR] [\fB--rpid \fIPID\fR] [\fB--rprotocol \fIPROTOCOL\fR] [\fB--rgrep \fIPATTERN\fR] 
 
 .SH DESCRIPTION
 \fBsiemquery\fR is a CLI tool to query a siemstress database.
@@ -18,15 +18,26 @@ siemquery - A CLI query tool for siemstress
     --version             show program's version number and exit
     -c CONFIG             set the config file
     -s SECTION            set the config section
-    --simple              this option will be gone soon
     --table TABLE         set a table to query
     --last LAST           match a preceeding time range (5m, 24h, etc)
     --range START-FINISH  match a date range (format: YYmmddHHMMSS)
     --shost HOST          match a source host
+    --sport PORT          match a source port
+    --dhost HOST          match a destination host
+    --dport PORT          match a destination port
     --process PROCESS     match a source process
+    --pid PID             match a source Process ID
+    --protocol PROTOCOL   match a protocol
     --grep PATTERN        match a pattern
+    --rshost HOST         filter out a source host
+    --rsport PORT         filter out a source port
+    --rdhost HOST         filter out a destination host
+    --rdport PORT         filter out a destination port
+    --rprocess PROCESS    filter out a source process
+    --rpid PID            filter out a source Process ID
+    --rprotocol PROTOCOL  filter out a protocol
+    --rgrep PATTERN       filter out a pattern
 
-  
 .SH EXAMPLES
     siemquery --last 6h
     siemquery --last 20m -s auth --process sshd --process systemd-logind --grep fail

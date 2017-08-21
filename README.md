@@ -32,7 +32,6 @@ optional arguments:
   --version   show program's version number and exit
   --clear     delete the SQL table for selected section
   --force     really delete the table
-  -q          query the SQL table for selected section
   -c CONFIG   set the config file
   -s SECTION  set the config section
   -z TZONE    set the offset to UTC (e.g. '+0500')
@@ -49,9 +48,13 @@ optional arguments:
 
 ```
 
-usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--simple]
-                 [--table TABLE] [--last LAST] [--range START-FINISH]
-                 [--shost HOST] [--process PROCESS] [--grep PATTERN]
+usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--table TABLE]
+                 [--last LAST] [--range START-FINISH] [--shost HOST]
+                 [--sport PORT] [--dhost HOST] [--dport PORT]
+                 [--process PROCESS] [--pid PID] [--protocol PROTOCOL]
+                 [--grep PATTERN] [--rshost HOST] [--rsport PORT]
+                 [--rdhost HOST] [--rdport PORT] [--rprocess PROCESS]
+                 [--rpid PID] [--rprotocol PROTOCOL] [--rgrep PATTERN]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -62,8 +65,21 @@ optional arguments:
   --last LAST           match a preceeding time range (5m, 24h, etc)
   --range START-FINISH  match a date range (format: YYmmddHHMMSS)
   --shost HOST          match a source host
+  --sport PORT          match a source port
+  --dhost HOST          match a destination host
+  --dport PORT          match a destination port
   --process PROCESS     match a source process
+  --pid PID             match a source Process ID
+  --protocol PROTOCOL   match a protocol
   --grep PATTERN        match a pattern
+  --rshost HOST         filter out a source host
+  --rsport PORT         filter out a source port
+  --rdhost HOST         filter out a destination host
+  --rdport PORT         filter out a destination port
+  --rprocess PROCESS    filter out a source process
+  --rpid PID            filter out a source Process ID
+  --rprotocol PROTOCOL  filter out a protocol
+  --rgrep PATTERN       filter out a pattern
 
 ```
 

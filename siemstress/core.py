@@ -51,7 +51,6 @@ class LiveParser:
         self.password = None
         self.database = None
         self.table = None
-        self.queryfields = None
 
 
 
@@ -66,9 +65,6 @@ class LiveParser:
         self.arg_parser.add_argument('--force',
                 action = 'store_true', dest = 'force',
                 help = ('really delete the table'))
-        self.arg_parser.add_argument('-q',
-                action = 'store_true', dest = 'querysiem',
-                help = ('query the SQL table for selected section'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -100,8 +96,6 @@ class LiveParser:
         self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.section, 'table')
         self.parsername = config.get(self.args.section, 'parser')
-        self.queryfields = [int(x) for x in config.get(
-            self.args.section, 'queryfields').split(',')]
 
 
         if self.parsername == 'syslogbsd':
@@ -128,42 +122,6 @@ class LiveParser:
                 cur.execute('DROP TABLE IF EXISTS ' + self.table)
         else: print("Use --force if you really want to drop table (" + \
                 self.table + ")")
-
-
-
-    def query_siem(self):
-        """Query SQL database for log events"""
-        
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
-        
-        with con: 
-        
-            cur = con.cursor()
-            cur.execute("SELECT * FROM " + self.table + \
-                        " WHERE DateStamp >= timestamp(date_sub(now(), " + \
-                        "interval 24 hour))")
-
-            rows = cur.fetchall()
-    
-            desc = cur.description
-
-            print "%7s %20s %10s %10s %7s %s" % (
-                    desc[self.queryfields[0]][0],
-                    desc[self.queryfields[1]][0],
-                    desc[self.queryfields[2]][0],
-                    desc[self.queryfields[3]][0],
-                    desc[self.queryfields[4]][0],
-                    desc[self.queryfields[5]][0])
-
-            for row in rows:
-                print "%7s %20s %10s %10s %7s %s" % (
-                        row[self.queryfields[0]],
-                        row[self.queryfields[1]],
-                        row[self.queryfields[2]],
-                        row[self.queryfields[3]],
-                        row[self.queryfields[4]],
-                        row[self.queryfields[5]])
 
 
 
@@ -282,8 +240,6 @@ class LiveParser:
             self.get_config()
             if self.args.clearsiem:
                 self.clear_siem()
-            elif self.args.querysiem:
-                self.query_siem()
             else:
                 self.parse_entries()
 
