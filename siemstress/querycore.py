@@ -213,7 +213,7 @@ class QueryCore:
         desc, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shosts,
-                processes = listself.args.processes,
+                processes = self.args.processes,
                 greps = self.args.greps)
 
         print "%7s %20s %14s %14s %7s %s" % (
