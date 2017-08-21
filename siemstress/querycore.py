@@ -150,7 +150,7 @@ class QueryCore:
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
-        if self.args.table:
+        if self.args.tables:
             self.tables = self.args.tables
         else:
             self.tables = []
