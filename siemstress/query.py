@@ -97,17 +97,17 @@ class SiemQuery:
         qstatement.append(tablestatement)
 
         # Date range
-        if last:
+        if daterange:
+            startdate, enddate = daterange.split('-')
+            datestatement = "WHERE DateStamp BETWEEN \"" + startdate + \
+                    "\" AND \"" + enddate + "\")"
+        elif last:
             lastunit = lastunits[last[-1]]
             lastnum = last[:-1]
 
             datestatement = "WHERE DateStamp >= " + \
                     "timestamp(date_sub(now(), interval " + \
                     lastnum + " " + lastunit + "))"
-        elif daterange:
-            startdate, enddate = daterange.split('-')
-            datestatement = "WHERE DateStamp BETWEEN \"" + startdate + \
-                    "\" AND \"" + enddate + "\")"
         else:
             datestatement = "WHERE DateStamp >= " + \
                     "timestamp(date_sub(now(), interval " + \
