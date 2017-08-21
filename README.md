@@ -49,26 +49,31 @@ optional arguments:
 
 ```
 
-usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--table TABLE]
-                 [--last LAST] [--shost SHOST] [--process PROCESS]
-                 [--grep GREP]
+usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--simple]
+                 [--table TABLE] [--last LAST] [--range START-FINISH]
+                 [--shost HOST] [--process PROCESS] [--grep PATTERN]
 
 optional arguments:
-  -h, --help         show this help message and exit
-  --version          show program's version number and exit
-  -c CONFIG          set the config file
-  -s SECTION         set the config section
-  --table TABLE      set the table to query
-  --last LAST        set the preceeding time range (5m, 24h, etc)
-  --shost SHOST      match a source host
-  --process PROCESS  match a source process
-  --grep GREP        match a pattern
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  -c CONFIG             set the config file
+  -s SECTION            set the config section
+  --table TABLE         set a table to query
+  --last LAST           match a preceeding time range (5m, 24h, etc)
+  --range START-FINISH  match a date range (format: YYmmddHHMMSS)
+  --shost HOST          match a source host
+  --process PROCESS     match a source process
+  --grep PATTERN        match a pattern
 
 ```
 
 ### Examples
     siemquery --last 6h
-    siemquery --last 20m -s auth --process sshd --grep fail
+    siemquery --last 20m -s auth --process sshd --process systemd-logind --grep fail
+    siemquery --range 20170726020000-20170726050000 -s auth --grep fail
+
+### Notes
+CLI arguments that are not time-related can be used more than once (except config/section).
 
 ## Copyright
 MIT License

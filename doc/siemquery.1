@@ -12,21 +12,28 @@ siemquery - A CLI query tool for siemstress
 .SH OPTIONS
 
   usage: \fBsiemquery\fR [\fBoptions\fR]
-  
+
   optional arguments:
-    -h, --help         show this help message and exit
-    --version          show program's version number and exit
-    -c CONFIG          set the config file
-    -s SECTION         set the config section
-    --table TABLE      set the table to query
-    --last LAST        set the preceeding time range (5m, 24h, etc)
-    --shost SHOST      match a source host
-    --process PROCESS  match a source process
-    --grep GREP        match a pattern
+    -h, --help            show this help message and exit
+    --version             show program's version number and exit
+    -c CONFIG             set the config file
+    -s SECTION            set the config section
+    --simple              this option will be gone soon
+    --table TABLE         set a table to query
+    --last LAST           match a preceeding time range (5m, 24h, etc)
+    --range START-FINISH  match a date range (format: YYmmddHHMMSS)
+    --shost HOST          match a source host
+    --process PROCESS     match a source process
+    --grep PATTERN        match a pattern
+
   
 .SH EXAMPLES
     siemquery --last 6h
-    siemquery --last 20m -s auth --process sshd --grep fail
+    siemquery --last 20m -s auth --process sshd --process systemd-logind --grep fail
+    siemquery --range 20170726020000-20170726050000 -s auth --grep fail
+
+.SH NOTES
+Command line arguments that are not time-related can be used more than once (except config/section)
 
 .SH SEE ALSO
     siemstress(1)

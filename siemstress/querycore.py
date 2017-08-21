@@ -69,9 +69,6 @@ class QueryCore:
                 action = 'store', dest = 'section',
                 default = 'default',
                 help = ('set the config section'))
-        self.arg_parser.add_argument('--simple',
-                action = 'store_true', dest = 'simple',
-                help = ('this option will be gone soon'))
         self.arg_parser.add_argument('--table',
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
@@ -239,8 +236,7 @@ class QueryCore:
         try:
             self.get_args()
             self.get_config()
-            if self.args.simple: self.simple_query_siem()
-            else: self.query_siem()
+            self.query_siem()
 
         except KeyboardInterrupt:
             pass
