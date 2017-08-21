@@ -75,7 +75,8 @@ class SiemQuery:
         return desc, rows
 
     def query(self, tables=['default'], columns=[], last=None,
-            daterange=None, sourcehosts=[], processes=[], greps = []):
+            daterange=None, sourcehosts=[], sourceports=[], desthosts=[],
+            destports=[], processes=[], pids=[], protocols=[], greps = []):
         """Query siemstress SQL database for events"""
         
         lastunits = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}

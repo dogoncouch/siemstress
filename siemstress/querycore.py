@@ -84,51 +84,34 @@ class QueryCore:
                 action = 'append', dest = 'shosts',
                 metavar = 'HOST',
                 help = ('match a source host'))
+        self.arg_parser.add_argument('--sport',
+                action = 'append', dest = 'sports',
+                metavar = 'PORT',
+                help = ('match a source port'))
+        self.arg_parser.add_argument('--dhost',
+                action = 'append', dest = 'dhosts',
+                metavar = 'HOST',
+                help = ('match a destination host'))
+        self.arg_parser.add_argument('--dport',
+                action = 'append', dest = 'dports',
+                metavar = 'PORT',
+                help = ('match a destination port'))
         self.arg_parser.add_argument('--process',
                 action = 'append', dest = 'processes',
                 metavar = 'PROCESS',
                 help = ('match a source process'))
+        self.arg_parser.add_argument('--pid',
+                action = 'append', dest = 'pids',
+                metavar = 'PID',
+                help = ('match a source Process ID'))
+        self.arg_parser.add_argument('--protocol',
+                action = 'append', dest = 'protocols',
+                metavar = 'PROTOCOL',
+                help = ('match a protocol'))
         self.arg_parser.add_argument('--grep',
                 action = 'append', dest = 'greps',
                 metavar = 'PATTERN',
                 help = ('match a pattern'))
-
-        self.args = self.arg_parser.parse_args()
-
-
-
-    def old_get_args(self):
-        """Set argument options"""
-
-        self.arg_parser.add_argument('--version', action = 'version',
-                version = '%(prog)s ' + str(__version__))
-        self.arg_parser.add_argument('-c',
-                action = 'store', dest = 'config',
-                default = '/etc/siemstress/siemstress.conf',
-                help = ('set the config file'))
-        self.arg_parser.add_argument('-s',
-                action = 'store', dest = 'section',
-                default = 'default',
-                help = ('set the config section'))
-        self.arg_parser.add_argument('--table',
-                action = 'store', dest = 'tables',
-                metavar = 'table',
-                help = ('set the table to query'))
-        self.arg_parser.add_argument('--last',
-                action = 'store', dest = 'last', default = '24h',
-                help = ("set the preceeding time range (5m, 24h, etc)"))
-        self.arg_parser.add_argument('--source',
-                action = 'store', dest = 'shosts',
-                metavar = 'host',
-                help = ("match a source host"))
-        self.arg_parser.add_argument('--process',
-                action = 'store', dest = 'processes',
-                metavar = 'process',
-                help = ("match a source process"))
-        self.arg_parser.add_argument('--grep',
-                action = 'store', dest = 'greps',
-                metavar = 'pattern',
-                help = ("match a pattern"))
 
         self.args = self.arg_parser.parse_args()
 
@@ -210,7 +193,12 @@ class QueryCore:
         desc, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shosts,
+                sourceports = self.args.sports,
+                desthosts = self.args.dhosts,
+                dports = self.args.dports,
                 processes = self.args.processes,
+                pids = self.args.pids,
+                protocols = self.args.protocols,
                 greps = self.args.greps)
 
         print "%7s %20s %14s %14s %7s %s" % (
