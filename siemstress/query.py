@@ -252,6 +252,7 @@ class SiemQuery:
 
 
         # Connect and execute
+        qstatement = " ".join(qstatement)
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
 
