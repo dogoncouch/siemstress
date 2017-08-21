@@ -106,8 +106,8 @@ class SiemQuery:
                     lastnum + " " + lastunit + "))"
         elif daterange:
             startdate, enddate = daterange.split('-')
-            datestatement = "WHERE DateStamp BETWEEN \"" startdate + \
-                    "\" AND \"" enddate + "\")"
+            datestatement = "WHERE DateStamp BETWEEN \"" + startdate + \
+                    "\" AND \"" + enddate + "\")"
         else:
             datestatement = "WHERE DateStamp >= " + \
                     "timestamp(date_sub(now(), interval " + \
