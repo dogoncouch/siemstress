@@ -86,10 +86,9 @@ class SiemQuery:
 
         # Select statement
         if columns:
-            selectstatement = "SELECT" + columns[0]
+            selectstatement = "SELECT " + columns[0]
             for column in columns[1:]:
                 selectstatement += ", " + column
-            selectstatement += 
         else:
             selectstatement = "SELECT *"
         qstatement.append(selectstatement)
@@ -109,8 +108,8 @@ class SiemQuery:
                     lastnum + " " + lastunit + "))"
         elif daterange:
             startdate, enddate = daterange.split('-')
-            datestatement = "WHERE (DateStamp >= " startdate + \
-                    " AND DateStamp <= " enddate + ")"
+            datestatement = "WHERE DateStamp BETWEEN \"" startdate + \
+                    "\" AND \"" enddate + "\")"
         else:
             datestatement = "WHERE DateStamp >= " + \
                     "timestamp(date_sub(now(), interval " + \
