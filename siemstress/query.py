@@ -74,12 +74,10 @@ class SiemQuery:
 
         return desc, rows
 
-    def query(self, tables=['default'], columns=[], last=None, daterange=None,
-            sourcehosts=[], processes=[], greps = []):
+    def query(self, tables=['default'], columns=[], last=None,
+            daterange=None, sourcehosts=[], processes=[], greps = []):
         """Query siemstress SQL database for events"""
         
-        rows = []
-
         lastunits = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}
         
         qstatement = []
