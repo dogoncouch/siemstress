@@ -74,8 +74,7 @@ class QueryCore:
                 help = ('this option will be gone soon'))
         self.arg_parser.add_argument('--table',
                 action = 'append', dest = 'table',
-                default = None,
-                help = ('set the table to query'))
+                help = ('set a table to query'))
         self.arg_parser.add_argument('--last',
                 action = 'store', dest = 'last', default = '24h',
                 help = ('match a preceeding time range (5m, 24h, etc)'))
@@ -83,13 +82,13 @@ class QueryCore:
                 action = 'store', dest = 'range',
                 help = ('match a date range'))
         self.arg_parser.add_argument('--shost',
-                action = 'append', dest = 'shost', default = None,
+                action = 'append', dest = 'shost',
                 help = ('match a source host'))
         self.arg_parser.add_argument('--process',
-                action = 'append', dest = 'process', default = None,
+                action = 'append', dest = 'process',
                 help = ('match a source process'))
         self.arg_parser.add_argument('--grep',
-                action = 'append', dest = 'grep', default = None,
+                action = 'append', dest = 'grep',
                 help = ('match a pattern'))
 
         self.args = self.arg_parser.parse_args()
@@ -201,6 +200,7 @@ class QueryCore:
         query = SiemQuery(server = self.server, user = self.user,
                 password = self.password, database = self.database)
 
+        print(self.table)
         desc, rows = query.query(tables = self.table,
                 last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shost, processes = self.args.process,
