@@ -109,20 +109,23 @@ class QueryCore:
                 default = 'default',
                 help = ('set the config section'))
         self.arg_parser.add_argument('--table',
-                action = 'store', dest = 'table',
-                default = None,
+                action = 'store', dest = 'tables',
+                metavar = 'table',
                 help = ('set the table to query'))
         self.arg_parser.add_argument('--last',
                 action = 'store', dest = 'last', default = '24h',
                 help = ("set the preceeding time range (5m, 24h, etc)"))
-        self.arg_parser.add_argument('--shost',
-                action = 'store', dest = 'shost', default = None,
+        self.arg_parser.add_argument('--source',
+                action = 'store', dest = 'shosts',
+                metavar = 'host',
                 help = ("match a source host"))
         self.arg_parser.add_argument('--process',
-                action = 'store', dest = 'process', default = None,
+                action = 'store', dest = 'processes',
+                metavar = 'process'
                 help = ("match a source process"))
         self.arg_parser.add_argument('--grep',
-                action = 'store', dest = 'grep', default = None,
+                action = 'store', dest = 'greps',
+                metavar = 'pattern'
                 help = ("match a pattern"))
 
         self.args = self.arg_parser.parse_args()
@@ -143,9 +146,10 @@ class QueryCore:
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
         if self.args.table:
-            self.table = self.args.table
+            self.tables = self.args.tables
         else:
-            self.table = config.get(self.args.section, 'table')
+            self.tables = []
+            self.tables.append(config.get(self.args.section, 'table'))
         self.queryfields = [int(x) for x in config.get(
             self.args.section, 'queryfields').split(',')]
 
@@ -201,10 +205,11 @@ class QueryCore:
                 password = self.password, database = self.database)
 
         print(self.table)
-        desc, rows = query.query(tables = self.table,
+        desc, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
-                sourcehosts = self.args.shost, processes = self.args.process,
-                greps = self.args.grep)
+                sourcehosts = self.args.shosts,
+                processes = listself.args.processes,
+                greps = self.args.greps)
 
         print "%7s %20s %14s %14s %7s %s" % (
                 desc[self.queryfields[0]][0],
