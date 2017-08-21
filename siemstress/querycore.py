@@ -121,11 +121,11 @@ class QueryCore:
                 help = ("match a source host"))
         self.arg_parser.add_argument('--process',
                 action = 'store', dest = 'processes',
-                metavar = 'process'
+                metavar = 'process',
                 help = ("match a source process"))
         self.arg_parser.add_argument('--grep',
                 action = 'store', dest = 'greps',
-                metavar = 'pattern'
+                metavar = 'pattern',
                 help = ("match a pattern"))
 
         self.args = self.arg_parser.parse_args()
