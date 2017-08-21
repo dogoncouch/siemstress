@@ -44,7 +44,7 @@ class SiemQuery:
 
     def simple_query(self, table='default', last='24h', shost=None,
             process=None, grep=None):
-        """Query SQL database for log events"""
+        """Query siemstress SQL database for events (simplified)"""
 
         qstatement = []
         qstatement.append("SELECT * FROM " + table)
@@ -73,3 +73,50 @@ class SiemQuery:
             desc = cur.description
 
         return desc, rows
+
+    def query(self, tables=['default'], last=None, daterange=None,
+            sourcehosts=[], processes=[], greps = []):
+        """Query siemstress SQL database for events"""
+        
+        rows = []
+
+        lastunits = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}
+        
+        if not daterange and not last:
+            lastunit = 'day'
+            lastnum = '1'
+        elif last:
+            lastunit = last[-1]
+            lastnum = last[:-1]
+
+        for table in tables:
+            qstatement = []
+            qstatement.append("SELECT * FROM " + table)
+            if last:
+                qstatement.append("WHERE DateStamp >= " + \
+                        "timestamp(date_sub(now(), interval " + \
+                        lastnum + " " + lastunit + "))")
+            else:
+                # WHERE statement based on daterange
+                pass
+
+            if sourcehosts:
+                qstatement.append("AND (SourceHost LIKE \"" + \
+                        sourcehosts[0] + "\"")
+                for host in sourcehosts[1:]:
+                    sqlstatement.append("OR SourceHost LIKE \"" + host + "\"")
+                sqlstatement.append(")")
+
+            if processes:
+                sqlstatement.append("AND (Process LIKE \"" + \
+                        processes[0] + "\"")
+                for process in processes[1:]:
+                    qstatement.append("OR Process LIKE \"" + process + "\"")
+                sqlstatement.append(")")
+            
+            if greps:
+                sqlstatement.append("AND (Message LIKE \"%" + \
+                        greps[0] + "%\"")
+                for grep in greps[1:]:
+                    qstatement.append("OR Message LIKE \"%" + grep + "%\"")
+                sqlstatement.append(")")
