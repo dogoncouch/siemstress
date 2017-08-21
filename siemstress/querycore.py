@@ -195,7 +195,7 @@ class QueryCore:
                 sourcehosts = self.args.shosts,
                 sourceports = self.args.sports,
                 desthosts = self.args.dhosts,
-                dports = self.args.dports,
+                destports = self.args.dports,
                 processes = self.args.processes,
                 pids = self.args.pids,
                 protocols = self.args.protocols,
