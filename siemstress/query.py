@@ -124,6 +124,30 @@ class SiemQuery:
             shoststatement += ")"
             qstatement.append(shoststatement)
 
+        if sourcehosts:
+            sportstatement = "AND (SourcePort LIKE \"" + \
+                    sourceports[0] + "\""
+            for port in sourceports[1:]:
+                sportstatement += " OR SourcePort LIKE \"" + port + "\""
+            sportstatement += ")"
+            qstatement.append(sportstatement)
+
+        if desthosts:
+            dhoststatement = "AND (DestHost LIKE \"" + \
+                    desthosts[0] + "\""
+            for host in desthosts[1:]:
+                dhoststatement += " OR DestHost LIKE \"" + host + "\""
+            dhoststatement += ")"
+            qstatement.append(dhoststatement)
+
+        if destports:
+            dportstatement = "AND (DestPort LIKE \"" + \
+                    destports[0] + "\""
+            for port in destports[1:]:
+                dportstatement += " OR DestPort LIKE \"" + port + "\""
+            dportstatement += ")"
+            qstatement.append(dportstatement)
+
         if processes:
             procstatement = "AND (Process LIKE \"" + \
                     processes[0] + "\""
@@ -131,6 +155,22 @@ class SiemQuery:
                 procstatement += " OR Process LIKE \"" + process + "\""
             procstatement += ")"
             qstatement.append(procstatement)
+        
+        if pids:
+            pidstatement = "AND (PID LIKE \"" + \
+                    pids[0] + "\""
+            for pid in pids[1:]:
+                pidstatement += " OR PID LIKE \"" + pid + "\""
+            pidstatement += ")"
+            qstatement.append(pidstatement)
+        
+        if protocols:
+            protstatement = "AND (Protocol LIKE \"" + \
+                    protocols[0] + "\""
+            for protocol in protocols[1:]:
+                protstatement += " OR Protocol LIKE \"" + protocol + "\""
+            protstatement += ")"
+            qstatement.append(protstatement)
         
         if greps:
             grepstatement = "AND (Message LIKE \"%" + \
