@@ -112,6 +112,38 @@ class QueryCore:
                 action = 'append', dest = 'greps',
                 metavar = 'PATTERN',
                 help = ('match a pattern'))
+        self.arg_parser.add_argument('--rshost',
+                action = 'append', dest = 'rshosts',
+                metavar = 'HOST',
+                help = ('filter out a source host'))
+        self.arg_parser.add_argument('--rsport',
+                action = 'append', dest = 'rsports',
+                metavar = 'PORT',
+                help = ('filter out a source port'))
+        self.arg_parser.add_argument('--rdhost',
+                action = 'append', dest = 'rdhosts',
+                metavar = 'HOST',
+                help = ('filter out a destination host'))
+        self.arg_parser.add_argument('--rdport',
+                action = 'append', dest = 'rdports',
+                metavar = 'PORT',
+                help = ('filter out a destination port'))
+        self.arg_parser.add_argument('--rprocess',
+                action = 'append', dest = 'rprocesses',
+                metavar = 'PROCESS',
+                help = ('filter out a source process'))
+        self.arg_parser.add_argument('--rpid',
+                action = 'append', dest = 'rpids',
+                metavar = 'PID',
+                help = ('filter out a source Process ID'))
+        self.arg_parser.add_argument('--rprotocol',
+                action = 'append', dest = 'rprotocols',
+                metavar = 'PROTOCOL',
+                help = ('filter out a protocol'))
+        self.arg_parser.add_argument('--rgrep',
+                action = 'append', dest = 'rgreps',
+                metavar = 'PATTERN',
+                help = ('filter out a pattern'))
 
         self.args = self.arg_parser.parse_args()
 
@@ -199,7 +231,15 @@ class QueryCore:
                 processes = self.args.processes,
                 pids = self.args.pids,
                 protocols = self.args.protocols,
-                greps = self.args.greps)
+                greps = self.args.greps,
+                rsourcehosts = self.args.rshosts,
+                rsourceports = self.args.rsports,
+                rdesthosts = self.args.rdhosts,
+                rdestports = self.args.rdports,
+                rprocesses = self.args.rprocesses,
+                rpids = self.args.rpids,
+                rprotocols = self.args.rprotocols,
+                rgreps = self.args.rgreps)
 
         print "%7s %20s %14s %14s %7s %s" % (
                 desc[self.queryfields[0]][0],
