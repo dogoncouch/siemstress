@@ -93,7 +93,7 @@ class SiemQuery:
                 statement += ", " + column
         else:
             statement = "SELECT *"
-        qstatement.append(selectstatement)
+        qstatement.append(statement)
         
         # From statement (tables)
         statement = "FROM " + tables[0]
