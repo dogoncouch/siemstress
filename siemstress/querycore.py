@@ -202,7 +202,7 @@ class QueryCore:
                 password = self.password, database = self.database)
 
         desc, rows = query.query(tables = self.table,
-                last = self.args.last, daterange = self.args.daterange,
+                last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shost, processes = self.args.process,
                 greps = self.args.grep)
 
