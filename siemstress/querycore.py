@@ -194,7 +194,7 @@ class QueryCore:
                     row[self.queryfields[5]])
 
 
-    def query_siem(self)
+    def query_siem(self):
         """Query SQL database for log events"""
         
 
