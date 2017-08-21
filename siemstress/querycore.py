@@ -73,22 +73,27 @@ class QueryCore:
                 action = 'store_true', dest = 'simple',
                 help = ('this option will be gone soon'))
         self.arg_parser.add_argument('--table',
-                action = 'append', dest = 'table',
+                action = 'append', dest = 'tables',
+                metavar = 'TABLE',
                 help = ('set a table to query'))
         self.arg_parser.add_argument('--last',
                 action = 'store', dest = 'last', default = '24h',
                 help = ('match a preceeding time range (5m, 24h, etc)'))
         self.arg_parser.add_argument('--range',
                 action = 'store', dest = 'range',
-                help = ('match a date range'))
+                metavar = 'START-FINISH',
+                help = ('match a date range (format: YYmmddHHMMSS)'))
         self.arg_parser.add_argument('--shost',
-                action = 'append', dest = 'shost',
+                action = 'append', dest = 'shosts',
+                metavar = 'HOST',
                 help = ('match a source host'))
         self.arg_parser.add_argument('--process',
-                action = 'append', dest = 'process',
+                action = 'append', dest = 'processes',
+                metavar = 'PROCESS',
                 help = ('match a source process'))
         self.arg_parser.add_argument('--grep',
-                action = 'append', dest = 'grep',
+                action = 'append', dest = 'greps',
+                metavar = 'PATTERN',
                 help = ('match a pattern'))
 
         self.args = self.arg_parser.parse_args()
