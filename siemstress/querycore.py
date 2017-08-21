@@ -69,6 +69,46 @@ class QueryCore:
                 action = 'store', dest = 'section',
                 default = 'default',
                 help = ('set the config section'))
+        self.arg_parser.add_argument('--simple',
+                action = 'store_true', dest = 'simple',
+                help = ('this option will be gone soon'))
+        self.arg_parser.add_argument('--table',
+                action = 'append', dest = 'table',
+                default = None,
+                help = ('set the table to query'))
+        self.arg_parser.add_argument('--last',
+                action = 'store', dest = 'last', default = '24h',
+                help = ('match a preceeding time range (5m, 24h, etc)'))
+        self.arg_parser.add_argument('--range',
+                action = 'store', dest = 'range',
+                help = ('match a date range'))
+        self.arg_parser.add_argument('--shost',
+                action = 'append', dest = 'shost', default = None,
+                help = ('match a source host'))
+        self.arg_parser.add_argument('--process',
+                action = 'append', dest = 'process', default = None,
+                help = ('match a source process'))
+        self.arg_parser.add_argument('--grep',
+                action = 'append', dest = 'grep', default = None,
+                help = ('match a pattern'))
+
+        self.args = self.arg_parser.parse_args()
+
+
+
+    def old_get_args(self):
+        """Set argument options"""
+
+        self.arg_parser.add_argument('--version', action = 'version',
+                version = '%(prog)s ' + str(__version__))
+        self.arg_parser.add_argument('-c',
+                action = 'store', dest = 'config',
+                default = '/etc/siemstress/siemstress.conf',
+                help = ('set the config file'))
+        self.arg_parser.add_argument('-s',
+                action = 'store', dest = 'section',
+                default = 'default',
+                help = ('set the config section'))
         self.arg_parser.add_argument('--table',
                 action = 'store', dest = 'table',
                 default = None,
@@ -125,8 +165,8 @@ class QueryCore:
 
 
 
-    def query_siem(self):
-        """Query SQL database for log events"""
+    def simple_query_siem(self):
+        """Query SQL database for log events (simplified)"""
         
 
         query = SiemQuery(server = self.server, user = self.user,
@@ -154,12 +194,43 @@ class QueryCore:
                     row[self.queryfields[5]])
 
 
+    def query_siem(self)
+        """Query SQL database for log events"""
+        
+
+        query = SiemQuery(server = self.server, user = self.user,
+                password = self.password, database = self.database)
+
+        desc, rows = query.query(tables = self.table,
+                last = self.args.last, daterange = self.args.daterange,
+                sourcehosts = self.args.shost, processes = self.args.process,
+                greps = self.args.grep)
+
+        print "%7s %20s %14s %14s %7s %s" % (
+                desc[self.queryfields[0]][0],
+                desc[self.queryfields[1]][0],
+                desc[self.queryfields[2]][0],
+                desc[self.queryfields[3]][0],
+                desc[self.queryfields[4]][0],
+                desc[self.queryfields[5]][0])
+
+        for row in rows:
+            print "%7s %20s %14s %14s %7s %s" % (
+                    row[self.queryfields[0]],
+                    row[self.queryfields[1]],
+                    row[self.queryfields[2]],
+                    row[self.queryfields[3]],
+                    row[self.queryfields[4]],
+                    row[self.queryfields[5]])
+
+
 
     def run_query(self):
         try:
             self.get_args()
             self.get_config()
-            self.query_siem()
+            if self.args.simple: self.simple_query_siem()
+            else: self.query_siem()
 
         except KeyboardInterrupt:
             pass
