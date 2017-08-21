@@ -61,20 +61,20 @@ class SiemQuery:
         if process: qstatement.append("AND Process LIKE \"" + process + "\"")
         if grep: qstatement.append("AND Message LIKE \"%" + grep + "%\"")
 
-        sqlstatement = " ".join(qstatement)
+        qstatement = " ".join(qstatement)
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
 
         with con:
             cur = con.cursor()
-            cur.execute(sqlstatement)
+            cur.execute(qstatement)
 
             rows = cur.fetchall()
             desc = cur.description
 
         return desc, rows
 
-    def query(self, tables=['default'], last=None, daterange=None,
+    def query(self, tables=['default'], columns=[], last=None, daterange=None,
             sourcehosts=[], processes=[], greps = []):
         """Query siemstress SQL database for events"""
         
@@ -82,41 +82,81 @@ class SiemQuery:
 
         lastunits = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}
         
-        if not daterange and not last:
-            lastunit = 'day'
-            lastnum = '1'
-        elif last:
-            lastunit = last[-1]
+        qstatement = []
+
+        # Select statement
+        if columns:
+            selectstatement = "SELECT" + columns[0]
+            for column in columns[1:]:
+                selectstatement += ", " + column
+            selectstatement += 
+        else:
+            selectstatement = "SELECT *"
+        qstatement.append(selectstatement)
+            
+        tablestatement = "FROM " + tables[0]
+        for table in tables[1:]:
+            selectstatement += ", " + table
+        qstatement.append(tablestatement)
+
+        # Date range
+        if last:
+            lastunit = lastunits[last[-1]]
             lastnum = last[:-1]
 
-        for table in tables:
-            qstatement = []
-            qstatement.append("SELECT * FROM " + table)
-            if last:
-                qstatement.append("WHERE DateStamp >= " + \
-                        "timestamp(date_sub(now(), interval " + \
-                        lastnum + " " + lastunit + "))")
+            datestatement = "WHERE DateStamp >= " + \
+                    "timestamp(date_sub(now(), interval " + \
+                    lastnum + " " + lastunit + "))"
+        elif daterange:
+            startdate, enddate = daterange.split('-')
+            datestatement = "WHERE (DateStamp >= " startdate + \
+                    " AND DateStamp <= " enddate + ")"
+        else:
+            datestatement = "WHERE DateStamp >= " + \
+                    "timestamp(date_sub(now(), interval " + \
+                    "1 day))"
+        qstatement.append(datestatement)
+
+        # Attributes
+        if sourcehosts:
+            shoststatement = "AND (SourceHost LIKE \"" + \
+                    sourcehosts[0] + "\""
+            for host in sourcehosts[1:]:
+                shoststatement += " OR SourceHost LIKE \"" + host + "\""
+            shoststatement += ")"
+            qstatement.append(shoststatement)
+
+        if processes:
+            procstatement = "AND (Process LIKE \"" + \
+                    processes[0] + "\""
+            for process in processes[1:]:
+                procstatement += " OR Process LIKE \"" + process + "\""
+            procstatement += ")"
+            qstatement.append(procstatement)
+        
+        if greps:
+            grepstatement = "AND (Message LIKE \"%" + \
+                    greps[0] + "%\""
+            for grep in greps[1:]:
+                grepstatement += " OR Message LIKE \"%" + grep + "%\""
+            grepstatement += ")"
+            qstatement.append(grepstatement)
+
+        qstatement = " ".join(qstatement)
+
+        # Connect and execute
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+
+        with con:
+            cur = con.cursor()
+            cur.execute(qstatement)
+
+            rows = cur.fetchall()
+            if columns:
+                desc = columns
             else:
-                # WHERE statement based on daterange
-                pass
+                desc = cur.description
 
-            if sourcehosts:
-                qstatement.append("AND (SourceHost LIKE \"" + \
-                        sourcehosts[0] + "\"")
-                for host in sourcehosts[1:]:
-                    sqlstatement.append("OR SourceHost LIKE \"" + host + "\"")
-                sqlstatement.append(")")
-
-            if processes:
-                sqlstatement.append("AND (Process LIKE \"" + \
-                        processes[0] + "\"")
-                for process in processes[1:]:
-                    qstatement.append("OR Process LIKE \"" + process + "\"")
-                sqlstatement.append(")")
+        return desc, rows
             
-            if greps:
-                sqlstatement.append("AND (Message LIKE \"%" + \
-                        greps[0] + "%\"")
-                for grep in greps[1:]:
-                    qstatement.append("OR Message LIKE \"%" + grep + "%\"")
-                sqlstatement.append(")")
