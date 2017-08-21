@@ -100,7 +100,7 @@ class SiemQuery:
         if daterange:
             startdate, enddate = daterange.split('-')
             datestatement = "WHERE DateStamp BETWEEN \"" + startdate + \
-                    "\" AND \"" + enddate + "\")"
+                    "\" AND \"" + enddate + "\""
         elif last:
             lastunit = lastunits[last[-1]]
             lastnum = last[:-1]
