@@ -68,7 +68,8 @@ class SiemTrigger:
         #with mdb.connect(self.server, self.user, self.password,
         #        self.database) as con:
         with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
+            #cur = con.cursor(mdb.cursors.DictCursor)
+            cur = con.cursor()
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.rule['outtable'] + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
