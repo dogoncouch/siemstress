@@ -101,6 +101,7 @@ class SiemTriggerCore:
                     rule['limit'] = config.get(s, 'limit')
                     rule['outtable'] = config.get(s, 'outtable')
                     rule['message'] = config.get(s, 'message')
+                    print('rule: ' + rule)
                     self.rules[s] = rule
 
 
