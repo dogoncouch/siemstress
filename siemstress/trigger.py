@@ -25,9 +25,9 @@
 import time
 from time import strftime
 from time import sleep
-import time.daylight
-import time.timezone
-import time.altzonze
+from time import daylight
+from time import timezone
+from time import altzonze
 from random import randrange
 from datetime import datetime
 import MySQLdb as mdb
@@ -49,16 +49,16 @@ class SiemTrigger:
         """Enforce a trigger rule"""
 
         # Set time zone:
-        if time.daylight:
+        if daylight:
             tzone = \
-                    str(int(float(time.altzone) / 60 // 60)).rjust(2,
+                    str(int(float(altzone) / 60 // 60)).rjust(2,
                             '0') + \
-                    str(int(float(time.altzone) / 60 % 60)).ljust(2, '0')
+                    str(int(float(altzone) / 60 % 60)).ljust(2, '0')
         else:
             tzone = \
-                    str(int(float(time.timezone) / 60 // 60)).rjust(2,
+                    str(int(float(timezone) / 60 // 60)).rjust(2,
                             '0') + \
-                    str(int(float(time.timezone) / 60 % 60)).ljust(2, '0')
+                    str(int(float(timezone) / 60 % 60)).ljust(2, '0')
         if not '-' in tzone:
             tzone = '+' + tzone
 
