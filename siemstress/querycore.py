@@ -223,8 +223,6 @@ class QueryCore:
         query = SiemQuery(server = self.server, user = self.user,
                 password = self.password, database = self.database)
 
-        print(self.tables)
-        
         qstatement, desc, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shosts,
@@ -245,7 +243,7 @@ class QueryCore:
                 rgreps = self.args.rgreps)
 
 
-        if self.args.verbose: print(qstatement)
+        if self.args.verbose: print("SQL:\n" + qstatement)
 
         print("%7s %20s %14s %14s %7s %s" % (
                 desc[self.queryfields[0]][0],

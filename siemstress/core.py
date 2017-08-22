@@ -180,6 +180,7 @@ class LiveParser:
                     'Message NVARCHAR(2000))')
 
 
+            # To Do: try taking while loop out of "with con:"
             while True:
 
                 line = sys.stdin.readline()
