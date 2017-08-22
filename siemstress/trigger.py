@@ -69,6 +69,7 @@ class SiemTrigger:
         #        self.database) as con:
         with con:
             cur = con.cursor()
+            print(self.rule['outtable'])
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.rule['outtable'] + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
@@ -126,6 +127,7 @@ def start_rule(rserver, ruser, rpassword, rdatabase, rrule={}):
             password = rpassword, database = rdatabase, rule = rrule)
 
     # Sleep randomly up to rule interval:
-    sleep(randrange(0, int(rrule['interval']) * 60))
+    # To Do: re-enable after debugging
+    #sleep(randrange(0, int(rrule['interval']) * 60))
 
     sentry.watch_rule()
