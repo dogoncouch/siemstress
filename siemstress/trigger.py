@@ -113,8 +113,9 @@ class SiemTrigger:
 
                     cur.execute(outstatement, (datestamp, tzone,
                         self.rule['name'], self.rule['sourcetable'],
-                        self.rule['interval'], self.rule['limit'],
-                        len(rows), self.rule['message'], idtags))
+                        self.rule['limit'], len(rows),
+                        self.rule['interval'], self.rule['message'],
+                        idtags))
 
             # Wait until the next interval
             sleep(int(self.rule['interval']) * 60)
