@@ -4,7 +4,7 @@ siemquery - A CLI query tool for siemstress
 
 .SH SYNOPSIS
 
-\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB--table \fITABLE\fR] [\fB--last \fILAST\fR] [\fB--shost \fIHOST\fR] [\fB--sport \fIPORT\fR] [\fB--dhost \fIHOST\fR] [\fB--dport \fIPORT\fR] [\fB--process \fIPROCESS\fR] [\fB--protocol \fIPROTOCOL\fR] [\fB--pid \fIPID\fR] [\fB--grep \fIPATTERN\fR] [\fB--rshost \fIHOST\fR] [\fB--rsport \fIPORT\fR] [\fB--rdhost \fIHOST\fR] [\fB--rdport \fIPORT\fR] [\fB--rprocess \fIPROCESS\fR] [\fB--rpid \fIPID\fR] [\fB--rprotocol \fIPROTOCOL\fR] [\fB--rgrep \fIPATTERN\fR] 
+\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB--verbose\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB--table \fITABLE\fR] [\fB--last \fILAST\fR] [\fB--shost \fIHOST\fR] [\fB--sport \fIPORT\fR] [\fB--dhost \fIHOST\fR] [\fB--dport \fIPORT\fR] [\fB--process \fIPROCESS\fR] [\fB--protocol \fIPROTOCOL\fR] [\fB--pid \fIPID\fR] [\fB--grep \fIPATTERN\fR] [\fB--rshost \fIHOST\fR] [\fB--rsport \fIPORT\fR] [\fB--rdhost \fIHOST\fR] [\fB--rdport \fIPORT\fR] [\fB--rprocess \fIPROCESS\fR] [\fB--rpid \fIPID\fR] [\fB--rprotocol \fIPROTOCOL\fR] [\fB--rgrep \fIPATTERN\fR] 
 
 .SH DESCRIPTION
 \fBsiemquery\fR is a CLI tool to query a siemstress database.
@@ -16,6 +16,7 @@ siemquery - A CLI query tool for siemstress
   optional arguments:
     -h, --help            show this help message and exit
     --version             show program's version number and exit
+    --verbose             print SQL queries
     -c CONFIG             set the config file
     -s SECTION            set the config section
     --table TABLE         set a table to query

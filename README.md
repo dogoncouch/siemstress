@@ -48,17 +48,19 @@ optional arguments:
 
 ```
 
-usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--table TABLE]
-                 [--last LAST] [--range START-FINISH] [--shost HOST]
-                 [--sport PORT] [--dhost HOST] [--dport PORT]
-                 [--process PROCESS] [--pid PID] [--protocol PROTOCOL]
-                 [--grep PATTERN] [--rshost HOST] [--rsport PORT]
-                 [--rdhost HOST] [--rdport PORT] [--rprocess PROCESS]
-                 [--rpid PID] [--rprotocol PROTOCOL] [--rgrep PATTERN]
+usage: siemquery.py [-h] [--version] [--verbose] [-c CONFIG] [-s SECTION]
+                    [--table TABLE] [--last LAST] [--range START-FINISH]
+                    [--shost HOST] [--sport PORT] [--dhost HOST]
+                    [--dport PORT] [--process PROCESS] [--pid PID]
+                    [--protocol PROTOCOL] [--grep PATTERN] [--rshost HOST]
+                    [--rsport PORT] [--rdhost HOST] [--rdport PORT]
+                    [--rprocess PROCESS] [--rpid PID] [--rprotocol PROTOCOL]
+                    [--rgrep PATTERN]
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
+  --verbose             print SQL queries
   -c CONFIG             set the config file
   -s SECTION            set the config section
   --table TABLE         set a table to query
