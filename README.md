@@ -48,14 +48,14 @@ optional arguments:
 
 ```
 
-usage: siemquery.py [-h] [--version] [--verbose] [-c CONFIG] [-s SECTION]
-                    [--table TABLE] [--last LAST] [--range START-FINISH]
-                    [--shost HOST] [--sport PORT] [--dhost HOST]
-                    [--dport PORT] [--process PROCESS] [--pid PID]
-                    [--protocol PROTOCOL] [--grep PATTERN] [--rshost HOST]
-                    [--rsport PORT] [--rdhost HOST] [--rdport PORT]
-                    [--rprocess PROCESS] [--rpid PID] [--rprotocol PROTOCOL]
-                    [--rgrep PATTERN]
+usage: siemquery [-h] [--version] [--verbose] [-c CONFIG] [-s SECTION]
+                 [--table TABLE] [--last LAST] [--range START-FINISH]
+                 [--shost HOST] [--sport PORT] [--dhost HOST]
+                 [--dport PORT] [--process PROCESS] [--pid PID]
+                 [--protocol PROTOCOL] [--grep PATTERN] [--rshost HOST]
+                 [--rsport PORT] [--rdhost HOST] [--rdport PORT]
+                 [--rprocess PROCESS] [--rpid PID] [--rprotocol PROTOCOL]
+                 [--rgrep PATTERN]
 
 optional arguments:
   -h, --help            show this help message and exit
