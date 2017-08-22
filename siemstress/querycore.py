@@ -225,7 +225,7 @@ class QueryCore:
 
         print(self.tables)
         
-        qstatement, desc, rows = query.query(tables = self.tables,
+        qstatement, desc, rows = query.query(tables = self.args.tables,
                 last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shosts,
                 sourceports = self.args.sports,
