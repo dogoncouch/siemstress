@@ -61,6 +61,9 @@ class QueryCore:
 
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
+        self.arg_parser.add_argument('--verbose',
+                action = 'store_true', dest = 'verbose',
+                help = ('print SQL queries'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -196,22 +199,22 @@ class QueryCore:
                 last = self.args.last, shost = self.args.shost,
                 process = self.args.process, grep = self.args.grep)
 
-        print "%7s %20s %14s %14s %7s %s" % (
+        print("%7s %20s %14s %14s %7s %s" % (
                 desc[self.queryfields[0]][0],
                 desc[self.queryfields[1]][0],
                 desc[self.queryfields[2]][0],
                 desc[self.queryfields[3]][0],
                 desc[self.queryfields[4]][0],
-                desc[self.queryfields[5]][0])
+                desc[self.queryfields[5]][0]))
 
         for row in rows:
-            print "%7s %20s %14s %14s %7s %s" % (
+            print("%7s %20s %14s %14s %7s %s" % (
                     row[self.queryfields[0]],
                     row[self.queryfields[1]],
                     row[self.queryfields[2]],
                     row[self.queryfields[3]],
                     row[self.queryfields[4]],
-                    row[self.queryfields[5]])
+                    row[self.queryfields[5]]))
 
 
     def query_siem(self):
@@ -221,8 +224,7 @@ class QueryCore:
         query = SiemQuery(server = self.server, user = self.user,
                 password = self.password, database = self.database)
 
-        print(self.table)
-        desc, rows = query.query(tables = self.tables,
+        qstatement, desc, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shosts,
                 sourceports = self.args.sports,
@@ -241,22 +243,25 @@ class QueryCore:
                 rprotocols = self.args.rprotocols,
                 rgreps = self.args.rgreps)
 
-        print "%7s %20s %14s %14s %7s %s" % (
+
+        if self.args.verbose: print(qstatement)
+
+        print("%7s %20s %14s %14s %7s %s" % (
                 desc[self.queryfields[0]][0],
                 desc[self.queryfields[1]][0],
                 desc[self.queryfields[2]][0],
                 desc[self.queryfields[3]][0],
                 desc[self.queryfields[4]][0],
-                desc[self.queryfields[5]][0])
+                desc[self.queryfields[5]][0]))
 
         for row in rows:
-            print "%7s %20s %14s %14s %7s %s" % (
+            print("%7s %20s %14s %14s %7s %s" % (
                     row[self.queryfields[0]],
                     row[self.queryfields[1]],
                     row[self.queryfields[2]],
                     row[self.queryfields[3]],
                     row[self.queryfields[4]],
-                    row[self.queryfields[5]])
+                    row[self.queryfields[5]]))
 
 
 

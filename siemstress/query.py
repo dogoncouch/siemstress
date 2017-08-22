@@ -74,9 +74,10 @@ class SiemQuery:
 
         return desc, rows
 
-    def query(self, tables=['default'], columns=[], last=None,
-            daterange=None, sourcehosts=[], sourceports=[], desthosts=[],
-            destports=[], processes=[], pids=[], protocols=[], greps = [],
+    def query(tables=['default'], columns=[],
+            last=None, daterange=None, sourcehosts=[], sourceports=[],
+            desthosts=[], destports=[], processes=[],
+            pids=[], protocols=[], greps = [],
             rsourcehosts=[], rsourceports=[], rdesthosts=[],
             rdestports=[], rprocesses=[], rpids=[], rprotocols=[],
             rgreps=[]):
@@ -266,5 +267,4 @@ class SiemQuery:
             else:
                 desc = cur.description
 
-        return desc, rows
-            
+        return qstatement, desc, rows
