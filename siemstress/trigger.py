@@ -84,7 +84,7 @@ class SiemTrigger:
         outstatement = 'INSERT INTO ' + \
                 self.rule['outtable'] + \
                 ' (DateStamp, TZone, ' + \
-                'SourceRule, SourceTable, Limit, Count, TimeInt, ' + \
+                'SourceRule, SourceTable, EventLimit, EventCount, TimeInt, ' + \
                 'Message, SourceIDs) ' + \
                 'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
