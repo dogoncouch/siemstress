@@ -62,9 +62,10 @@ class SiemTrigger:
             tzone = '+' + tzone
 
         # Create table if it doesn't exist:
-        con = mdb.connect(self.server, self.user, self.password,
+        #con = mdb.connect(self.server, self.user, self.password,
                 self.database)
-        with con:
+        with mdb.connect(self.server, self.user, self.password,
+                self.database) as con:
             cur = con.cursor()
             cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['outtable'] + \
                     '(Id INT PRIMARY_KEY AUTO_INCREMENT, ' + \
@@ -92,13 +93,14 @@ class SiemTrigger:
             # Evaluate the results:
             if len(rows) > self.rule['limit']:
                 idtags = str([row[0] for row in rows])
-                outcon = mdb.connect(self.server, self.user,
+                #outcon = mdb.connect(self.server, self.user,
                         self.password, self.database)
 
                 datestamp = datetime.now().strftime('%y%m%d%H%M%S')
 
                 # Send an event to the database:
-                with con:
+                with mdb.connect(self.server, self.user, self.password,
+                        self.database) as outcon:
                     cur = con.cursor()
 
                     cur.execute(outstatement, (datestamp, tzone,
