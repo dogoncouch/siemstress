@@ -42,6 +42,7 @@ class SiemTriggerCore:
         self.user = None
         self.password = None
         self.database = None
+        self.rules = {}
 
 
 
