@@ -28,6 +28,7 @@ from time import sleep
 import time.daylight
 import time.timezone
 import time.altzonze
+from random import randrange
 from datetime import datetime
 import MySQLdb as mdb
 
@@ -116,4 +117,8 @@ def start_rule(rserver, ruser, rpassword, rdatabase, rrule={}):
 
     sentry = SiemTrigger(server = rserver, user = ruser,
             password = rpassword, database = rdatabase, rule = rrule)
+
+    # Sleep randomly up to rule interval:
+    sleep(randrange(0, int(rrule['interval'] * 60)
+
     sentry.watch_rule()
