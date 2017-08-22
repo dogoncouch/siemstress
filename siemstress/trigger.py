@@ -27,7 +27,7 @@ from time import strftime
 from time import sleep
 from time import daylight
 from time import timezone
-from time import altzonze
+from time import altzone
 from random import randrange
 from datetime import datetime
 import MySQLdb as mdb
