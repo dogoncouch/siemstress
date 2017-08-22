@@ -85,7 +85,7 @@ class SiemTriggerCore:
                     '/' + confdir
 
         for conffile in os.listdir(self.confdir):
-            if conffile.endswith('.conf')
+            if conffile.endswith('.conf'):
                 conflet = config.read(self.confdir + conffile)
                 
                 # Each section is a rule.
