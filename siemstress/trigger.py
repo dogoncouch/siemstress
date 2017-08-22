@@ -124,7 +124,7 @@ def start_rule(rserver, ruser, rpassword, rdatabase, rrule={}):
             password = rpassword, database = rdatabase, rule = rrule)
 
     # Sleep randomly up to rule interval:
-    print(rrule)
+    for r in rrule: print(r)
     sleep(randrange(0, int(rrule['interval']) * 60))
 
     sentry.watch_rule()
