@@ -111,7 +111,7 @@ class SiemTriggerCore:
         # Start one thread per rule:
         threads = {}
         for r in self.rules:
-            thread = threading.Thread(name=r['name'],
+            thread = threading.Thread(name=r,
                     target=siemstress.trigger.start_rule)
             thread.start(self.server, self.user, self.password,
                     self.database, r)
