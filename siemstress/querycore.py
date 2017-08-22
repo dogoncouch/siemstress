@@ -169,7 +169,7 @@ class QueryCore:
             self.tables = self.args.tables
         else:
             self.tables.append(config.get(self.args.section, 'table'))
-        self.queryfields = [int(x) for x in config.get(
+        self.queryfields = [x for x in config.get(
             self.args.section, 'queryfields').split(',')]
 
 

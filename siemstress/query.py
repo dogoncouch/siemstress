@@ -258,7 +258,7 @@ class SiemQuery:
                 self.database)
 
         with con:
-            cur = con.cursor()
+            cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute(qstatement)
 
             rows = cur.fetchall()
