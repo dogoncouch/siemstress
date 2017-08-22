@@ -246,12 +246,12 @@ class QueryCore:
         if self.args.verbose: print("SQL:\n" + qstatement)
 
         print("%7s %20s %18s %14s %12s %s" % (
-                desc[self.queryfields[0]],
-                desc[self.queryfields[1]],
-                desc[self.queryfields[2]],
-                desc[self.queryfields[3]],
-                desc[self.queryfields[4]],
-                desc[self.queryfields[5]]))
+                self.queryfields[0],
+                self.queryfields[1],
+                self.queryfields[2],
+                self.queryfields[3],
+                self.queryfields[4],
+                self.queryfields[5]))
 
         #print("%7s %20s %18s %14s %12s %s" % (
         #        desc[self.queryfields[0]][0],
