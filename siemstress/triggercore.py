@@ -113,6 +113,7 @@ class SiemTriggerCore:
         # Start one thread per rule:
         threads = {}
         for r in self.rules:
+            print('rule to start:'
             print(r)
             thread = threading.Thread(name=r,
                     target=siemstress.trigger.start_rule,
