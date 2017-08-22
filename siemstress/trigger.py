@@ -109,7 +109,7 @@ class SiemTrigger:
                     cur = con.cursor()
 
                     cur.execute(outstatement, (datestamp, tzone,
-                        self.rule['name'], self.rule['sourcetable',
+                        self.rule['name'], self.rule['sourcetable'],
                         self.rule['interval'], len(rows),
                         self.rule['count'], 
                         self.rule['message'], idtags))
