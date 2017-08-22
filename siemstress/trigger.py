@@ -103,7 +103,7 @@ class SiemTrigger:
                 outcon = mdb.connect(self.server, self.user,
                         self.password, self.database)
 
-                datestamp = datetime.now().strftime('%y%m%d%H%M%S')
+                datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
                 # Send an event to the database:
                 #with mdb.connect(self.server, self.user, self.password,
