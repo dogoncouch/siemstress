@@ -70,7 +70,7 @@ class SiemTrigger:
         with con:
             cur = con.cursor()
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.rule['outtable'] + \
-                    ' (Id INT PRIMARY_KEY AUTO_INCREMENT, ' + \
+                    '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
                     'TZone NVARCHAR(5), ' + \
                     'SourceRule NVARCHAR(25), ' + \
