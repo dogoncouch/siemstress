@@ -93,7 +93,6 @@ class SiemTriggerCore:
                 # Each section is a rule.
                 self.rules = {}
                 for s in config.sections():
-                    print('section: ' + s)
                     rule = {}
                     rule['name'] = s
                     rule['sqlquery'] = config.get(s, 'sqlquery')
@@ -102,7 +101,6 @@ class SiemTriggerCore:
                     rule['limit'] = config.get(s, 'limit')
                     rule['outtable'] = config.get(s, 'outtable')
                     rule['message'] = config.get(s, 'message')
-                    print(rule)
                     self.rules[rule['name']] = rule
 
 
@@ -113,8 +111,6 @@ class SiemTriggerCore:
         # Start one thread per rule:
         threads = {}
         for r in self.rules:
-            print('rule to start:')
-            print(r)
             thread = threading.Thread(name=r,
                     target=siemstress.trigger.start_rule,
                     args=(self.server, self.user, self.password,
