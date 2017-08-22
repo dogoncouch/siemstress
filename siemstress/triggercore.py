@@ -86,11 +86,12 @@ class SiemTriggerCore:
 
         for conffile in os.listdir(self.confdir):
             if conffile.endswith('.conf'):
-                conflet = config.read(self.confdir + conffile)
+                config.read(self.confdir + conffile)
                 
                 # Each section is a rule.
                 self.rules = {}
-                for s in conflet.sections():
+                for s in config.sections():
+                    print(s)
                     rule = {}
                     rule['name'] = s
                     rule['sqlquery'] = config.get(s, 'sqlquery')
