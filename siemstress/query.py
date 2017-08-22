@@ -74,7 +74,7 @@ class SiemQuery:
 
         return desc, rows
 
-    def query(tables=['default'], columns=[],
+    def query(tables=[], columns=[],
             last=None, daterange=None, sourcehosts=[], sourceports=[],
             desthosts=[], destports=[], processes=[],
             pids=[], protocols=[], greps = [],
