@@ -86,7 +86,7 @@ class LiveParser:
 
         config = ConfigParser.ConfigParser()
         if os.path.isfile(self.args.config):
-            myconf = (config)
+            myconf = self.args.config
         else: myconf = 'config/siemstress.conf'
         config.read(myconf)
 
