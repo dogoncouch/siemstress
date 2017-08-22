@@ -224,6 +224,7 @@ class QueryCore:
         query = SiemQuery(server = self.server, user = self.user,
                 password = self.password, database = self.database)
 
+        print(self.tables)
         qstatement, desc, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
                 sourcehosts = self.args.shosts,
