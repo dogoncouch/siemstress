@@ -64,7 +64,7 @@ class SiemTrigger:
 
         # Create table if it doesn't exist:
         #con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        #        self.database)
         with mdb.connect(self.server, self.user, self.password,
                 self.database) as con:
             cur = con.cursor()
@@ -99,7 +99,7 @@ class SiemTrigger:
             if len(rows) > self.rule['limit']:
                 idtags = str([row[0] for row in rows])
                 #outcon = mdb.connect(self.server, self.user,
-                        self.password, self.database)
+                #        self.password, self.database)
 
                 datestamp = datetime.now().strftime('%y%m%d%H%M%S')
 
