@@ -98,7 +98,7 @@ class SiemTrigger:
                 rows = cur.fetchall
         
             # Evaluate the results:
-            if len(rows) > self.rule['limit']:
+            if len(list(rows)) > int(self.rule['limit']):
                 idtags = str([row[0] for row in rows])
                 outcon = mdb.connect(self.server, self.user,
                         self.password, self.database)
