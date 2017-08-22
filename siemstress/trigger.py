@@ -76,14 +76,14 @@ class SiemTrigger:
                     'SourceRule NVARCHAR(25), ' + \
                     'SourceTable NVARCHAR(25), ' + \
                     'Limit INT, Count INT, ' + \
-                    'Interval INT, '
+                    'TimeInt INT, '
                     'Message NVARCHAR(1000), ' + \
                     'SourceIDs NVARCHAR(2000))')
 
         outstatement = 'INSERT INTO ' + \
                 self.rule['outtable'] + \
                 ' (DateStamp, TZone, ' + \
-                'SourceRule, SourceTable, Limit, Count, Interval, ' + \
+                'SourceRule, SourceTable, Limit, Count, TimeInt, ' + \
                 'Message, SourceIDs) ' + \
                 'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
