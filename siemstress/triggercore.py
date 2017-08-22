@@ -101,9 +101,6 @@ class SiemTriggerCore:
                     rule['limit'] = config.get(s, 'limit')
                     rule['outtable'] = config.get(s, 'outtable')
                     rule['message'] = config.get(s, 'message')
-                    idtags = config.get(s, 'idtags')
-                    if idtags == 'On': rule['idtags'] = True
-                    else: rule['idtags'] = False
                     self.rules[s] = rule
 
 
