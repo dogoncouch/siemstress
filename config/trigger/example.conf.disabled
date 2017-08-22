@@ -1,10 +1,10 @@
 # Example siemtrigger rules
 
-[auth_failure_10m]
+[auth_fail_10m]
 sqlquery=SELECT Id FROM Auth WHERE DateStamp >= timestamp(date_sub(now(), interval 10 minute)) AND (Message LIKE "%fail%")
 sourcetable=Auth
 interval=10
 limit=7
 outtable=UserAuth
-message=Over 7 authentication failures in 10 minutes
+message=Over 7 auth failure events in 10 minutes
 
