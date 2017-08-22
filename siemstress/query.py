@@ -55,7 +55,7 @@ class SiemQuery:
         else: timeint = 'hour'
 
         qstatement.append("WHERE DateStamp >= timestamp(date_sub(now(), " + \
-                "interval " + str(int(last[:-1])) + " " + timeint + ")")
+                "interval " + str(int(last[:-1])) + " " + timeint + "))")
         
         if shost: qstatement.append("AND SourceHost LIKE \"" + shost + "\"")
         if process: qstatement.append("AND Process LIKE \"" + process + "\"")
