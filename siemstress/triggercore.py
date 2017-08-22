@@ -86,6 +86,7 @@ class SiemTriggerCore:
 
         for conffile in os.listdir(self.confdir):
             if conffile.endswith('.conf'):
+                config = ConfigParser.ConfigParser()
                 config.read(self.confdir + conffile)
                 
                 # Each section is a rule.
