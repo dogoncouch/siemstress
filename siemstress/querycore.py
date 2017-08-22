@@ -198,22 +198,22 @@ class QueryCore:
                 last = self.args.last, shost = self.args.shost,
                 process = self.args.process, grep = self.args.grep)
 
-        print("%7s %20s %14s %14s %7s %s" % (
+        print "%7s %20s %14s %14s %7s %s" % (
                 desc[self.queryfields[0]][0],
                 desc[self.queryfields[1]][0],
                 desc[self.queryfields[2]][0],
                 desc[self.queryfields[3]][0],
                 desc[self.queryfields[4]][0],
-                desc[self.queryfields[5]][0]))
+                desc[self.queryfields[5]][0])
 
         for row in rows:
-            print("%7s %20s %14s %14s %7s %s" % (
+            print "%7s %20s %14s %14s %7s %s" % (
                     row[self.queryfields[0]],
                     row[self.queryfields[1]],
                     row[self.queryfields[2]],
                     row[self.queryfields[3]],
                     row[self.queryfields[4]],
-                    row[self.queryfields[5]]))
+                    row[self.queryfields[5]])
 
 
     def query_siem(self):
