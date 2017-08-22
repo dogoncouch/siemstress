@@ -92,7 +92,7 @@ class SiemTriggerCore:
                 # Each section is a rule.
                 self.rules = {}
                 for s in config.sections():
-                    print(s)
+                    print('section: ' + s)
                     rule = {}
                     rule['name'] = s
                     rule['sqlquery'] = config.get(s, 'sqlquery')
