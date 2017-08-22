@@ -76,7 +76,7 @@ class SiemTrigger:
                     'TZone NVARCHAR(5), ' + \
                     'SourceRule NVARCHAR(25), ' + \
                     'SourceTable NVARCHAR(25), ' + \
-                    'Limit INT, Count INT, ' + \
+                    'EventLimit INT, EventCount INT, ' + \
                     'TimeInt INT, '
                     'Message NVARCHAR(1000), ' + \
                     'SourceIDs NVARCHAR(2000))')
