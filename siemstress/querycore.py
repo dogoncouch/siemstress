@@ -51,7 +51,7 @@ class QueryCore:
         self.user = None
         self.password = None
         self.database = None
-        self.table = None
+        self.tables = []
         self.queryfields = None
 
 
@@ -168,7 +168,6 @@ class QueryCore:
         if self.args.tables:
             self.tables = self.args.tables
         else:
-            self.tables = []
             self.tables.append(config.get(self.args.section, 'table'))
         self.queryfields = [int(x) for x in config.get(
             self.args.section, 'queryfields').split(',')]
