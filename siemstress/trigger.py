@@ -70,16 +70,17 @@ class SiemTrigger:
             cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['outtable'] + \
                     '(Id INT PRIMARY_KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
-                    'TZone NVARCHAR(5) ' + \
-                    'SourceRule NVARCHAR(25) ' + \
-                    'Message NVARCHAR(1000) ' + \
+                    'TZone NVARCHAR(5), ' + \
+                    'SourceRule NVARCHAR(25), ' + \
+                    'Interval INT, '
+                    'Message NVARCHAR(1000), ' + \
                     'Source_IDs NVARCHAR(2000))')
 
         outstatement = 'INSERT INTO ' + \
                 self.rule['outtable'] + \
                 ' (DateStamp, TZone, ' + \
-                'SourceRule, Message, Source_IDs) ' + \
-                'VALUES (%s, %s, %s, %s, %s)'
+                'SourceRule, Interval, Message, Source_IDs) ' + \
+                'VALUES (%s, %s, %s, %s, %s, %s)'
 
         while True:
         
@@ -104,8 +105,8 @@ class SiemTrigger:
                     cur = con.cursor()
 
                     cur.execute(outstatement, (datestamp, tzone,
-                        self.rule['name'], self.rule['message'],
-                        idtags))
+                        self.rule['name'], self.rule['interval'],
+                        self.rule['message'], idtags))
 
             # Wait until the next interval
             sleep(int(self.rule['interval']) * 60)
