@@ -73,15 +73,18 @@ class SiemTrigger:
                     'DateStamp TIMESTAMP, ' + \
                     'TZone NVARCHAR(5), ' + \
                     'SourceRule NVARCHAR(25), ' + \
+                    'SourceTable NVARCHAR(25), ' + \
+                    'Limit INT, Count INT, ' + \
                     'Interval INT, '
                     'Message NVARCHAR(1000), ' + \
-                    'Source_IDs NVARCHAR(2000))')
+                    'SourceIDs NVARCHAR(2000))')
 
         outstatement = 'INSERT INTO ' + \
                 self.rule['outtable'] + \
                 ' (DateStamp, TZone, ' + \
-                'SourceRule, Interval, Message, Source_IDs) ' + \
-                'VALUES (%s, %s, %s, %s, %s, %s)'
+                'SourceRule, SourceTable, Limit, Count, Interval, ' + \
+                'Message, SourceIDs) ' + \
+                'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         while True:
         
@@ -106,7 +109,9 @@ class SiemTrigger:
                     cur = con.cursor()
 
                     cur.execute(outstatement, (datestamp, tzone,
-                        self.rule['name'], self.rule['interval'],
+                        self.rule['name'], self.rule['sourcetable',
+                        self.rule['interval'], len(rows),
+                        self.rule['count'], 
                         self.rule['message'], idtags))
 
             # Wait until the next interval

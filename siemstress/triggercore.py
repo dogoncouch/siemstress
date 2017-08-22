@@ -94,6 +94,7 @@ class SiemTriggerCore:
                     rule = {}
                     rule['name'] = s
                     rule['sqlquery'] = config.get(s, 'sqlquery')
+                    rule['sourcetable'] = config.get(s, 'sourcetable')
                     rule['interval'] = config.get(s, 'interval')
                     rule['limit'] = config.get(s, 'limit')
                     rule['outtable'] = config.get(s, 'outtable')
