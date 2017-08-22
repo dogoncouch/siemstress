@@ -71,32 +71,37 @@ class SiemTriggerCore:
         else: myconf = 'config/siemtrigger.conf'
         config.read(myconf)
 
-        else:
-            # Read /etc/triggers.d/*.conf in a for loop
+        # Read /etc/triggers.d/*.conf in a for loop
 
         self.server = config.get('siemstress', 'server')
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
-        self.confdir = config.get('siemstress', 'confdir')
+        confdir = config.get('siemstress', 'confdir')
+        if confdir.startswith('/'):
+            self.confdir = confdir
+        else:
+            self.confdir = os.path.dirname(os.path.realpath(myconf)) + \
+                    '/' + confdir
 
         for conffile in os.listdir(self.confdir):
-            conflet = config.read(self.confdir + conffile)
-            
-            # Each section is a rule.
-            self.rules = {}
-            for s in conflet.sections():
-                rule = {}
-                rule['name'] = s
-                rule['sqlquery'] = config.get(s, 'sqlquery')
-                rule['interval'] = config.get(s, 'interval')
-                rule['limit'] = config.get(s, 'limit')
-                rule['outtable'] = config.get(s, 'outtable')
-                rule['message'] = config.get(s, 'message')
-                idtags = config.get(s, 'idtags')
-                if idtags == 'On': rule['idtags'] = True
-                else: rule['idtags'] = False
-                self.rules[s] = rule
+            if conffile.endswith('.conf')
+                conflet = config.read(self.confdir + conffile)
+                
+                # Each section is a rule.
+                self.rules = {}
+                for s in conflet.sections():
+                    rule = {}
+                    rule['name'] = s
+                    rule['sqlquery'] = config.get(s, 'sqlquery')
+                    rule['interval'] = config.get(s, 'interval')
+                    rule['limit'] = config.get(s, 'limit')
+                    rule['outtable'] = config.get(s, 'outtable')
+                    rule['message'] = config.get(s, 'message')
+                    idtags = config.get(s, 'idtags')
+                    if idtags == 'On': rule['idtags'] = True
+                    else: rule['idtags'] = False
+                    self.rules[s] = rule
 
 
 
