@@ -54,7 +54,7 @@ optional arguments:
     tail -n 0 -f /var/log/auth.log | siemparse -s auth
 
 ### Config
-The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
+The default siemparse config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
 ## Siemquery
 `siemquery` performs database queries on a siemstress database.
