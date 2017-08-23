@@ -74,7 +74,7 @@ class QueryCore:
                 help = ('set the config section'))
         self.arg_parser.add_argument('--verbose',
                 action = 'store_true', dest = 'verbose',
-                help = ('print SQL queries'))
+                help = ('print SQL statement used for query'))
         self.arg_parser.add_argument('--silent',
                 action = 'store_true', dest = 'silent',
                 help = ('silence table output to terminal'))

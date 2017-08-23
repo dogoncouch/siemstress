@@ -77,7 +77,7 @@ optional arguments:
   --version             show program's version number and exit
   -c CONFIG             set the config file
   -s SECTION            set the config section
-  --verbose             print SQL queries
+  --verbose             print SQL statement used for query
   --silent              silence table output to terminal
   --json JSON           set a JSON output file
 
