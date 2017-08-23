@@ -75,8 +75,8 @@ class SiemQuery:
         return desc, rows
 
     def query(self, tables=[], columns=[],
-            last=None, daterange=None, sourcehosts=[], sourceports=[],
-            desthosts=[], destports=[], processes=[],
+            last=None, daterange=None, ids=[], sourcehosts=[],
+            sourceports=[], desthosts=[], destports=[], processes=[],
             pids=[], protocols=[], greps = [],
             rsourcehosts=[], rsourceports=[], rdesthosts=[],
             rdestports=[], rprocesses=[], rpids=[], rprotocols=[],
@@ -122,6 +122,14 @@ class SiemQuery:
 
 
         # Include attributes
+        if ids:
+            statement = "AND (Id LIKE \"" + \
+                    ids[0] + "\""
+            for i in ids[1:]:
+                statement += " OR Id LIKE \"" + i + "\""
+            statement += ")"
+            qstatement.append(statement)
+
         if sourcehosts:
             statement = "AND (SourceHost LIKE \"" + \
                     sourcehosts[0] + "\""

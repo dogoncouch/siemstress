@@ -83,6 +83,10 @@ class QueryCore:
                 action = 'store', dest = 'range',
                 metavar = 'START-FINISH',
                 help = ('match a date range (format: YYmmddHHMMSS)'))
+        self.arg_parser.add_argument('--id',
+                action = 'store', dest = 'ids',
+                metavar = 'ID',
+                help = ('match an event ID'))
         self.arg_parser.add_argument('--shost',
                 action = 'append', dest = 'shosts',
                 metavar = 'HOST',
@@ -225,6 +229,7 @@ class QueryCore:
 
         qstatement, desc, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
+                ids = self.args.ids,
                 sourcehosts = self.args.shosts,
                 sourceports = self.args.sports,
                 desthosts = self.args.dhosts,
