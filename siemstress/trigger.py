@@ -75,6 +75,7 @@ class SiemTrigger:
                     'DateStamp TIMESTAMP, ' + \
                     'TZone NVARCHAR(5), ' + \
                     'SourceRule NVARCHAR(25), ' + \
+                    'Severity TINYINT UNSIGNED, ', + \
                     'SourceTable NVARCHAR(25), ' + \
                     'EventLimit INT, EventCount INT, ' + \
                     'TimeInt INT, '
@@ -84,9 +85,9 @@ class SiemTrigger:
         outstatement = 'INSERT INTO ' + \
                 self.rule['outtable'] + \
                 ' (DateStamp, TZone, ' + \
-                'SourceRule, SourceTable, EventLimit, EventCount, TimeInt, ' + \
-                'Message, SourceIDs) ' + \
-                'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                'SourceRule, Severity, SourceTable, EventLimit, EventCount, ' + \
+                'TimeInt, Message, SourceIDs) ' + \
+                'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         while True:
         
@@ -112,7 +113,8 @@ class SiemTrigger:
                     cur = outcon.cursor()
 
                     cur.execute(outstatement, (datestamp, tzone,
-                        self.rule['name'], self.rule['sourcetable'],
+                        self.rule['name'], self.rule['severity'],
+                        self.rule['sourcetable'],
                         self.rule['limit'], len(rows),
                         self.rule['interval'], self.rule['message'],
                         idtags))

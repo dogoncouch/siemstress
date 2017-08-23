@@ -95,6 +95,7 @@ class SiemTriggerCore:
                 for s in config.sections():
                     rule = {}
                     rule['name'] = s
+                    rule['severity'] = config.get(s, 'severity')
                     rule['sqlquery'] = config.get(s, 'sqlquery')
                     rule['sourcetable'] = config.get(s, 'sourcetable')
                     rule['interval'] = config.get(s, 'interval')
