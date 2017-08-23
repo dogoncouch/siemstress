@@ -75,7 +75,7 @@ class SiemTrigger:
                     'Severity TINYINT UNSIGNED, ', + \
                     'SourceTable NVARCHAR(25), ' + \
                     'EventLimit INT, EventCount INT, ' + \
-                    'TimeInt INT, '
+                    'TimeInt INT, ' + \
                     'Message NVARCHAR(1000), ' + \
                     'SourceIDs NVARCHAR(2000))')
             cur.close()
