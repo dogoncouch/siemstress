@@ -110,8 +110,11 @@ query options:
     siemquery --last 20m -s auth --process sshd --process systemd-logind --grep fail
     siemquery --range 20170726020000-20170726050000 -s auth --grep fail
 
+### Config
+The default siemquery config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
+
 ### Notes
-CLI arguments that are not time-related can be used more than once (except config/section). The default config file is the same as siemstress.
+CLI arguments that are not time-related can be used more than once (except config/section).
 
 ## Siemtrigger
 `siemtrigger` triggers SIEM events based on siemstress database analysis.
