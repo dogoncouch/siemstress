@@ -5,3 +5,4 @@ __github__ = 'https://github.com/dogoncouch/siemstress'
 __all__ = ['core', 'querycore', 'query']
 
 import siemstress.query
+import siemstress.trigger
