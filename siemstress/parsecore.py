@@ -218,7 +218,9 @@ class LiveParser:
                         datestamp = ymdstamp + entry['tstamp']
                         intdatestamp = \
                                 ymdstamp + entry['tstamp'].split('.')[0]
-
+                        
+                        if not intdatestamp[1]:
+                            datestamp += '.000000'
 
                         # Put our attributes in our table:
                         cur.execute(self.sqlstatement,
