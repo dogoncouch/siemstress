@@ -14,10 +14,10 @@ A very basic Security Information and Event Management system (SIEM)
 
 ## Introduction
 
-## Description
+### Description
 Siemstress is a suite of CLI tools to parse events into an SQL database, query the data, and trigger events based on configured rules.
 
-## Installing
+### Installing
 
 Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
 
