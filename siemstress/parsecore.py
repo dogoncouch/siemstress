@@ -215,12 +215,15 @@ class LiveParser:
                             if not entry['tzone']:
                                 entry['tzone'] = tzone
                     
-                        datestamp = ymdstamp + entry['tstamp']
+                        tstamp = entry['tstamp'].split('.')
                         intdatestamp = \
-                                ymdstamp + entry['tstamp'].split('.')[0]
+                                ymdstamp + tstamp[0]
                         
-                        if not intdatestamp[1]:
-                            datestamp += '.000000'
+                        if not tstamp[1]:
+                            datestamp = intdatestamp + '.000000'
+                        else:
+                            datestamp = '.'.join(intdatestamp,
+                                    tstamp[1].ljust(6, '0'))
 
                         # Put our attributes in our table:
                         cur.execute(self.sqlstatement,
