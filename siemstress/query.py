@@ -270,9 +270,5 @@ class SiemQuery:
             cur.execute(qstatement)
 
             rows = cur.fetchall()
-            if columns:
-                desc = columns
-            else:
-                desc = cur.description
 
-        return qstatement, desc, rows
+        return qstatement, rows

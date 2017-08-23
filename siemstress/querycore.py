@@ -33,6 +33,7 @@ import os
 from argparse import ArgumentParser
 import ConfigParser
 from siemstress.query import SiemQuery
+import json
 
 
 
@@ -64,6 +65,9 @@ class QueryCore:
         self.arg_parser.add_argument('--verbose',
                 action = 'store_true', dest = 'verbose',
                 help = ('print SQL queries'))
+        self.arg_parser.add_argument('--silent',
+                action = 'store_true', dest = 'silent',
+                help = ('silence table output to terminal'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -72,6 +76,10 @@ class QueryCore:
                 action = 'store', dest = 'section',
                 default = 'default',
                 help = ('set the config section'))
+        self.arg_parser.add_argument('--json',
+                action = 'store', dest = 'outjson',
+                metavar = 'JSON',
+                help = ('set a JSON output file')
         self.arg_parser.add_argument('--table',
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
@@ -173,8 +181,13 @@ class QueryCore:
             self.tables = self.args.tables
         else:
             self.tables.append(config.get(self.args.section, 'table'))
-        self.queryfields = [x for x in config.get(
-            self.args.section, 'queryfields').split(',')]
+        try:
+            self.queryfields = [x for x in config.get(
+                self.args.section, 'queryfields').split(',')]
+        except Exception:
+            # To Do: narrow down exception
+            self.queryfields = ['Id', 'DateStamp', 'SourceHost', 
+                    'Process', 'PID', 'Message']
 
 
 
@@ -202,22 +215,23 @@ class QueryCore:
                 last = self.args.last, shost = self.args.shost,
                 process = self.args.process, grep = self.args.grep)
 
-        print "%7s %20s %14s %14s %7s %s" % (
-                desc[self.queryfields[0]][0],
-                desc[self.queryfields[1]][0],
-                desc[self.queryfields[2]][0],
-                desc[self.queryfields[3]][0],
-                desc[self.queryfields[4]][0],
-                desc[self.queryfields[5]][0])
-
-        for row in rows:
+        if not self.args.silent:
             print "%7s %20s %14s %14s %7s %s" % (
-                    row[self.queryfields[0]],
-                    row[self.queryfields[1]],
-                    row[self.queryfields[2]],
-                    row[self.queryfields[3]],
-                    row[self.queryfields[4]],
-                    row[self.queryfields[5]])
+                    desc[self.queryfields[0]][0],
+                    desc[self.queryfields[1]][0],
+                    desc[self.queryfields[2]][0],
+                    desc[self.queryfields[3]][0],
+                    desc[self.queryfields[4]][0],
+                    desc[self.queryfields[5]][0])
+        
+            for row in rows:
+                print "%7s %20s %14s %14s %7s %s" % (
+                        row[self.queryfields[0]],
+                        row[self.queryfields[1]],
+                        row[self.queryfields[2]],
+                        row[self.queryfields[3]],
+                        row[self.queryfields[4]],
+                        row[self.queryfields[5]])
 
 
     def query_siem(self):
@@ -227,7 +241,7 @@ class QueryCore:
         query = SiemQuery(server = self.server, user = self.user,
                 password = self.password, database = self.database)
 
-        qstatement, desc, rows = query.query(tables = self.tables,
+        qstatement, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,
                 ids = self.args.ids,
                 sourcehosts = self.args.shosts,
@@ -250,25 +264,32 @@ class QueryCore:
 
         if self.args.verbose: print("SQL:\n" + qstatement)
 
-        print("%7s %20s %18s %14s %12s %s" % (
-                self.queryfields[0],
-                self.queryfields[1],
-                self.queryfields[2],
-                self.queryfields[3],
-                self.queryfields[4],
-                self.queryfields[5]))
-
-        for row in rows:
+        if not self.args.silent:
             print("%7s %20s %18s %14s %12s %s" % (
-                    row[self.queryfields[0]],
-                    row[self.queryfields[1]],
-                    row[self.queryfields[2]],
-                    row[self.queryfields[3]],
-                    row[self.queryfields[4]],
-                    row[self.queryfields[5]]))
+                    self.queryfields[0],
+                    self.queryfields[1],
+                    self.queryfields[2],
+                    self.queryfields[3],
+                    self.queryfields[4],
+                    self.queryfields[5]))
+                   
+            for row in rows:
+                print("%7s %20s %18s %14s %12s %s" % (
+                        row[self.queryfields[0]],
+                        row[self.queryfields[1]],
+                        row[self.queryfields[2]],
+                        row[self.queryfields[3]],
+                        row[self.queryfields[4]],
+                        row[self.queryfields[5]]))
 
+        if self.args.outjson:
 
-
+            with open(self.args.outjson, 'w') as f:
+                f.write(json.dumps(rows, indent=2, sort_keys=True,
+                    separators=(',', ': ')))
+                   
+                   
+                   
     def run_query(self):
         try:
             self.get_args()

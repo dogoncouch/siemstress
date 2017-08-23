@@ -95,7 +95,11 @@ class LiveParser:
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.section, 'table')
-        self.parsername = config.get(self.args.section, 'parser')
+        try:
+            self.parsername = config.get(self.args.section, 'parser')
+        except Exception:
+            # To Do: narrow down exception
+            self.parsername = 'syslogbsd'
 
 
         if self.parsername == 'syslogbsd':
