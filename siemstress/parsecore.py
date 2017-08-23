@@ -216,7 +216,8 @@ class LiveParser:
                                 entry['tzone'] = tzone
                     
                         datestamp = ymdstamp + entry['tstamp']
-                        intdatestamp = datestamp.split('.')[0]
+                        intdatestamp = \
+                                ymdstamp + entry['tstamp'].split('.')[0]
 
 
                         # Put our attributes in our table:
