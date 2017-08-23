@@ -169,7 +169,7 @@ class LiveParser:
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
-                    'FDateStamp FLOAT(20, 6) UNSIGNED, ' + \
+                    'FDateStamp DECIMAL(20, 1), ' + \
                     'TZone NVARCHAR(5), '+ \
                     'RawStamp NVARCHAR(80), ' + \
                     'Facility NVARCHAR(15), ' + \
