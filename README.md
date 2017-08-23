@@ -15,9 +15,6 @@ Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
 ### Database Setup
 siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
 
-### Config
-The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
-
 ## Siemstress
 `siemstress` parses lines from standard input into the SQL database.
 
@@ -42,6 +39,9 @@ optional arguments:
 ### Examples
     tail -n 0 -f /var/log/messages | siemstress
     tail -n 0 -f /var/log/auth.log | siemstress -s auth
+
+### Config
+The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
 ## Siemquery
 `siemquery` performs database queries.
@@ -98,7 +98,7 @@ query options:
     siemquery --range 20170726020000-20170726050000 -s auth --grep fail
 
 ### Notes
-CLI arguments that are not time-related can be used more than once (except config/section).
+CLI arguments that are not time-related can be used more than once (except config/section). The default config file is the same as siemstress.
 
 ## Siemtrigger
 `siemtrigger` triggers SIEM events based on database analysis.
@@ -119,6 +119,9 @@ optional arguments:
 ### Examples
 
     siemtrigger -c config/siemtrigger.conf
+
+### Config
+The default siemtrigger config file location is `/etc/siemtrigger.conf` (`config/siemstress.conf` if working in the repository). `siemtrigger.conf` loads rules from files in a conf directory.
 
 ## Copyright
 MIT License
