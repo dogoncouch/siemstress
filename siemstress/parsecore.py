@@ -220,7 +220,7 @@ class LiveParser:
                     intdatestamp = \
                             ymdstamp + tstamp[0]
                     
-                    if len(tstamp[1]) == 1:
+                    if len(tstamp) == 1:
                         datestamp = intdatestamp + '.000000'
                     else:
                         datestamp = '.'.join(intdatestamp,
