@@ -1,6 +1,19 @@
 # siemstress
 A very basic Security Information and Event Management system (SIEM)
 
+## Index
+
+- [Introduction](#introduction)
+  - [Description](#description)
+  - [Installing](#installing)
+- Tools
+  - [siemparse](#siemparse)
+  - [siemquery](#siemquery)
+  - [siemtrigger](#siemtrigger)
+- [Copyright](#copyright)
+
+## Introduction
+
 ## Description
 Siemstress is a suite of CLI tools to parse events into an SQL database, query the data, and trigger events based on configured rules.
 
@@ -15,15 +28,15 @@ Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
 ### Database Setup
 siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
 
-## Siemstress
-`siemstress` parses lines from standard input into the SQL database.
+## Siemparse
+`siemparse` parses lines from standard input into a siemstress database.
 
 ### Usage
 
 ```
 
-usage: siemstress [-h] [--version] [--clear] [--force] [-q] [-c CONFIG]
-                  [-s SECTION] [-z TZONE]
+usage: siemparse [-h] [--version] [--clear] [--force] [-q] [-c CONFIG]
+                 [-s SECTION] [-z TZONE]
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -44,7 +57,7 @@ optional arguments:
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
 ## Siemquery
-`siemquery` performs database queries.
+`siemquery` performs database queries on a siemstress database.
 
 ### Usage
 
@@ -101,7 +114,7 @@ query options:
 CLI arguments that are not time-related can be used more than once (except config/section). The default config file is the same as siemstress.
 
 ## Siemtrigger
-`siemtrigger` triggers SIEM events based on database analysis.
+`siemtrigger` triggers SIEM events based on siemstress database analysis.
 
 ### Usage
 
