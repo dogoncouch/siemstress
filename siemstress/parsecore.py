@@ -186,71 +186,70 @@ class LiveParser:
         con.close()
 
 
-            # To Do: try taking while loop out of "with con:"
-            while True:
+        while True:
 
-                line = sys.stdin.readline()
+            line = sys.stdin.readline()
 
-                if line:
-                    # Do the parsing
-                    ourline = line.rstrip()
+            if line:
+                # Do the parsing
+                ourline = line.rstrip()
+                
+                entry = self.parser.parse_line(ourline)
+
+                if entry:
+
+                    if float(entry['tstamp']) < oldtnum:
+                        ymdstamp = datetime.now().strftime('%Y%m%d')
+                    oldtnum = float(entry['tstamp'])
                     
-                    entry = self.parser.parse_line(ourline)
-
-                    if entry:
-
-                        if float(entry['tstamp']) < oldtnum:
-                            ymdstamp = datetime.now().strftime('%Y%m%d')
-                        oldtnum = float(entry['tstamp'])
-                        
-                    
-                        # Set datestamp
-                        if not entry['year']:
-                            entry['year'] = ymdstamp[0:4]
-                        if not entry['month']:
-                            entry['month'] = ymdstamp[4:6]
-                        if not entry['day']:
-                            entry['day'] = ymdstamp[6:8]
-                        if self.args.tzone:
-                            entry['tzone'] = args.tzone
-                        else:
-                            if not entry['tzone']:
-                                entry['tzone'] = tzone
-                    
-                        tstamp = entry['tstamp'].split('.')
-                        intdatestamp = \
-                                ymdstamp + tstamp[0]
-                        
-                        if not tstamp[1]:
-                            datestamp = intdatestamp + '.000000'
-                        else:
-                            datestamp = '.'.join(intdatestamp,
-                                    tstamp[1].ljust(6, '0'))
-
-                        # Put our attributes in our table:
-                        con = mdb.connect(self.server, self.user,
-                                self.password, self.database)
-        
-                        with con:
-                            cur = con.cursor()
-                            cur.execute(self.sqlstatement,
-                                    (intdatestamp, datestamp,
-                                        entry['tzone'], entry['raw_stamp'], 
-                                        entry['facility'], entry['severity'],
-                                        entry['source_host'], entry['source_port'],
-                                        entry['dest_host'], entry['dest_port'],
-                                        entry['source_process'],
-                                        entry['source_pid'],
-                                        entry['protocol'], entry['message']))
-                            con.commit()
-                            cur.close()
-                        con.close()
-
-
+                
+                    # Set datestamp
+                    if not entry['year']:
+                        entry['year'] = ymdstamp[0:4]
+                    if not entry['month']:
+                        entry['month'] = ymdstamp[4:6]
+                    if not entry['day']:
+                        entry['day'] = ymdstamp[6:8]
+                    if self.args.tzone:
+                        entry['tzone'] = args.tzone
                     else:
-                        # No match!?
-                        # To Do: raise an error here.
-                        print('No Match: ' + ourline)
+                        if not entry['tzone']:
+                            entry['tzone'] = tzone
+                
+                    tstamp = entry['tstamp'].split('.')
+                    intdatestamp = \
+                            ymdstamp + tstamp[0]
+                    
+                    if not tstamp[1]:
+                        datestamp = intdatestamp + '.000000'
+                    else:
+                        datestamp = '.'.join(intdatestamp,
+                                tstamp[1].ljust(6, '0'))
+
+                    # Put our attributes in our table:
+                    con = mdb.connect(self.server, self.user,
+                            self.password, self.database)
+        
+                    with con:
+                        cur = con.cursor()
+                        cur.execute(self.sqlstatement,
+                                (intdatestamp, datestamp,
+                                    entry['tzone'], entry['raw_stamp'], 
+                                    entry['facility'], entry['severity'],
+                                    entry['source_host'], entry['source_port'],
+                                    entry['dest_host'], entry['dest_port'],
+                                    entry['source_process'],
+                                    entry['source_pid'],
+                                    entry['protocol'], entry['message']))
+                        con.commit()
+                        cur.close()
+                    con.close()
+
+
+                else:
+                    # No match!?
+                    # To Do: raise an error here.
+                    print('No Match: ' + ourline)
 
 
 
