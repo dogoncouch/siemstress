@@ -50,8 +50,8 @@ optional arguments:
 ```
 
 ### Examples
-    tail -n 0 -f /var/log/messages | siemstress
-    tail -n 0 -f /var/log/auth.log | siemstress -s auth
+    tail -n 0 -f /var/log/messages | siemparse
+    tail -n 0 -f /var/log/auth.log | siemparse -s auth
 
 ### Config
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
