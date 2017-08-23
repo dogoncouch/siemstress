@@ -1,6 +1,7 @@
 # Example siemtrigger rules
 
 # Remove '.disabled' from file name to enable
+# Note: trigger rules will be stored in database tables in the near future.
 
 [pam_authfail_10m]
 sqlquery=SELECT Id FROM Auth WHERE DateStamp >= timestamp(date_sub(now(), interval 10 minute)) AND (Message LIKE "%fail%" AND Message LIKE "%pam%")
