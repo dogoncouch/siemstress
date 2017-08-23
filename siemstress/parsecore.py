@@ -146,9 +146,6 @@ class LiveParser:
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
                 '%s, %s, %s, %s, %s)'
 
-        con = mdb.connect(self.server, self.user,
-                self.password, self.database)
-        
         if not self.args.tzone:
             if time.daylight:
                 tzone = \
@@ -164,8 +161,11 @@ class LiveParser:
                 tzone = '+' + tzone
 
         
+        con = mdb.connect(self.server, self.user,
+                self.password, self.database)
+        
         with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
+            cur = con.cursor()
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
@@ -182,6 +182,8 @@ class LiveParser:
                     'PID MEDIUMINT UNSIGNED, ' + \
                     'Protocol NVARCHAR(5), ' + \
                     'Message NVARCHAR(2000))')
+            cur.close()
+        con.close()
 
 
             # To Do: try taking while loop out of "with con:"
@@ -226,16 +228,23 @@ class LiveParser:
                                     tstamp[1].ljust(6, '0'))
 
                         # Put our attributes in our table:
-                        cur.execute(self.sqlstatement,
-                                (intdatestamp, datestamp,
-                                    entry['tzone'], entry['raw_stamp'], 
-                                    entry['facility'], entry['severity'],
-                                    entry['source_host'], entry['source_port'],
-                                    entry['dest_host'], entry['dest_port'],
-                                    entry['source_process'],
-                                    entry['source_pid'],
-                                    entry['protocol'], entry['message']))
-                        con.commit()
+                        con = mdb.connect(self.server, self.user,
+                                self.password, self.database)
+        
+                        with con:
+                            cur = con.cursor()
+                            cur.execute(self.sqlstatement,
+                                    (intdatestamp, datestamp,
+                                        entry['tzone'], entry['raw_stamp'], 
+                                        entry['facility'], entry['severity'],
+                                        entry['source_host'], entry['source_port'],
+                                        entry['dest_host'], entry['dest_port'],
+                                        entry['source_process'],
+                                        entry['source_pid'],
+                                        entry['protocol'], entry['message']))
+                            con.commit()
+                            cur.close()
+                        con.close()
 
 
                     else:

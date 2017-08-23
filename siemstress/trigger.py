@@ -65,10 +65,7 @@ class SiemTrigger:
         # Create table if it doesn't exist:
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
-        #with mdb.connect(self.server, self.user, self.password,
-        #        self.database) as con:
         with con:
-            #cur = con.cursor(mdb.cursors.DictCursor)
             cur = con.cursor()
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.rule['outtable'] + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
@@ -81,6 +78,8 @@ class SiemTrigger:
                     'TimeInt INT, '
                     'Message NVARCHAR(1000), ' + \
                     'SourceIDs NVARCHAR(2000))')
+            cur.close()
+        con.close()
 
         outstatement = 'INSERT INTO ' + \
                 self.rule['outtable'] + \
@@ -92,32 +91,34 @@ class SiemTrigger:
         while True:
         
             # Query the database:
+            con = mdb.connect(self.server, self.user, self.password,
+                    self.database)
             with con:
                 cur = con.cursor()
                 cur.execute(self.rule['sqlquery'])
-        
                 rows = cur.fetchall()
+                cur.close()
+            con.close()
         
             # Evaluate the results:
             if len(rows) > int(self.rule['limit']):
                 idtags = str([row[0] for row in rows])
-                outcon = mdb.connect(self.server, self.user,
-                        self.password, self.database)
 
                 datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
                 # Send an event to the database:
-                #with mdb.connect(self.server, self.user, self.password,
-                #        self.database) as outcon:
-                with outcon:
-                    cur = outcon.cursor()
-
+                con = mdb.connect(self.server, self.user,
+                        self.password, self.database)
+                with con:
+                    cur = con.cursor()
                     cur.execute(outstatement, (datestamp, tzone,
                         self.rule['name'], self.rule['severity'],
                         self.rule['sourcetable'],
                         self.rule['limit'], len(rows),
                         self.rule['interval'], self.rule['message'],
                         idtags))
+                    cur.close()
+                con.close()
 
             # Wait until the next interval
             sleep(int(self.rule['interval']) * 60)
@@ -128,7 +129,7 @@ def start_rule(rserver, ruser, rpassword, rdatabase, rrule={}):
     sentry = SiemTrigger(server = rserver, user = ruser,
             password = rpassword, database = rdatabase, rule = rrule)
 
-    # Sleep randomly up to rule interval:
+    # Before starting, leep randomly up to rule interval to stagger DB use:
     sleep(randrange(0, int(rrule['interval']) * 60))
 
     sentry.watch_rule()
