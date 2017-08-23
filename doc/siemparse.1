@@ -1,17 +1,17 @@
-.TH SIEMSTRESS 1
+.TH SIEMPARSE 1
 .SH NAME
-siemstress - CLI tool to parse events into an SQL database
+siemparse - CLI tool to parse lines from standard input into a siemstress database
 
 .SH SYNOPSIS
 
-\fBsiemstress\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
+\fBsiemparse\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
 
 .SH DESCRIPTION
-\fBsiemstress\fR is a CLI tool to parse syslog lines from standard input into an SQL database, and query the data.
+\fBsiemparse\fR is a CLI tool to parse syslog lines from standard input into an SQL database.
 
 .SH OPTIONS
 
-  usage: \fBsiemstress\fR [\fBoptions\fR]
+  usage: \fBsiemparse\fR [\fBoptions\fR]
   
   optional arguments:
     -h, --help  show this help message and exit
@@ -23,8 +23,8 @@ siemstress - CLI tool to parse events into an SQL database
     -z TZONE    set the offset to UTC (e.g. '+0500')
 
 .SH EXAMPLES
-    tail -n 0 -f /var/log/messages | siemstress
-    tail -n 0 -f /var/log/auth.log | siemstress -s auth
+    tail -n 0 -f /var/log/messages | siemparse
+    tail -n 0 -f /var/log/auth.log | siemparse -s auth
 
 .SH SEE ALSO
     siemquery(1)

@@ -41,7 +41,7 @@ from sys import prefix
 from siemstress import __version__
 
 ourdata = [(join(prefix, 'share/man/man1'),
-        ['doc/siemstress.1', 'doc/siemquery.1']),
+        ['doc/siemparse.1', 'doc/siemquery.1']),
         ('/etc/siemstress', ['config/siemstress.conf',
             'config/siemtrigger.conf']),
         ('/etc/siemstress/triggers.d',
@@ -61,7 +61,7 @@ setup(name = 'siemstress', version = str(__version__),
             'log-management', 'log-collector', 'log-monitoring'],
         packages = ['siemstress'],
         entry_points = \
-                { 'console_scripts': [ 'siemstress = siemstress.core:main',
+                { 'console_scripts': [ 'siemparse = siemstress.parsecore:main',
                     'siemquery = siemstress.querycore:main',
                     'siemtrigger = siemstress.triggercore:main' ]},
         data_files = ourdata,
