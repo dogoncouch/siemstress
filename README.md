@@ -2,7 +2,7 @@
 A very basic Security Information and Event Management system (SIEM)
 
 ## Description
-siemstress is a CLI tool to parse syslog lines from standard input into an SQL database. Siemquery is a CLI tool to query the data.
+Siemstress is a suite of CLI tools to parse events into an SQL database, query the data, and trigger events based on configured rules.
 
 ## Installing
 
@@ -19,6 +19,7 @@ siemstress is developed and tested using MariaDB as an SQL server. You will need
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
 ## Siemstress
+`siemstress` parses lines from standard input into the SQL database.
 
 ### Usage
 
@@ -43,29 +44,35 @@ optional arguments:
     tail -n 0 -f /var/log/auth.log | siemstress -s auth
 
 ## Siemquery
+`siemquery` performs database queries.
 
 ### Usage
 
 ```
 
-usage: siemquery [-h] [--version] [--verbose] [-c CONFIG] [-s SECTION]
-                 [--table TABLE] [--last LAST] [--range START-FINISH]
-                 [--shost HOST] [--sport PORT] [--dhost HOST]
-                 [--dport PORT] [--process PROCESS] [--pid PID]
-                 [--protocol PROTOCOL] [--grep PATTERN] [--rshost HOST]
-                 [--rsport PORT] [--rdhost HOST] [--rdport PORT]
-                 [--rprocess PROCESS] [--rpid PID] [--rprotocol PROTOCOL]
-                 [--rgrep PATTERN]
+usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--verbose]
+                 [--silent] [--json JSON] [--table TABLE] [--last LAST]
+                 [--range START-FINISH] [--id ID] [--shost HOST]
+                 [--sport PORT] [--dhost HOST] [--dport PORT]
+                 [--process PROCESS] [--pid PID] [--protocol PROTOCOL]
+                 [--grep PATTERN] [--rshost HOST] [--rsport PORT]
+                 [--rdhost HOST] [--rdport PORT] [--rprocess PROCESS]
+                 [--rpid PID] [--rprotocol PROTOCOL] [--rgrep PATTERN]
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
-  --verbose             print SQL queries
   -c CONFIG             set the config file
   -s SECTION            set the config section
+  --verbose             print SQL queries
+  --silent              silence table output to terminal
+  --json JSON           set a JSON output file
+
+query options:
   --table TABLE         set a table to query
   --last LAST           match a preceeding time range (5m, 24h, etc)
   --range START-FINISH  match a date range (format: YYmmddHHMMSS)
+  --id ID               match an event ID
   --shost HOST          match a source host
   --sport PORT          match a source port
   --dhost HOST          match a destination host
@@ -92,6 +99,26 @@ optional arguments:
 
 ### Notes
 CLI arguments that are not time-related can be used more than once (except config/section).
+
+## Siemtrigger
+`siemtrigger` triggers SIEM events based on database analysis.
+
+### Usage
+
+```
+
+usage: siemtrigger.py [-h] [--version] [-c CONFIG]
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit
+  -c CONFIG   set the config file
+
+```
+
+### Examples
+
+    siemtrigger -c config/siemtrigger.conf
 
 ## Copyright
 MIT License

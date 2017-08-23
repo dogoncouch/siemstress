@@ -45,6 +45,7 @@ class QueryCore:
 
         self.args = None
         self.arg_parser = ArgumentParser()
+        self.query_args = self.arg_parser.add_argument_group('query options')
         self.config = None
 
         #self.parser = None
@@ -63,12 +64,6 @@ class QueryCore:
 
         self.arg_parser.add_argument('--version', action = 'version',
                 version = '%(prog)s ' + str(__version__))
-        self.arg_parser.add_argument('--verbose',
-                action = 'store_true', dest = 'verbose',
-                help = ('print SQL queries'))
-        self.arg_parser.add_argument('--silent',
-                action = 'store_true', dest = 'silent',
-                help = ('silence table output to terminal'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -77,90 +72,97 @@ class QueryCore:
                 action = 'store', dest = 'section',
                 default = 'default',
                 help = ('set the config section'))
+        self.arg_parser.add_argument('--verbose',
+                action = 'store_true', dest = 'verbose',
+                help = ('print SQL queries'))
+        self.arg_parser.add_argument('--silent',
+                action = 'store_true', dest = 'silent',
+                help = ('silence table output to terminal'))
         self.arg_parser.add_argument('--json',
                 action = 'store', dest = 'outjson',
                 metavar = 'JSON',
                 help = ('set a JSON output file'))
-        self.arg_parser.add_argument('--table',
+        self.query_args.add_argument('--table',
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
                 help = ('set a table to query'))
-        self.arg_parser.add_argument('--last',
+        self.query_args.add_argument('--last',
                 action = 'store', dest = 'last', default = '24h',
                 help = ('match a preceeding time range (5m, 24h, etc)'))
-        self.arg_parser.add_argument('--range',
+        self.query_args.add_argument('--range',
                 action = 'store', dest = 'range',
                 metavar = 'START-FINISH',
                 help = ('match a date range (format: YYmmddHHMMSS)'))
-        self.arg_parser.add_argument('--id',
+        self.query_args.add_argument('--id',
                 action = 'store', dest = 'ids',
                 metavar = 'ID',
                 help = ('match an event ID'))
-        self.arg_parser.add_argument('--shost',
+        self.query_args.add_argument('--shost',
                 action = 'append', dest = 'shosts',
                 metavar = 'HOST',
                 help = ('match a source host'))
-        self.arg_parser.add_argument('--sport',
+        self.query_args.add_argument('--sport',
                 action = 'append', dest = 'sports',
                 metavar = 'PORT',
                 help = ('match a source port'))
-        self.arg_parser.add_argument('--dhost',
+        self.query_args.add_argument('--dhost',
                 action = 'append', dest = 'dhosts',
                 metavar = 'HOST',
                 help = ('match a destination host'))
-        self.arg_parser.add_argument('--dport',
+        self.query_args.add_argument('--dport',
                 action = 'append', dest = 'dports',
                 metavar = 'PORT',
                 help = ('match a destination port'))
-        self.arg_parser.add_argument('--process',
+        self.query_args.add_argument('--process',
                 action = 'append', dest = 'processes',
                 metavar = 'PROCESS',
                 help = ('match a source process'))
-        self.arg_parser.add_argument('--pid',
+        self.query_args.add_argument('--pid',
                 action = 'append', dest = 'pids',
                 metavar = 'PID',
                 help = ('match a source Process ID'))
-        self.arg_parser.add_argument('--protocol',
+        self.query_args.add_argument('--protocol',
                 action = 'append', dest = 'protocols',
                 metavar = 'PROTOCOL',
                 help = ('match a protocol'))
-        self.arg_parser.add_argument('--grep',
+        self.query_args.add_argument('--grep',
                 action = 'append', dest = 'greps',
                 metavar = 'PATTERN',
                 help = ('match a pattern'))
-        self.arg_parser.add_argument('--rshost',
+        self.query_args.add_argument('--rshost',
                 action = 'append', dest = 'rshosts',
                 metavar = 'HOST',
                 help = ('filter out a source host'))
-        self.arg_parser.add_argument('--rsport',
+        self.query_args.add_argument('--rsport',
                 action = 'append', dest = 'rsports',
                 metavar = 'PORT',
                 help = ('filter out a source port'))
-        self.arg_parser.add_argument('--rdhost',
+        self.query_args.add_argument('--rdhost',
                 action = 'append', dest = 'rdhosts',
                 metavar = 'HOST',
                 help = ('filter out a destination host'))
-        self.arg_parser.add_argument('--rdport',
+        self.query_args.add_argument('--rdport',
                 action = 'append', dest = 'rdports',
                 metavar = 'PORT',
                 help = ('filter out a destination port'))
-        self.arg_parser.add_argument('--rprocess',
+        self.query_args.add_argument('--rprocess',
                 action = 'append', dest = 'rprocesses',
                 metavar = 'PROCESS',
                 help = ('filter out a source process'))
-        self.arg_parser.add_argument('--rpid',
+        self.query_args.add_argument('--rpid',
                 action = 'append', dest = 'rpids',
                 metavar = 'PID',
                 help = ('filter out a source Process ID'))
-        self.arg_parser.add_argument('--rprotocol',
+        self.query_args.add_argument('--rprotocol',
                 action = 'append', dest = 'rprotocols',
                 metavar = 'PROTOCOL',
                 help = ('filter out a protocol'))
-        self.arg_parser.add_argument('--rgrep',
+        self.query_args.add_argument('--rgrep',
                 action = 'append', dest = 'rgreps',
                 metavar = 'PATTERN',
                 help = ('filter out a pattern'))
 
+        self.arg_parser.add_argument_group(self.query_args)
         self.args = self.arg_parser.parse_args()
 
 
