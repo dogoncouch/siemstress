@@ -79,7 +79,7 @@ class QueryCore:
         self.arg_parser.add_argument('--json',
                 action = 'store', dest = 'outjson',
                 metavar = 'JSON',
-                help = ('set a JSON output file')
+                help = ('set a JSON output file'))
         self.arg_parser.add_argument('--table',
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
