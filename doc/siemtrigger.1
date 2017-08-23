@@ -1,13 +1,13 @@
 .TH SIEMSTRESS 1
 .SH NAME
-siemstress - CLI tool to parse events into an SQL database
+siemtrigger - tool to trigger SIEM events based on rules
 
 .SH SYNOPSIS
 
-\fBsiemstress\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
+\fBsiemstress\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR]
 
 .SH DESCRIPTION
-\fBsiemstress\fR is a CLI tool to parse syslog lines from standard input into an SQL database, and query the data.
+\fBsiemtrigger\fR is a tool to trigger SIEM events based on database analysis.
 
 .SH OPTIONS
 
@@ -16,19 +16,14 @@ siemstress - CLI tool to parse events into an SQL database
   optional arguments:
     -h, --help  show this help message and exit
     --version   show program's version number and exit
-    --clear     delete the SQL table for selected section
-    --force     really delete the table
     -c CONFIG   set the config file
-    -s SECTION  set the config section
-    -z TZONE    set the offset to UTC (e.g. '+0500')
 
 .SH EXAMPLES
-    tail -n 0 -f /var/log/messages | siemstress
-    tail -n 0 -f /var/log/auth.log | siemstress -s auth
+    siemtrigger -c config/siemtrigger.conf
 
 .SH SEE ALSO
+    siemstress(1)
     siemquery(1)
-    siemtrigger(1)
 
 .SH FILES
     /etc/siemstress/siemstress.conf
