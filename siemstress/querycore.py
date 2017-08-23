@@ -29,6 +29,7 @@ from siemstress import __version__
 #import re
 #import sys
 import os
+from time import strftime
 #import MySQLdb as mdb
 from argparse import ArgumentParser
 import ConfigParser
@@ -283,6 +284,13 @@ class QueryCore:
                         row[self.queryfields[5]]))
 
         if self.args.outjson:
+            jrows = []
+            for row in rows:
+                jrow = row
+                if jrow['DateStamp']:
+                    jrow['DateStamp'] = \
+                            jrow['DateStamp'].strftime('%Y%m%d%H%M%S')
+                jrows.append(jrow)
 
             with open(self.args.outjson, 'w') as f:
                 f.write(json.dumps(rows, indent=2, sort_keys=True,
