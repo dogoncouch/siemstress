@@ -72,7 +72,7 @@ class SiemTrigger:
                     'DateStamp TIMESTAMP, ' + \
                     'TZone NVARCHAR(5), ' + \
                     'SourceRule NVARCHAR(25), ' + \
-                    'Severity TINYINT UNSIGNED, ', + \
+                    'Severity TINYINT UNSIGNED, ' + \
                     'SourceTable NVARCHAR(25), ' + \
                     'EventLimit INT, EventCount INT, ' + \
                     'TimeInt INT, ' + \
