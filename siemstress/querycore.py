@@ -299,7 +299,7 @@ class QueryCore:
 
             with open(self.args.outjson, 'w') as f:
                 f.write(json.dumps(rows, indent=2, sort_keys=True,
-                    separators=(',', ': ')))
+                    separators=(',', ': ')) + '\n')
                    
                    
                    
