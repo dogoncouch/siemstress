@@ -92,70 +92,70 @@ class SiemTriggerCore:
 
 
         
-        def get_rules(self):
-            """Get rules from tables"""
+    def get_rules(self):
+        """Get rules from tables"""
 
-            self.rules = []
+        self.rules = []
+        for table in self.args.tables:
+            con = mdb.connect(self.server, self.user,
+                    self.password, self.database)
+            with con:
+                cur = con.cursor(mdb.cursors.DictCursor)
+                cur.execute('SELECT * FROM ' + table)
+                rules = cur.fetchall()
+                cur.close()
+            con.close()
+
+
+
+    def import_rules(self):
+        """Import rules from a JSON file"""
+        
+        with open(self.args.importfile, 'r') as f:
+            rules = json.loads(f.read())
+
+        # Set up SQL insert statement:
+        insertstatement = 'Insert into ' + self.args.tables[0] + \
+                '(RuleName, IsEnabled, Severity, ' + \
+                'TimeInt, EventLimit, SQLQuery, ' + \
+                'SourceTable, OutTable, Message) VALUES ' + \
+                '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+
+        # Create table if it doesn't exist:
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+        with con:
+            cur = con.cursor()
             for table in self.args.tables:
-                con = mdb.connect(self.server, self.user,
-                        self.password, self.database)
-                with con:
-                    cur = con.cursor(mdb.cursors.DictCursor)
-                    cur.execute('SELECT * FROM ' + table)
-                    rules = cur.fetchall()
-                    cur.close()
-                con.close()
-
-
-
-        def import_rules(self):
-            """Import rules from a JSON file"""
-            
-            with open(self.args.importfile, 'r') as f:
-                rules = json.loads(f.read())
-
-            # Set up SQL insert statement:
-            insertstatement = 'Insert into ' + self.args.tables[0] + \
-                    '(RuleName, IsEnabled, Severity, ' + \
-                    'TimeInt, EventLimit, SQLQuery, ' + \
-                    'SourceTable, OutTable, Message) VALUES ' + \
-                    '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
-
-            # Create table if it doesn't exist:
-            con = mdb.connect(self.server, self.user, self.password,
-                    self.database)
-            with con:
-                cur = con.cursor()
-                for table in self.args.tables:
-                    cur.execute('CREATE TABLE IF NOT EXISTS ' + \
-                            self.args.tables[0] + \
-                            '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                            'RuleName NVARCHAR(25), ' + \
-                            'IsEnabled BOOLEAN, Severity TINYINT', + \
-                            'TimeInt INT, EventLimit INT, ' + \
-                            'SQLQuery NVARCHAR(1000), ' + \
-                            'SourceTable NVARCHAR(25), ' + \
-                            'OutTable NVARCHAR(25), ' + \
-                            'Message NVARCHAR(1000))')
-                cur.close()
-            con.close()
-            
-            con = mdb.connect(self.server, self.user, self.password,
-                    self.database)
-            with con:
-                cur = con.cursor()
-                for rule in rules:
-                    cur.execute(insertstatement, (rule['RuleName'],
-                        rule['IsEnabled'], rule['Severity'],
-                        rule['TimeInt'], rule['EventLimit'], 
-                        rule['SQLQuery'], rule['SourceTable'],
-                        rule['OutTable'], rule['Message']))
-                cur.close()
-            con.close()
+                cur.execute('CREATE TABLE IF NOT EXISTS ' + \
+                        self.args.tables[0] + \
+                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'RuleName NVARCHAR(25), ' + \
+                        'IsEnabled BOOLEAN, Severity TINYINT', + \
+                        'TimeInt INT, EventLimit INT, ' + \
+                        'SQLQuery NVARCHAR(1000), ' + \
+                        'SourceTable NVARCHAR(25), ' + \
+                        'OutTable NVARCHAR(25), ' + \
+                        'Message NVARCHAR(1000))')
+            cur.close()
+        con.close()
+        
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+        with con:
+            cur = con.cursor()
+            for rule in rules:
+                cur.execute(insertstatement, (rule['RuleName'],
+                    rule['IsEnabled'], rule['Severity'],
+                    rule['TimeInt'], rule['EventLimit'], 
+                    rule['SQLQuery'], rule['SourceTable'],
+                    rule['OutTable'], rule['Message']))
+            cur.close()
+        con.close()
 
 
     def export_rules(self):
-            """Export rules from a table into a JSON file"""
+        """Export rules from a table into a JSON file"""
 
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
