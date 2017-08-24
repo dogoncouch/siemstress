@@ -133,7 +133,7 @@ class SiemTriggerCore:
                         table + \
                         '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                         'RuleName NVARCHAR(25), ' + \
-                        'IsEnabled BOOLEAN, Severity TINYINT', + \
+                        'IsEnabled BOOLEAN, Severity TINYINT' + \
                         'TimeInt INT, EventLimit INT, ' + \
                         'SQLQuery NVARCHAR(1000), ' + \
                         'SourceTable NVARCHAR(25), ' + \
