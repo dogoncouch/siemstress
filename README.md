@@ -6,7 +6,7 @@ A very basic Security Information and Event Management system (SIEM)
 - [Introduction](#introduction)
   - [Description](#description)
   - [Installing](#installing)
-- Tools
+- [Tools](#tools)
   - [siemparse](#siemparse)
   - [siemquery](#siemquery)
   - [siemtrigger](#siemtrigger)
@@ -27,10 +27,12 @@ siemstress is developed and tested using MariaDB as an SQL server. You will need
 ### Config
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
-## Siemparse
+## Tools
+
+### Siemparse
 `siemparse` is a CLI tool to parse log lines from standard input into a siemstress database.
 
-### Usage
+#### Usage
 
 ```
 
@@ -48,14 +50,14 @@ optional arguments:
 
 ```
 
-### Examples
+#### Examples
     tail -n 0 -f /var/log/messages | siemparse
     tail -n 0 -f /var/log/auth.log | siemparse -s auth
 
-## Siemquery
+### Siemquery
 `siemquery` is a CLI tool to query a siemstress database.
 
-### Usage
+#### Usage
 
 ```
 
@@ -103,18 +105,18 @@ query options:
 
 ```
 
-### Examples
+#### Examples
     siemquery --last 6h --json events.json
     siemquery --last 20m -s auth --process sshd --process systemd-logind --grep fail
     siemquery --range 20170726020000-20170726050000 -s auth --grep fail
 
-### Notes
+#### Notes
 CLI arguments that are not time-related can be used more than once (except config/section).
 
-## Siemtrigger
+### Siemtrigger
 `siemtrigger` is a CLI tool to trigger SIEM events based on siemstress database analysis.
 
-### Usage
+#### Usage
 
 ```
 
@@ -131,7 +133,7 @@ optional arguments:
 
 ```
 
-### Examples
+#### Examples
 
     siemtrigger --table AuthRules --import doc/example_rules.json
     siemtrigger -c config/siemstress.conf --table AuthRules
