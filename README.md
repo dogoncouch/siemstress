@@ -4,6 +4,7 @@ A very basic Security Information and Event Management system (SIEM)
 ## Index
 
 - [Introduction](#introduction)
+  - [Screenshot](#screenshot)
   - [Description](#description)
   - [Installing](#installing)
 - [Tools](#tools)
@@ -13,6 +14,9 @@ A very basic Security Information and Event Management system (SIEM)
 - [Copyright](#copyright)
 
 ## Introduction
+
+### Screenshot
+![siemstress screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/siemstress.png)
 
 ### Description
 Siemstress is a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger..
