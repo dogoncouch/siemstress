@@ -128,6 +128,6 @@ def start_rule(server, user, password, database, rule):
     sentry = SiemTrigger(server, user, password, database, rule)
 
     # Before starting, leep randomly up to rule interval to stagger DB use:
-    sleep(randrange(0, int(rrule['TimeInt']) * 60))
+    sleep(randrange(0, int(rule['TimeInt']) * 60))
 
     sentry.watch_rule()
