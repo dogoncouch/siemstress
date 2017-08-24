@@ -95,36 +95,38 @@ class SiemTrigger:
             # Wait until the next interval
             sleep(int(self.rule['TimeInt']) * 60)
 
-        def check_rule(self):
-            # Query the database:
-            con = mdb.connect(self.server, self.user, self.password,
-                    self.database)
+
+
+    def check_rule(self):
+        # Query the database:
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+        with con:
+            cur = con.cursor()
+            cur.execute(self.rule['SQLQuery'])
+            rows = cur.fetchall()
+            cur.close()
+        con.close()
+    
+        # Evaluate the results:
+        if len(rows) > int(self.rule['EventLimit']):
+            idtags = str([row[0] for row in rows])
+
+            datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+
+            # Send an event to the database:
+            con = mdb.connect(self.server, self.user,
+                    self.password, self.database)
             with con:
                 cur = con.cursor()
-                cur.execute(self.rule['SQLQuery'])
-                rows = cur.fetchall()
+                cur.execute(outstatement, (datestamp, tzone,
+                    self.rule['RuleName'], self.rule['Severity'],
+                    self.rule['SourceTable'],
+                    self.rule['EventLimit'], len(rows),
+                    self.rule['TimeInt'], self.rule['Message'],
+                    idtags))
                 cur.close()
             con.close()
-        
-            # Evaluate the results:
-            if len(rows) > int(self.rule['EventLimit']):
-                idtags = str([row[0] for row in rows])
-
-                datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-
-                # Send an event to the database:
-                con = mdb.connect(self.server, self.user,
-                        self.password, self.database)
-                with con:
-                    cur = con.cursor()
-                    cur.execute(outstatement, (datestamp, tzone,
-                        self.rule['RuleName'], self.rule['Severity'],
-                        self.rule['SourceTable'],
-                        self.rule['EventLimit'], len(rows),
-                        self.rule['TimeInt'], self.rule['Message'],
-                        idtags))
-                    cur.close()
-                con.close()
 
 def start_rule(server, user, password, database, rule, oneshot):
     """Initialize trigger object and start watching"""
