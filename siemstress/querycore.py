@@ -289,7 +289,7 @@ class QueryCore:
                         row[self.queryfields[4]],
                         row[self.queryfields[5]]))
 
-        if self.args.outjson:
+        if self.args.outjson and not self.args.rule:
             jrows = []
             for row in rows:
                 jrow = row
