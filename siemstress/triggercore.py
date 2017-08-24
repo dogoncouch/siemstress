@@ -107,7 +107,6 @@ class SiemTriggerCore:
                 cur.close()
             con.close()
             self.rules = self.rules + list(rules)
-            print(self.rules)
 
 
 
@@ -184,7 +183,7 @@ class SiemTriggerCore:
         # Start one thread per rule:
         threads = {}
         for r in self.rules:
-            if r['IsEnabled'] == 'true':
+            if r['IsEnabled'] == 1:
                 thread = threading.Thread(name=r,
                         target=siemstress.trigger.start_rule,
                         args=(self.server, self.user, self.password,

@@ -2,7 +2,7 @@
   "AuthRules": [
     {
       "EventLimit": 7,
-      "IsEnabled": "true",
+      "IsEnabled": 1,
       "Message": "Over 7 pam auth failure events in 10 minute",
       "OutTable": "UserAuth",
       "RuleName": "PAM_AuthFail_10m",
@@ -13,7 +13,7 @@
     },
     {
       "EventLimit": 3,
-      "IsEnabled": "true",
+      "IsEnabled": 1,
       "Message": "Over 3 pam auth failure events for root in 10 minutes",
       "OutTable": "UserAuth",
       "RuleName": "PAM_RootFail_10m",
