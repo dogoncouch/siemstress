@@ -55,7 +55,7 @@ class QueryCore:
         self.password = None
         self.database = None
         self.tables = []
-        self.queryfields = None
+        self.displayfields = None
 
 
 
@@ -188,11 +188,11 @@ class QueryCore:
         else:
             self.tables.append(config.get(self.args.section, 'table'))
         try:
-            self.queryfields = [x for x in config.get(
-                self.args.section, 'queryfields').split(',')]
+            self.displayfields = [x for x in config.get(
+                self.args.section, 'displayfields').split(',')]
         except Exception:
             # To Do: narrow down exception
-            self.queryfields = ['Id', 'DateStamp', 'SourceHost', 
+            self.displayfields = ['Id', 'DateStamp', 'SourceHost', 
                     'Process', 'PID', 'Message']
 
 
@@ -223,21 +223,21 @@ class QueryCore:
 
         if not self.args.silent:
             print "%9s %20s %18s %14s %14s %s" % (
-                    desc[self.queryfields[0]][0],
-                    desc[self.queryfields[1]][0],
-                    desc[self.queryfields[2]][0],
-                    desc[self.queryfields[3]][0],
-                    desc[self.queryfields[4]][0],
-                    desc[self.queryfields[5]][0])
+                    desc[self.displayfields[0]][0],
+                    desc[self.displayfields[1]][0],
+                    desc[self.displayfields[2]][0],
+                    desc[self.displayfields[3]][0],
+                    desc[self.displayfields[4]][0],
+                    desc[self.displayfields[5]][0])
         
             for row in rows:
                 print "%9s %20s %18s %14s %14s %s" % (
-                        row[self.queryfields[0]],
-                        row[self.queryfields[1]],
-                        row[self.queryfields[2]],
-                        row[self.queryfields[3]],
-                        row[self.queryfields[4]],
-                        row[self.queryfields[5]])
+                        row[self.displayfields[0]],
+                        row[self.displayfields[1]],
+                        row[self.displayfields[2]],
+                        row[self.displayfields[3]],
+                        row[self.displayfields[4]],
+                        row[self.displayfields[5]])
 
 
     def query_siem(self):
@@ -273,21 +273,21 @@ class QueryCore:
 
         if not self.args.silent:
             print("%9s %20s %18s %14s %14s %s" % (
-                    self.queryfields[0],
-                    self.queryfields[1],
-                    self.queryfields[2],
-                    self.queryfields[3],
-                    self.queryfields[4],
-                    self.queryfields[5]))
+                    self.displayfields[0],
+                    self.displayfields[1],
+                    self.displayfields[2],
+                    self.displayfields[3],
+                    self.displayfields[4],
+                    self.displayfields[5]))
                    
             for row in rows:
                 print("%9s %20s %18s %14s %14s %s" % (
-                        row[self.queryfields[0]],
-                        row[self.queryfields[1]],
-                        row[self.queryfields[2]],
-                        row[self.queryfields[3]],
-                        row[self.queryfields[4]],
-                        row[self.queryfields[5]]))
+                        row[self.displayfields[0]],
+                        row[self.displayfields[1]],
+                        row[self.displayfields[2]],
+                        row[self.displayfields[3]],
+                        row[self.displayfields[4]],
+                        row[self.displayfields[5]]))
 
         if self.args.outjson:
             jrows = []
