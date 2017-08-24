@@ -80,13 +80,6 @@ class SiemTrigger:
             cur.close()
         con.close()
 
-        outstatement = 'INSERT INTO ' + \
-                self.rule['OutTable'] + \
-                '(DateStamp, TZone, ' + \
-                'SourceRule, Severity, SourceTable, EventLimit, EventCount, ' + \
-                'TimeInt, Message, SourceIDs) ' + \
-                'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-
         while True:
 
             # Check the rule:
@@ -113,6 +106,13 @@ class SiemTrigger:
             idtags = str([row[0] for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+
+            outstatement = 'INSERT INTO ' + \
+                    self.rule['OutTable'] + \
+                    '(DateStamp, TZone, ' + \
+                    'SourceRule, Severity, SourceTable, EventLimit, ' + \
+                    'EventCount, TimeInt, Message, SourceIDs) ' + \
+                    'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
             # Send an event to the database:
             con = mdb.connect(self.server, self.user,
