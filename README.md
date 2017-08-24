@@ -36,7 +36,7 @@ The default siemstress config file location is `/etc/siemstress.conf` (`config/s
 ### Siemparse
 `siemparse` is a CLI tool to parse log lines from standard input into a siemstress database.
 
-#### Usage
+#### Options
 
 ```
 
@@ -61,7 +61,7 @@ optional arguments:
 ### Siemquery
 `siemquery` is a CLI tool to query a siemstress database.
 
-#### Usage
+#### Options
 
 ```
 
@@ -120,7 +120,7 @@ CLI arguments that are not time-related can be used more than once (except confi
 ### Siemtrigger
 `siemtrigger` is a CLI tool to trigger SIEM events based on siemstress database analysis.
 
-#### Usage
+#### Options
 
 ```
 
@@ -140,8 +140,8 @@ optional arguments:
 
 #### Examples
 
-    siemtrigger --table AuthRules --import doc/example_rules.json
-    siemtrigger -c config/siemstress.conf --table AuthRules
+    siemtrigger --table RULESAuth --import doc/example_rules.json
+    siemtrigger -c config/siemstress.conf -s rulesauth
 
 ## Copyright
 MIT License
