@@ -42,24 +42,11 @@ class SiemTrigger:
         self.password = password
         self.database = database
         self.rule = rule
+        self.tzone = None
 
 
     def watch_rule(self):
         """Enforce a trigger rule"""
-
-        # Set time zone:
-        if daylight:
-            self.tzone = \
-                    str(int(float(altzone) / 60 // 60)).rjust(2,
-                            '0') + \
-                    str(int(float(altzone) / 60 % 60)).ljust(2, '0')
-        else:
-            self.tzone = \
-                    str(int(float(timezone) / 60 // 60)).rjust(2,
-                            '0') + \
-                    str(int(float(timezone) / 60 % 60)).ljust(2, '0')
-        if not '-' in self.tzone:
-            self.tzone = '+' + self.tzone
 
         # Create table if it doesn't exist:
         con = mdb.connect(self.server, self.user, self.password,
@@ -130,6 +117,20 @@ class SiemTrigger:
 
 def start_rule(server, user, password, database, rule, oneshot):
     """Initialize trigger object and start watching"""
+
+    # Set time zone:
+    if daylight:
+        self.tzone = \
+                str(int(float(altzone) / 60 // 60)).rjust(2,
+                        '0') + \
+                str(int(float(altzone) / 60 % 60)).ljust(2, '0')
+    else:
+        self.tzone = \
+                str(int(float(timezone) / 60 // 60)).rjust(2,
+                        '0') + \
+                str(int(float(timezone) / 60 % 60)).ljust(2, '0')
+    if not '-' in self.tzone:
+        self.tzone = '+' + self.tzone
 
     sentry = SiemTrigger(server, user, password, database, rule)
 
