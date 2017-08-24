@@ -174,7 +174,8 @@ class SiemTriggerCore:
         con.close()
 
         with open(self.args.exportfile, 'w') as f:
-            f.write(json.dumps(rules))
+            f.write(json.dumps(rules, indent=2, sort_keys=True,
+                separators=(',', ': ')) + '\n')
 
 
 
