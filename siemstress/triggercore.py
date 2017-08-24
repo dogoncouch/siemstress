@@ -60,7 +60,7 @@ class SiemTriggerCore:
                 help = ('set the config file'))
         self.arg_parser.add_argument('--table',
                 action = 'append', dest = 'tables',
-                metavar = 'TABLE', default = ['default'],
+                metavar = 'TABLE',
                 help = ('set a rule table'))
         self.arg_parser.add_argument('--import',
                 action = 'store', dest = 'importfile',
