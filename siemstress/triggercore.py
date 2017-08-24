@@ -111,7 +111,7 @@ class SiemTriggerCore:
         def import_rules(self):
             """Import rules from a JSON file"""
             
-            with open(self.args.importfile, 'r') as f
+            with open(self.args.importfile, 'r') as f:
             rules = json.loads(f.read())
 
             # Set up SQL insert statement:
