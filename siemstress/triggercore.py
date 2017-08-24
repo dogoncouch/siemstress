@@ -106,7 +106,7 @@ class SiemTriggerCore:
                 rules = cur.fetchall()
                 cur.close()
             con.close()
-            self.rules = self.rules + rules
+            self.rules = self.rules + list(rules)
 
 
 
