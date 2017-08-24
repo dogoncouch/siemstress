@@ -26,6 +26,7 @@ from siemstress import __version__
 import siemstress.trigger
 import threading
 import os
+from sys import exit
 from argparse import ArgumentParser
 import ConfigParser
 import json
@@ -89,6 +90,7 @@ class SiemTriggerCore:
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
 
+
         
         def get_rules(self):
             """Get rules from tables"""
@@ -107,6 +109,8 @@ class SiemTriggerCore:
 
 
         def import_rules(self):
+            """Import rules from a JSON file"""
+            
             with open(self.args.importfile, 'r') as f
             rules = json.loads(f.read())
 
@@ -150,7 +154,7 @@ class SiemTriggerCore:
             con.close()
 
 
-        def export_rules(self):
+    def export_rules(self):
             """Export rules from a table into a JSON file"""
 
         con = mdb.connect(self.server, self.user, self.password,
@@ -186,7 +190,13 @@ class SiemTriggerCore:
         try:
             self.get_args()
             self.get_config()
+            if self.args.importfile:
+                self.import_rules()
+                exit(0)
             self.get_rules()
+            if self.args.exportfile:
+                self.export_rules()
+                exit(0)
             self.start_triggers()
 
         except KeyboardInterrupt:
