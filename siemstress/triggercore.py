@@ -116,13 +116,6 @@ class SiemTriggerCore:
         with open(self.args.importfile, 'r') as f:
             rules = json.loads(f.read())
 
-        # Set up SQL insert statement:
-        insertstatement = 'INSERT INTO %s' + \
-                '(RuleName, IsEnabled, Severity, ' + \
-                'TimeInt, EventLimit, SQLQuery, ' + \
-                'SourceTable, OutTable, Message) VALUES ' + \
-                '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
-
         # Create table if it doesn't exist:
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
@@ -147,9 +140,16 @@ class SiemTriggerCore:
         with con:
             cur = con.cursor()
             for table in rules:
+                # Set up SQL insert statement:
+                insertstatement = 'INSERT INTO ' + table + \
+                        '(RuleName, IsEnabled, Severity, ' + \
+                        'TimeInt, EventLimit, SQLQuery, ' + \
+                        'SourceTable, OutTable, Message) VALUES ' + \
+                        '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+
+
                 for rule in rules[table]:
-                    cur.execute(insertstatement, (table,
-                        rule['RuleName'],
+                    cur.execute(insertstatement, (rule['RuleName'],
                         rule['IsEnabled'], rule['Severity'],
                         rule['TimeInt'], rule['EventLimit'], 
                         rule['SQLQuery'], rule['SourceTable'],
