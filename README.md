@@ -64,13 +64,14 @@ optional arguments:
 ```
 
 usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--verbose]
-                 [--silent] [--json FILE] [--table TABLE] [--last LAST]
-                 [--range START-FINISH] [--id ID] [--shost HOST]
-                 [--sport PORT] [--dhost HOST] [--dport PORT]
-                 [--process PROCESS] [--pid PID] [--protocol PROTOCOL]
-                 [--grep PATTERN] [--rshost HOST] [--rsport PORT]
-                 [--rdhost HOST] [--rdport PORT] [--rprocess PROCESS]
-                 [--rpid PID] [--rprotocol PROTOCOL] [--rgrep PATTERN]
+                 [--silent] [--rule] [--json FILE] [--table TABLE]
+                 [--last LAST] [--range START-FINISH] [--id ID]
+                 [--shost HOST] [--sport PORT] [--dhost HOST]
+                 [--dport PORT] [--process PROCESS] [--pid PID]
+                 [--protocol PROTOCOL] [--grep PATTERN] [--rshost HOST]
+                 [--rsport PORT] [--rdhost HOST] [--rdport PORT]
+                 [--rprocess PROCESS] [--rpid PID] [--rprotocol PROTOCOL]
+                 [--rgrep PATTERN]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -79,6 +80,7 @@ optional arguments:
   -s SECTION            set the config section
   --verbose             print SQL statement used for query
   --silent              silence table output to terminal
+  --rule                set rule query mode
   --json FILE           set a JSON output file
 
 query options:
@@ -135,8 +137,8 @@ optional arguments:
 
 ### Examples
 
-    siemtrigger -c config/siemstress.conf
     siemtrigger --table AuthRules --import doc/example_rules.json
+    siemtrigger -c config/siemstress.conf --table AuthRules
 
 ## Copyright
 MIT License

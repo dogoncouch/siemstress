@@ -22,7 +22,8 @@ siemtrigger - CLI tool to trigger SIEM events based on siemstress database analy
     --export FILE  set a JSON file to export rules
 
 .SH EXAMPLES
-    siemtrigger -c config/siemtrigger.conf
+    siemtrigger --table AuthRules --import doc/example_rules.json
+    siemtrigger -c config/siemtrigger.conf --table AuthRules
 
 .SH SEE ALSO
     siemparse(1)

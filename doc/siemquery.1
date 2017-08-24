@@ -4,7 +4,7 @@ siemquery - A CLI tool to perform queries on a siemstress database
 
 .SH SYNOPSIS
 
-\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB--verbose\fR] [\fB--silent\fR] [\fB--json \fIFILE\fR] [\fB--table \fITABLE\fR] [\fB--last \fILAST\fR] [\fB--range \fISTART-FINISH\fR] [\fB--id \fIID\fR] [\fB--shost \fIHOST\fR] [\fB--sport \fIPORT\fR] [\fB--dhost \fIHOST\fR] [\fB--dport \fIPORT\fR] [\fB--process \fIPROCESS\fR] [\fB--protocol \fIPROTOCOL\fR] [\fB--pid \fIPID\fR] [\fB--grep \fIPATTERN\fR] [\fB--rshost \fIHOST\fR] [\fB--rsport \fIPORT\fR] [\fB--rdhost \fIHOST\fR] [\fB--rdport \fIPORT\fR] [\fB--rprocess \fIPROCESS\fR] [\fB--rpid \fIPID\fR] [\fB--rprotocol \fIPROTOCOL\fR] [\fB--rgrep \fIPATTERN\fR] 
+\fBsiemquery\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB--verbose\fR] [\fB--silent\fR] [\fB--rule\fR] [\fB--json \fIFILE\fR] [\fB--table \fITABLE\fR] [\fB--last \fILAST\fR] [\fB--range \fISTART-FINISH\fR] [\fB--id \fIID\fR] [\fB--shost \fIHOST\fR] [\fB--sport \fIPORT\fR] [\fB--dhost \fIHOST\fR] [\fB--dport \fIPORT\fR] [\fB--process \fIPROCESS\fR] [\fB--protocol \fIPROTOCOL\fR] [\fB--pid \fIPID\fR] [\fB--grep \fIPATTERN\fR] [\fB--rshost \fIHOST\fR] [\fB--rsport \fIPORT\fR] [\fB--rdhost \fIHOST\fR] [\fB--rdport \fIPORT\fR] [\fB--rprocess \fIPROCESS\fR] [\fB--rpid \fIPID\fR] [\fB--rprotocol \fIPROTOCOL\fR] [\fB--rgrep \fIPATTERN\fR] 
 
 .SH DESCRIPTION
 \fBsiemquery\fR is a CLI tool to query a siemstress database.
@@ -20,6 +20,7 @@ siemquery - A CLI tool to perform queries on a siemstress database
   -s SECTION            set the config section
   --verbose             print SQL statement used for query
   --silent              silence table output to terminal
+  --rule                set rule query mode
   --json FILE           set a JSON output file
   
   query options:
