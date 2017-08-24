@@ -121,7 +121,7 @@ class SiemTrigger:
     
         # Evaluate the results:
         if len(rows) > int(self.rule['EventLimit']):
-            idtags = str([row[0] for row in rows])
+            idtags = str([int(row[0]) for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
