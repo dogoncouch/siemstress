@@ -62,25 +62,6 @@ class SiemTrigger:
         if not '-' in self.tzone:
             self.tzone = '+' + self.tzone
 
-        # Create table if it doesn't exist:
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
-        with con:
-            cur = con.cursor()
-            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.rule['OutTable'] + \
-                    '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'DateStamp TIMESTAMP, ' + \
-                    'TZone NVARCHAR(5), ' + \
-                    'SourceRule NVARCHAR(25), ' + \
-                    'Severity TINYINT UNSIGNED, ' + \
-                    'SourceTable NVARCHAR(25), ' + \
-                    'EventLimit INT, EventCount INT, ' + \
-                    'TimeInt INT, ' + \
-                    'Message NVARCHAR(1000), ' + \
-                    'SourceIDs NVARCHAR(2000))')
-            cur.close()
-        con.close()
-
         while True:
 
             # Check the rule:
@@ -148,6 +129,25 @@ class SiemTrigger:
 
 def start_rule(server, user, password, database, rule, oneshot):
     """Initialize trigger object and start watching"""
+
+    # Create table if it doesn't exist:
+    con = mdb.connect(self.server, self.user, self.password,
+            self.database)
+    with con:
+        cur = con.cursor()
+        cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['OutTable'] + \
+                '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                'DateStamp TIMESTAMP, ' + \
+                'TZone NVARCHAR(5), ' + \
+                'SourceRule NVARCHAR(25), ' + \
+                'Severity TINYINT UNSIGNED, ' + \
+                'SourceTable NVARCHAR(25), ' + \
+                'EventLimit INT, EventCount INT, ' + \
+                'TimeInt INT, ' + \
+                'Message NVARCHAR(1000), ' + \
+                'SourceIDs NVARCHAR(2000))')
+        cur.close()
+    con.close()
 
     sentry = SiemTrigger(server, user, password, database, rule)
 
