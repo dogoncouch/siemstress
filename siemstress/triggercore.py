@@ -161,6 +161,7 @@ class SiemTriggerCore:
     def export_rules(self):
         """Export rules from a table into a JSON file"""
 
+        rules = {}
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
         with con:
