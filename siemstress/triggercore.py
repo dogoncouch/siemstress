@@ -127,16 +127,16 @@ class SiemTriggerCore:
             with con:
                 cur = con.cursor()
                 for table in self.args.tables:
-                cur.execute('CREATE TABLE IF NOT EXISTS ' + \
-                        self.args.tables[0] + \
-                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                        'RuleName NVARCHAR(25), ' + \
-                        'IsEnabled BOOLEAN, Severity TINYINT', + \
-                        'TimeInt INT, EventLimit INT, ' + \
-                        'SQLQuery NVARCHAR(1000), ' + \
-                        'SourceTable NVARCHAR(25), ' + \
-                        'OutTable NVARCHAR(25), ' + \
-                        'Message NVARCHAR(1000))')
+                    cur.execute('CREATE TABLE IF NOT EXISTS ' + \
+                            self.args.tables[0] + \
+                            '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                            'RuleName NVARCHAR(25), ' + \
+                            'IsEnabled BOOLEAN, Severity TINYINT', + \
+                            'TimeInt INT, EventLimit INT, ' + \
+                            'SQLQuery NVARCHAR(1000), ' + \
+                            'SourceTable NVARCHAR(25), ' + \
+                            'OutTable NVARCHAR(25), ' + \
+                            'Message NVARCHAR(1000))')
                 cur.close()
             con.close()
             
