@@ -222,7 +222,7 @@ class QueryCore:
                 process = self.args.process, grep = self.args.grep)
 
         if not self.args.silent:
-            print "%7s %20s %14s %14s %7s %s" % (
+            print "%9s %20s %14s %14s %7s %s" % (
                     desc[self.queryfields[0]][0],
                     desc[self.queryfields[1]][0],
                     desc[self.queryfields[2]][0],
@@ -231,7 +231,7 @@ class QueryCore:
                     desc[self.queryfields[5]][0])
         
             for row in rows:
-                print "%7s %20s %14s %14s %7s %s" % (
+                print "%9s %20s %14s %14s %7s %s" % (
                         row[self.queryfields[0]],
                         row[self.queryfields[1]],
                         row[self.queryfields[2]],
@@ -272,7 +272,7 @@ class QueryCore:
         if self.args.verbose: print("SQL:\n" + qstatement)
 
         if not self.args.silent:
-            print("%7s %20s %18s %14s %12s %s" % (
+            print("%9s %20s %18s %14s %12s %s" % (
                     self.queryfields[0],
                     self.queryfields[1],
                     self.queryfields[2],
@@ -281,7 +281,7 @@ class QueryCore:
                     self.queryfields[5]))
                    
             for row in rows:
-                print("%7s %20s %18s %14s %12s %s" % (
+                print("%9s %20s %18s %14s %12s %s" % (
                         row[self.queryfields[0]],
                         row[self.queryfields[1]],
                         row[self.queryfields[2]],
