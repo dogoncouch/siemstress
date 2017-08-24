@@ -78,6 +78,9 @@ class QueryCore:
         self.arg_parser.add_argument('--silent',
                 action = 'store_true', dest = 'silent',
                 help = ('silence table output to terminal'))
+        self.arg_parser.add_argument('--rule',
+                action = 'store_true', dest = 'rule',
+                help = ('set rule query mode'))
         self.arg_parser.add_argument('--json',
                 action = 'store', dest = 'outjson',
                 metavar= 'FILE',
@@ -262,7 +265,8 @@ class QueryCore:
                 rprocesses = self.args.rprocesses,
                 rpids = self.args.rpids,
                 rprotocols = self.args.rprotocols,
-                rgreps = self.args.rgreps)
+                rgreps = self.args.rgreps,
+                rulequery = self.args.rule)
 
 
         if self.args.verbose: print("SQL:\n" + qstatement)
