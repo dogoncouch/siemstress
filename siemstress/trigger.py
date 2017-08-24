@@ -49,17 +49,17 @@ class SiemTrigger:
 
         # Set time zone:
         if daylight:
-            tzone = \
+            self.tzone = \
                     str(int(float(altzone) / 60 // 60)).rjust(2,
                             '0') + \
                     str(int(float(altzone) / 60 % 60)).ljust(2, '0')
         else:
-            tzone = \
+            self.tzone = \
                     str(int(float(timezone) / 60 // 60)).rjust(2,
                             '0') + \
                     str(int(float(timezone) / 60 % 60)).ljust(2, '0')
-        if not '-' in tzone:
-            tzone = '+' + tzone
+        if not '-' in self.tzone:
+            self.tzone = '+' + self.tzone
 
         # Create table if it doesn't exist:
         con = mdb.connect(self.server, self.user, self.password,
@@ -119,7 +119,7 @@ class SiemTrigger:
                     self.password, self.database)
             with con:
                 cur = con.cursor()
-                cur.execute(outstatement, (datestamp, tzone,
+                cur.execute(outstatement, (datestamp, self.tzone,
                     self.rule['RuleName'], self.rule['Severity'],
                     self.rule['SourceTable'],
                     self.rule['EventLimit'], len(rows),
