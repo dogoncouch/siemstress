@@ -117,7 +117,7 @@ class SiemTriggerCore:
             rules = json.loads(f.read())
 
         # Set up SQL insert statement:
-        insertstatement = 'Insert into %s' + \
+        insertstatement = 'INSERT INTO %s' + \
                 '(RuleName, IsEnabled, Severity, ' + \
                 'TimeInt, EventLimit, SQLQuery, ' + \
                 'SourceTable, OutTable, Message) VALUES ' + \
