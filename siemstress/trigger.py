@@ -126,7 +126,7 @@ class SiemTrigger:
                     cur.close()
                 con.close()
 
-def start_rule(server, user, password, database, rule, oneshot=False):
+def start_rule(server, user, password, database, rule, oneshot):
     """Initialize trigger object and start watching"""
 
     sentry = SiemTrigger(server, user, password, database, rule)
