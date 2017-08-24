@@ -121,7 +121,7 @@ class SiemTriggerCore:
                 '(RuleName, IsEnabled, Severity, ' + \
                 'TimeInt, EventLimit, SQLQuery, ' + \
                 'SourceTable, OutTable, Message) VALUES ' + \
-                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         # Create table if it doesn't exist:
         con = mdb.connect(self.server, self.user, self.password,
