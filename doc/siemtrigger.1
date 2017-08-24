@@ -4,19 +4,22 @@ siemtrigger - CLI tool to trigger SIEM events based on siemstress database analy
 
 .SH SYNOPSIS
 
-\fBsiemtrigger\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR]
+\fBsiemtrigger\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fB--table \fITABLE\fR] [\fB--import \fIFILE\fR] [\fB--export \fIFILE\fR]
 
 .SH DESCRIPTION
 \fBsiemtrigger\fR is a tool to trigger SIEM events based on database analysis.
 
 .SH OPTIONS
-
-  usage: \fBsiemtrigger\fR [\fBoptions\fR]
   
+  usage: \fBsiemtrigger\fR [\fBoptions\fR]
+
   optional arguments:
-    -h, --help  show this help message and exit
-    --version   show program's version number and exit
-    -c CONFIG   set the config file
+    -h, --help     show this help message and exit
+    --version      show program's version number and exit
+    -c CONFIG      set the config file
+    --table TABLE  set a rule table
+    --import FILE  set a JSON file to import rules
+    --export FILE  set a JSON file to export rules
 
 .SH EXAMPLES
     siemtrigger -c config/siemtrigger.conf
@@ -27,8 +30,7 @@ siemtrigger - CLI tool to trigger SIEM events based on siemstress database analy
 
 .SH FILES
     /etc/siemstress/siemstress.conf
-    /etc/siemstress/siemtrigger.conf
-    /etc/siemstress/triggers.d/*
+    /usr/share/doc/siemstress/example_rules.json
     /usr/share/doc/siemstress/README.md
     /usr/share/doc/siemstress/LICENSE
     /usr/share/doc/siemstress/CHANGELOG.md

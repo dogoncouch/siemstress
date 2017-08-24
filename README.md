@@ -28,6 +28,9 @@ Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
 ### Database Setup
 siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
 
+### Config
+The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
+
 ## Siemparse
 `siemparse` parses lines from standard input into a siemstress database.
 
@@ -52,9 +55,6 @@ optional arguments:
 ### Examples
     tail -n 0 -f /var/log/messages | siemparse
     tail -n 0 -f /var/log/auth.log | siemparse -s auth
-
-### Config
-The default siemparse config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
 ## Siemquery
 `siemquery` performs database queries on a siemstress database.
@@ -110,9 +110,6 @@ query options:
     siemquery --last 20m -s auth --process sshd --process systemd-logind --grep fail
     siemquery --range 20170726020000-20170726050000 -s auth --grep fail
 
-### Config
-The default siemquery config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
-
 ### Notes
 CLI arguments that are not time-related can be used more than once (except config/section).
 
@@ -123,21 +120,23 @@ CLI arguments that are not time-related can be used more than once (except confi
 
 ```
 
-usage: siemtrigger.py [-h] [--version] [-c CONFIG]
+usage: siemtrigger [-h] [--version] [-c CONFIG] [--table TABLE]
+                   [--import FILE] [--export FILE]
 
 optional arguments:
-  -h, --help  show this help message and exit
-  --version   show program's version number and exit
-  -c CONFIG   set the config file
+  -h, --help     show this help message and exit
+  --version      show program's version number and exit
+  -c CONFIG      set the config file
+  --table TABLE  set a rule table
+  --import FILE  set a JSON file to import rules
+  --export FILE  set a JSON file to export rules
 
 ```
 
 ### Examples
 
-    siemtrigger -c config/siemtrigger.conf
-
-### Config
-The default siemtrigger config file location is `/etc/siemtrigger.conf` (`config/siemstress.conf` if working in the repository). `siemtrigger.conf` loads rules from files in a conf directory.
+    siemtrigger -c config/siemstress.conf
+    siemtrigger --table AuthRules --import doc/example_rules.json
 
 ## Copyright
 MIT License
