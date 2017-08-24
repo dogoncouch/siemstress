@@ -167,9 +167,8 @@ class SiemTriggerCore:
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             for table in self.args.tables:
-                rules[table] = []
                 cur.execute('SELECT * FROM ' + table)
-                rules[table].append(cur.fetchall())
+                rules[table] = cur.fetchall()
             cur.close()
         con.close()
 
