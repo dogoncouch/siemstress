@@ -173,7 +173,7 @@ class SiemTriggerCore:
             cur.close()
         con.close()
 
-        with open(self.args.export, 'w') as f:
+        with open(self.args.exportfile, 'w') as f:
             f.write(json.dumps(rules))
 
 
