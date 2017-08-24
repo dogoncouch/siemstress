@@ -1,33 +1,18 @@
-.TH SIEMPARSE 1
+.TH SIEMSTRESS 7
 .SH NAME
-siemparse - CLI tool to parse lines from standard input into a siemstress database
-
-.SH SYNOPSIS
-
-\fBsiemparse\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
+siemstress - a CLI based Security Information and Event Management (SIEM) system
 
 .SH DESCRIPTION
+\fBsiemstress\fR is a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger.
+
 \fBsiemparse\fR is a CLI tool to parse syslog lines from standard input into a siemstress database.
 
-.SH OPTIONS
+\fBsiemquery\fR is a CLI tool to query a siemstress database.
 
-  usage: \fBsiemparse\fR [\fBoptions\fR]
-  
-  optional arguments:
-    -h, --help  show this help message and exit
-    --version   show program's version number and exit
-    --clear     delete the SQL table for selected section
-    --force     really delete the table
-    -c CONFIG   set the config file
-    -s SECTION  set the config section
-    -z TZONE    set the offset to UTC (e.g. '+0500')
-
-.SH EXAMPLES
-    tail -n 0 -f /var/log/messages | siemparse
-    tail -n 0 -f /var/log/auth.log | siemparse -s auth
+\fBsiemtrigger\fR is a CLI tool to trigger SIEM events based on siemstress database analysis.
 
 .SH SEE ALSO
-    siemstress(7)
+    siemparse(1)
     siemquery(1)
     siemtrigger(1)
 

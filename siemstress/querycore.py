@@ -290,17 +290,16 @@ class QueryCore:
                         row[self.queryfields[5]]))
 
         if self.args.outjson:
-            if not self.args.rule:
-                jrows = []
-                for row in rows:
-                    jrow = row
-                    if jrow['DateStamp']:
-                        jrow['DateStamp'] = \
-                                jrow['DateStamp'].strftime('%Y%m%d%H%M%S')
-                    if jrow['FDateStamp']:
-                        jrow['FDateStamp'] = \
-                                float(jrow['FDateStamp'])
-                    jrows.append(jrow)
+            jrows = []
+            for row in rows:
+                jrow = row
+                if 'DateStamp' in jrow:
+                    jrow['DateStamp'] = \
+                            jrow['DateStamp'].strftime('%Y%m%d%H%M%S')
+                if 'FDateStamp' in jrow:
+                    jrow['FDateStamp'] = \
+                            float(jrow['FDateStamp'])
+                jrows.append(jrow)
 
             with open(self.args.outjson, 'w') as f:
                 f.write(json.dumps(rows, indent=2, sort_keys=True,

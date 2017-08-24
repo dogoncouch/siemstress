@@ -15,7 +15,7 @@ A very basic Security Information and Event Management system (SIEM)
 ## Introduction
 
 ### Description
-Siemstress is a suite of CLI tools to parse events into an SQL database, query the data, and trigger events based on configured rules.
+Siemstress is a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger..
 
 ### Installing
 
@@ -32,7 +32,7 @@ siemstress is developed and tested using MariaDB as an SQL server. You will need
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
 ## Siemparse
-`siemparse` parses lines from standard input into a siemstress database.
+`siemparse` is a CLI tool to parse log lines from standard input into a siemstress database.
 
 ### Usage
 
@@ -57,7 +57,7 @@ optional arguments:
     tail -n 0 -f /var/log/auth.log | siemparse -s auth
 
 ## Siemquery
-`siemquery` performs database queries on a siemstress database.
+`siemquery` is a CLI tool to query a siemstress database.
 
 ### Usage
 
@@ -116,7 +116,7 @@ query options:
 CLI arguments that are not time-related can be used more than once (except config/section).
 
 ## Siemtrigger
-`siemtrigger` triggers SIEM events based on siemstress database analysis.
+`siemtrigger` is a CLI tool to trigger SIEM events based on siemstress database analysis.
 
 ### Usage
 

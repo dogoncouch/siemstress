@@ -41,13 +41,11 @@ from sys import prefix
 from siemstress import __version__
 
 ourdata = [(join(prefix, 'share/man/man1'),
-        ['doc/siemparse.1', 'doc/siemquery.1']),
-        ('/etc/siemstress', ['config/siemstress.conf',
-            'config/siemtrigger.conf']),
-        ('/etc/siemstress/triggers.d',
-            ['config/triggers.d/example.conf.disabled']),
+        ['doc/siemparse.1', 'doc/siemquery.1', 'doc/siemtrigger.1',
+            'doc/siemstress.7']),
+        (join(prefix, '/etc/siemstress'), ['config/siemstress.conf']),
         (join(prefix, 'share/doc/siemstress'), ['README.md', 'LICENSE',
-            'CHANGELOG.md'])]
+            'CHANGELOG.md', 'doc/example_rules.json'])]
 
 setup(name = 'siemstress', version = str(__version__),
         description = 'A very basic Security Information and Event Management system (SIEM)',
