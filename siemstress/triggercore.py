@@ -30,6 +30,7 @@ from sys import exit
 from argparse import ArgumentParser
 import ConfigParser
 import json
+import MySQLdb as mdb
 
 
 class SiemTriggerCore:
