@@ -28,6 +28,7 @@ import threading
 import os
 from argparse import ArgumentParser
 import ConfigParser
+import json
 
 
 class SiemTriggerCore:
@@ -53,11 +54,20 @@ class SiemTriggerCore:
                 version = '%(prog)s ' + str(__version__))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
-                default = '/etc/siemstress/siemtrigger.conf',
+                default = '/etc/siemstress/siemstress.conf',
                 help = ('set the config file'))
-        # self.arg_parser.add_argument('-z',
-        #         action = 'store', dest = 'tzone',
-        #         help = ("set the offset to UTC (e.g. '+0500')"))
+        self.arg_parser.add_argument('--table',
+                action = 'append', dest = 'tables',
+                metavar = 'TABLE', default = 'default',
+                help = ('set a rule table'))
+        self.arg_parser.add_argument('--import',
+                action = 'store', dest = 'importfile',
+                metavar = 'FILE',
+                help = ('set a JSON file to import rules'))
+        self.arg_parser.add_argument('--export',
+                action = 'store', dest = 'exportfile',
+                metavar = 'FILE',
+                help = ('set a JSON file to export rules'))
 
         self.args = self.arg_parser.parse_args()
 
@@ -69,7 +79,7 @@ class SiemTriggerCore:
         config = ConfigParser.ConfigParser()
         if os.path.isfile(self.args.config):
             myconf = self.args.config
-        else: myconf = 'config/siemtrigger.conf'
+        else: myconf = 'config/siemstress.conf'
         config.read(myconf)
 
         # Read /etc/triggers.d/*.conf in a for loop
@@ -78,31 +88,81 @@ class SiemTriggerCore:
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
-        confdir = config.get('siemstress', 'confdir')
-        if confdir.startswith('/'):
-            self.confdir = confdir
-        else:
-            self.confdir = os.path.dirname(os.path.realpath(myconf)) + \
-                    '/' + confdir
 
-        for conffile in os.listdir(self.confdir):
-            if conffile.endswith('.conf'):
-                config = ConfigParser.ConfigParser()
-                config.read(self.confdir + conffile)
-                
-                # Each section is a rule.
-                self.rules = {}
-                for s in config.sections():
-                    rule = {}
-                    rule['name'] = s
-                    rule['severity'] = config.get(s, 'severity')
-                    rule['sqlquery'] = config.get(s, 'sqlquery')
-                    rule['sourcetable'] = config.get(s, 'sourcetable')
-                    rule['interval'] = config.get(s, 'interval')
-                    rule['limit'] = config.get(s, 'limit')
-                    rule['outtable'] = config.get(s, 'outtable')
-                    rule['message'] = config.get(s, 'message')
-                    self.rules[rule['name']] = rule
+        
+        def get_rules(self):
+            """Get rules from tables"""
+
+            self.rules = []
+            for table in self.args.tables:
+                con = mdb.connect(self.server, self.user,
+                        self.password, self.database)
+                with con:
+                    cur = con.cursor(mdb.cursors.DictCursor)
+                    cur.execute('SELECT * FROM ' + table)
+                    rules = cur.fetchall()
+                    cur.close()
+                con.close()
+
+
+
+        def import_rules(self):
+            with open(self.args.importfile, 'r') as f
+            rules = json.loads(f.read())
+
+            # Set up SQL insert statement:
+            insertstatement = 'Insert into ' + self.args.tables[0] + \
+                    '(RuleName, IsEnabled, Severity, ' + \
+                    'TimeInt, EventLimit, SQLQuery, ' + \
+                    'SourceTable, OutTable, Message) VALUES ' + \
+                    '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+
+            # Create table if it doesn't exist:
+            con = mdb.connect(self.server, self.user, self.password,
+                    self.database)
+            with con:
+                cur = con.cursor()
+                for table in self.args.tables:
+                cur.execute('CREATE TABLE IF NOT EXISTS ' + \
+                        self.args.tables[0] + \
+                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'RuleName NVARCHAR(25), ' + \
+                        'IsEnabled BOOLEAN, Severity TINYINT', + \
+                        'TimeInt INT, EventLimit INT, ' + \
+                        'SQLQuery NVARCHAR(1000), ' + \
+                        'SourceTable NVARCHAR(25), ' + \
+                        'OutTable NVARCHAR(25), ' + \
+                        'Message NVARCHAR(1000))')
+                cur.close()
+            con.close()
+            
+            con = mdb.connect(self.server, self.user, self.password,
+                    self.database)
+            with con:
+                cur = con.cursor()
+                for rule in rules:
+                    cur.execute(insertstatement, (rule['RuleName'],
+                        rule['IsEnabled'], rule['Severity'],
+                        rule['TimeInt'], rule['EventLimit'], 
+                        rule['SQLQuery'], rule['SourceTable'],
+                        rule['OutTable'], rule['Message']))
+                cur.close()
+            con.close()
+
+
+        def export_rules(self):
+            """Export rules from a table into a JSON file"""
+
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+        with con:
+            cur = con.cursor()
+            for table in self.args.tables:
+                cur.execute('SELECT * FROM ' + table)
+                rules = cur.fetchall()
+
+            with open(self.args.export, 'w') as f:
+                f.write(json.dumps(rules))
 
 
 
@@ -112,11 +172,12 @@ class SiemTriggerCore:
         # Start one thread per rule:
         threads = {}
         for r in self.rules:
-            thread = threading.Thread(name=r,
-                    target=siemstress.trigger.start_rule,
-                    args=(self.server, self.user, self.password,
-                    self.database, self.rules[r]))
-            thread.start()
+            if r['IsEnabled'] == 'true':
+                thread = threading.Thread(name=r,
+                        target=siemstress.trigger.start_rule,
+                        args=(self.server, self.user, self.password,
+                        self.database, self.rules[r]))
+                thread.start()
 
 
 
@@ -125,6 +186,7 @@ class SiemTriggerCore:
         try:
             self.get_args()
             self.get_config()
+            self.get_rules()
             self.start_triggers()
 
         except KeyboardInterrupt:

@@ -35,8 +35,7 @@ import MySQLdb as mdb
 
 class SiemTrigger:
 
-    def __init__(self, server='127.0.0.1', user='siemstress',
-            password='siems2bfine', database='siemstressdb', rule={}):
+    def __init__(self, server, user, password, database, rule):
         """Initialize trigger object"""
         self.server = server
         self.user = user
@@ -67,7 +66,7 @@ class SiemTrigger:
                 self.database)
         with con:
             cur = con.cursor()
-            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.rule['outtable'] + \
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.rule['OutTable'] + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
                     'TZone NVARCHAR(5), ' + \
@@ -82,8 +81,8 @@ class SiemTrigger:
         con.close()
 
         outstatement = 'INSERT INTO ' + \
-                self.rule['outtable'] + \
-                ' (DateStamp, TZone, ' + \
+                self.rule['OutTable'] + \
+                '(DateStamp, TZone, ' + \
                 'SourceRule, Severity, SourceTable, EventLimit, EventCount, ' + \
                 'TimeInt, Message, SourceIDs) ' + \
                 'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
@@ -95,13 +94,13 @@ class SiemTrigger:
                     self.database)
             with con:
                 cur = con.cursor()
-                cur.execute(self.rule['sqlquery'])
+                cur.execute(self.rule['SQLQuery'])
                 rows = cur.fetchall()
                 cur.close()
             con.close()
         
             # Evaluate the results:
-            if len(rows) > int(self.rule['limit']):
+            if len(rows) > int(self.rule['EventLimit']):
                 idtags = str([row[0] for row in rows])
 
                 datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -112,24 +111,23 @@ class SiemTrigger:
                 with con:
                     cur = con.cursor()
                     cur.execute(outstatement, (datestamp, tzone,
-                        self.rule['name'], self.rule['severity'],
-                        self.rule['sourcetable'],
-                        self.rule['limit'], len(rows),
-                        self.rule['interval'], self.rule['message'],
+                        self.rule['RuleName'], self.rule['Severity'],
+                        self.rule['SourceTable'],
+                        self.rule['EventLimit'], len(rows),
+                        self.rule['TimeInt'], self.rule['Message'],
                         idtags))
                     cur.close()
                 con.close()
 
             # Wait until the next interval
-            sleep(int(self.rule['interval']) * 60)
+            sleep(int(self.rule['TimeInt']) * 60)
 
-def start_rule(rserver, ruser, rpassword, rdatabase, rrule={}):
+def start_rule(server, user, password, database, rule):
     """Initialize trigger object and start watching"""
 
-    sentry = SiemTrigger(server = rserver, user = ruser,
-            password = rpassword, database = rdatabase, rule = rrule)
+    sentry = SiemTrigger(server, user, password, database, rule)
 
     # Before starting, leep randomly up to rule interval to stagger DB use:
-    sleep(randrange(0, int(rrule['interval']) * 60))
+    sleep(randrange(0, int(rrule['TimeInt']) * 60))
 
     sentry.watch_rule()
