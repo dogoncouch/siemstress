@@ -147,7 +147,7 @@ class SiemTriggerCore:
         with con:
             cur = con.cursor()
             for table in rules:
-                for rule in table:
+                for rule in rules[table]:
                     cur.execute(insertstatement, (table,
                         rule['RuleName'],
                         rule['IsEnabled'], rule['Severity'],
