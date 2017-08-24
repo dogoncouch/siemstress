@@ -88,7 +88,14 @@ class SiemTrigger:
                 'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         while True:
+
+            # Check the rule:
+            self.check_rule()
         
+            # Wait until the next interval
+            sleep(int(self.rule['TimeInt']) * 60)
+
+        def check_rule(self):
             # Query the database:
             con = mdb.connect(self.server, self.user, self.password,
                     self.database)
@@ -119,15 +126,17 @@ class SiemTrigger:
                     cur.close()
                 con.close()
 
-            # Wait until the next interval
-            sleep(int(self.rule['TimeInt']) * 60)
-
-def start_rule(server, user, password, database, rule):
+def start_rule(server, user, password, database, rule, oneshot=False):
     """Initialize trigger object and start watching"""
 
     sentry = SiemTrigger(server, user, password, database, rule)
 
-    # Before starting, leep randomly up to rule interval to stagger DB use:
-    sleep(randrange(0, int(rule['TimeInt']) * 60))
+    if oneshot:
+        sentry.check_rule()
+    
+    else:
+        # Before starting, sleep randomly up to rule interval to stagger
+        # database use:
+        sleep(randrange(0, int(rule['TimeInt']) * 60))
 
-    sentry.watch_rule()
+        sentry.watch_rule()

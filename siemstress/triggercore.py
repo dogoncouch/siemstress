@@ -62,6 +62,9 @@ class SiemTriggerCore:
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
                 help = ('set a rule table'))
+        self.arg_parser.add_argument('--oneshot',
+                action = 'store_true',
+                help = ('check database once and exit'))
         self.arg_parser.add_argument('--import',
                 action = 'store', dest = 'importfile',
                 metavar = 'FILE',
@@ -205,7 +208,10 @@ class SiemTriggerCore:
             if self.args.exportfile:
                 self.export_rules()
                 exit(0)
-            self.start_triggers()
+            if self.args.oneshot:
+                siemstress.trigger.check
+            else:
+                self.start_triggers()
 
         except KeyboardInterrupt:
             pass
