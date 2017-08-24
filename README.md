@@ -19,11 +19,7 @@ Siemstress is a suite of CLI tools for managing log events, and automating event
 
 ### Installing
 
-Requirements: git, python-setuptools, python-mysqldb, logdissect (>=2.0)
-
-    git clone https://github.com/dogoncouch/siemstress.git
-    cd siemstress
-    sudo make all
+See the latest instructions on the [releases page](https://github.com/dogoncouch/siemstress/releases).
 
 ### Database Setup
 siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
