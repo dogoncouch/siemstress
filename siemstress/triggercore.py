@@ -165,7 +165,7 @@ class SiemTriggerCore:
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
         with con:
-            cur = con.cursor()
+            cur = con.cursor(mdb.cursors.DictCursor)
             for table in self.args.tables:
                 rules[table] = []
                 cur.execute('SELECT * FROM ' + table)
