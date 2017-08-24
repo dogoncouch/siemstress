@@ -120,7 +120,7 @@ CLI arguments that are not time-related can be used more than once (except confi
 
 ```
 
-usage: siemtrigger [-h] [--version] [-c CONFIG] [--table TABLE]
+usage: siemtrigger [-h] [--version] [-c CONFIG] [--table TABLE] [--oneshot]
                    [--import FILE] [--export FILE]
 
 optional arguments:
@@ -128,6 +128,7 @@ optional arguments:
   --version      show program's version number and exit
   -c CONFIG      set the config file
   --table TABLE  set a rule table
+  --oneshot      check database once and exit
   --import FILE  set a JSON file to import rules
   --export FILE  set a JSON file to export rules
 

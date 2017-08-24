@@ -208,10 +208,7 @@ class SiemTriggerCore:
             if self.args.exportfile:
                 self.export_rules()
                 exit(0)
-            if self.args.oneshot:
-                siemstress.trigger.check
-            else:
-                self.start_triggers()
+            self.start_triggers()
 
         except KeyboardInterrupt:
             pass
