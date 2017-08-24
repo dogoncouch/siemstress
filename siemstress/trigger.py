@@ -46,7 +46,7 @@ class SiemTrigger:
 
 
     def watch_rule(self):
-        """Enforce a trigger rule"""
+        """Watch a trigger rule"""
 
         # Set time zone:
         if daylight:
@@ -92,20 +92,22 @@ class SiemTrigger:
 
 
     def check_rule(self):
+        """Check a trigger rule"""
         
-        # Set time zone:
-        if daylight:
-            self.tzone = \
-                    str(int(float(altzone) / 60 // 60)).rjust(2,
-                            '0') + \
-                    str(int(float(altzone) / 60 % 60)).ljust(2, '0')
-        else:
-            self.tzone = \
-                    str(int(float(timezone) / 60 // 60)).rjust(2,
-                            '0') + \
-                    str(int(float(timezone) / 60 % 60)).ljust(2, '0')
-        if not '-' in self.tzone:
-            self.tzone = '+' + self.tzone
+        if not self.tzone:
+            # Set time zone:
+            if daylight:
+                self.tzone = \
+                        str(int(float(altzone) / 60 // 60)).rjust(2,
+                                '0') + \
+                        str(int(float(altzone) / 60 % 60)).ljust(2, '0')
+            else:
+                self.tzone = \
+                        str(int(float(timezone) / 60 // 60)).rjust(2,
+                                '0') + \
+                        str(int(float(timezone) / 60 % 60)).ljust(2, '0')
+            if not '-' in self.tzone:
+                self.tzone = '+' + self.tzone
 
         # Query the database:
         con = mdb.connect(self.server, self.user, self.password,
