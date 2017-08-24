@@ -80,7 +80,7 @@ class SiemQuery:
             pids=[], protocols=[], greps = [],
             rsourcehosts=[], rsourceports=[], rdesthosts=[],
             rdestports=[], rprocesses=[], rpids=[], rprotocols=[],
-            rgreps=[]):
+            rgreps=[], rulequery=False):
         """Query siemstress SQL database for events"""
         
         lastunits = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}
@@ -267,8 +267,9 @@ class SiemQuery:
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
+            if rulequery: qstatement = 'SELECT * FROM ' + ', '.join(tables)
+            
             cur.execute(qstatement)
-
             rows = cur.fetchall()
 
         return qstatement, rows
