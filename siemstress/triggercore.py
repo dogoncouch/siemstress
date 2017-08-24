@@ -115,20 +115,20 @@ class SiemTriggerCore:
             rules = json.loads(f.read())
 
         # Set up SQL insert statement:
-        insertstatement = 'Insert into ' + self.args.tables[0] + \
+        insertstatement = 'Insert into %s' + \
                 '(RuleName, IsEnabled, Severity, ' + \
                 'TimeInt, EventLimit, SQLQuery, ' + \
                 'SourceTable, OutTable, Message) VALUES ' + \
-                '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         # Create table if it doesn't exist:
         con = mdb.connect(self.server, self.user, self.password,
                 self.database)
         with con:
             cur = con.cursor()
-            for table in self.args.tables:
+            for table in rules:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + \
-                        self.args.tables[0] + \
+                        table + \
                         '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                         'RuleName NVARCHAR(25), ' + \
                         'IsEnabled BOOLEAN, Severity TINYINT', + \
@@ -144,12 +144,14 @@ class SiemTriggerCore:
                 self.database)
         with con:
             cur = con.cursor()
-            for rule in rules:
-                cur.execute(insertstatement, (rule['RuleName'],
-                    rule['IsEnabled'], rule['Severity'],
-                    rule['TimeInt'], rule['EventLimit'], 
-                    rule['SQLQuery'], rule['SourceTable'],
-                    rule['OutTable'], rule['Message']))
+            for table in rules:
+                for rule in table:
+                    cur.execute(insertstatement, (table,
+                        rule['RuleName'],
+                        rule['IsEnabled'], rule['Severity'],
+                        rule['TimeInt'], rule['EventLimit'], 
+                        rule['SQLQuery'], rule['SourceTable'],
+                        rule['OutTable'], rule['Message']))
             cur.close()
         con.close()
 
@@ -162,11 +164,14 @@ class SiemTriggerCore:
         with con:
             cur = con.cursor()
             for table in self.args.tables:
+                rules[table] = []
                 cur.execute('SELECT * FROM ' + table)
-                rules = cur.fetchall()
+                rules[table].append(cur.fetchall())
+            cur.close()
+        con.close()
 
-            with open(self.args.export, 'w') as f:
-                f.write(json.dumps(rules))
+        with open(self.args.export, 'w') as f:
+            f.write(json.dumps(rules))
 
 
 
