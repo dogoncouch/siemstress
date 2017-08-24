@@ -301,9 +301,9 @@ class QueryCore:
                             float(jrow['FDateStamp'])
                 jrows.append(jrow)
 
-            with open(self.args.outjson, 'w') as f:
-                f.write(json.dumps(rows, indent=2, sort_keys=True,
-                    separators=(',', ': ')) + '\n')
+        with open(self.args.outjson, 'w') as f:
+            f.write(json.dumps(rows, indent=2, sort_keys=True,
+                separators=(',', ': ')) + '\n')
                    
                    
                    
