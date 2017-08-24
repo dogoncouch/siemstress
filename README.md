@@ -106,7 +106,7 @@ query options:
 ```
 
 ### Examples
-    siemquery --last 6h
+    siemquery --last 6h --json events.json
     siemquery --last 20m -s auth --process sshd --process systemd-logind --grep fail
     siemquery --range 20170726020000-20170726050000 -s auth --grep fail
 
