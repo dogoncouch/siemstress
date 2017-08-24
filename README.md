@@ -64,7 +64,7 @@ optional arguments:
 ```
 
 usage: siemquery [-h] [--version] [-c CONFIG] [-s SECTION] [--verbose]
-                 [--silent] [--json JSON] [--table TABLE] [--last LAST]
+                 [--silent] [--json FILE] [--table TABLE] [--last LAST]
                  [--range START-FINISH] [--id ID] [--shost HOST]
                  [--sport PORT] [--dhost HOST] [--dport PORT]
                  [--process PROCESS] [--pid PID] [--protocol PROTOCOL]
@@ -79,7 +79,7 @@ optional arguments:
   -s SECTION            set the config section
   --verbose             print SQL statement used for query
   --silent              silence table output to terminal
-  --json JSON           set a JSON output file
+  --json FILE           set a JSON output file
 
 query options:
   --table TABLE         set a table to query

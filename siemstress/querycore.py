@@ -80,7 +80,7 @@ class QueryCore:
                 help = ('silence table output to terminal'))
         self.arg_parser.add_argument('--json',
                 action = 'store', dest = 'outjson',
-                metavar = 'JSON',
+                metavar= 'FILE',
                 help = ('set a JSON output file'))
         self.query_args.add_argument('--table',
                 action = 'append', dest = 'tables',
