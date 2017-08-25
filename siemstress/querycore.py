@@ -97,7 +97,7 @@ class QueryCore:
                 metavar = 'START-FINISH',
                 help = ('match a date range (format: YYmmddHHMMSS)'))
         self.query_args.add_argument('--id',
-                action = 'store', dest = 'ids',
+                action = 'append', dest = 'ids',
                 metavar = 'ID',
                 help = ('match an event ID'))
         self.query_args.add_argument('--shost',
