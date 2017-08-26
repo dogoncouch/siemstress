@@ -21,6 +21,28 @@
       "Severity": 5,
       "SourceTable": "Auth",
       "TimeInt": 10
+    },
+    {
+      "EventLimit": 25,
+      "IsEnabled": 1,
+      "Message": "Over 25 pam auth failure events in 10 minute",
+      "OutTable": "SIEMAuth",
+      "RuleName": "PAM_AuthF2_10m",
+      "SQLQuery": "SELECT Id FROM Auth WHERE DateStamp >= timestamp(date_sub(now(), interval 10 minute)) AND (Message LIKE \"%fail%\" AND Message LIKE \"%pam%\")",
+      "Severity": 4,
+      "SourceTable": "Auth",
+      "TimeInt": 10
+    },
+    {
+      "EventLimit": 15,
+      "IsEnabled": 1,
+      "Message": "Over 15 pam auth failure events for root in 10 minutes",
+      "OutTable": "SIEMAuth",
+      "RuleName": "PAM_RootF2_10m",
+      "SQLQuery": "SELECT Id FROM Auth WHERE DateStamp >= timestamp(date_sub(now(), interval 10 minute)) AND (Message LIKE \"%fail%\" AND Message LIKE \"%pam%\" AND Message LIKE \"%root%\")",
+      "Severity": 6,
+      "SourceTable": "Auth",
+      "TimeInt": 10
     }
   ]
 }

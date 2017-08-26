@@ -131,8 +131,7 @@ def start_rule(server, user, password, database, rule, oneshot):
     """Initialize trigger object and start watching"""
 
     # Create table if it doesn't exist:
-    con = mdb.connect(self.server, self.user, self.password,
-            self.database)
+    con = mdb.connect(server, user, password, database)
     with con:
         cur = con.cursor()
         cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['OutTable'] + \
