@@ -32,6 +32,7 @@ import ConfigParser
 import json
 import MySQLdb as mdb
 import signal
+from time import sleep
 
 
 class SiemTriggerCore:
