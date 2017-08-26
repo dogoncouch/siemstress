@@ -54,6 +54,7 @@ class SiemTriggerCore:
 
     def sigterm_handler(self, signal, frame):
         """Exit cleanly on sigterm"""
+        self.stop_threads()
         exit(0)
 
 
@@ -190,6 +191,11 @@ class SiemTriggerCore:
 
 
 
+    def stop_threads(self):
+        for thread in self.threads:
+            thread.stop()
+
+
     def start_triggers(self):
         """Start siemstress event triggers"""
 
@@ -197,14 +203,13 @@ class SiemTriggerCore:
         self.threads = []
         for r in self.rules:
             if r['IsEnabled'] == 1:
-                thread = threading.Thread(name=r,
+                thread = StoppableThread(name=r,
                         target=siemstress.trigger.start_rule,
                         args=(self.server, self.user, self.password,
                         self.database, r, self.args.oneshot))
                 thread.start()
 
             self.threads.append(thread)
-
 
 
     def run_triggers(self):
@@ -222,13 +227,26 @@ class SiemTriggerCore:
             self.start_triggers()
 
         except KeyboardInterrupt:
+            self.stop_threads()
             exit(0)
         except Exception as err:
+            self.stop_threads()
             exit(0)
             print('Error: ' + str(err))
 
     
-    
+class StoppableThread(threading.Thread):
+    def __init__(self):
+        super(StoppableThread, self).__init__()
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
+
+
 def main():
     parser = SiemTrigger()
     parser.run_triggers()
