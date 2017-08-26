@@ -203,8 +203,8 @@ class SiemTriggerCore:
         self.threads = []
         for r in self.rules:
             if r['IsEnabled'] == 1:
-                thread = threading.Thread(name=r,
-                        target=siemstress.trigger.start_rule, daemon=True,
+                thread = threading.Thread(daemon=Tru, ename=r,
+                        target=siemstress.trigger.start_rule,
                         args=(self.server, self.user, self.password,
                         self.database, r, self.args.oneshot))
                 thread.start()
