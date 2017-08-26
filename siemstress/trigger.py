@@ -32,8 +32,9 @@ from random import randrange
 from datetime import datetime
 import MySQLdb as mdb
 import json
-from sys import exit
-import signal
+import threading
+#from sys import exit
+#import signal
 
 
 class SiemTrigger:
@@ -73,7 +74,9 @@ class SiemTrigger:
         if not '-' in self.tzone:
             self.tzone = '+' + self.tzone
 
-        while True:
+        me = threading.currentThread()
+        while gettarrt(me, "do_run", True):
+        #while True:
 
             # Check the rule:
             self.check_rule()
