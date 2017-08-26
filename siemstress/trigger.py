@@ -33,7 +33,8 @@ from datetime import datetime
 import MySQLdb as mdb
 import json
 import threading
-#from sys import exit
+import os
+from sys import exit
 #import signal
 
 
@@ -55,7 +56,7 @@ class SiemTrigger:
     #    """Exit cleanly on sigterm"""
     #    exit(0)
 
-
+    
 
     def watch_rule(self):
         """Watch a trigger rule"""
@@ -74,9 +75,7 @@ class SiemTrigger:
         if not '-' in self.tzone:
             self.tzone = '+' + self.tzone
 
-        me = threading.currentThread()
-        while gettarrt(me, "do_run", True):
-        #while True:
+        while True:
 
             # Check the rule:
             self.check_rule()

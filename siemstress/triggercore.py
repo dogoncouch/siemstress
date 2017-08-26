@@ -47,6 +47,7 @@ class SiemTriggerCore:
         self.password = None
         self.database = None
         self.rules = {}
+        self.threads = []
 
         signal.signal(signal.SIGTERM, self.sigterm_handler)
 
@@ -193,7 +194,7 @@ class SiemTriggerCore:
         """Start siemstress event triggers"""
 
         # Start one thread per rule:
-        threads = {}
+        self.threads = []
         for r in self.rules:
             if r['IsEnabled'] == 1:
                 thread = threading.Thread(name=r,
@@ -201,6 +202,8 @@ class SiemTriggerCore:
                         args=(self.server, self.user, self.password,
                         self.database, r, self.args.oneshot))
                 thread.start()
+
+            self.threads.append(thread)
 
 
 
@@ -219,9 +222,10 @@ class SiemTriggerCore:
             self.start_triggers()
 
         except KeyboardInterrupt:
-            pass
-        # except Exception as err:
-        #     print('Error: ' + str(err))
+            exit(0)
+        except Exception as err:
+            exit(0)
+            print('Error: ' + str(err))
 
     
     
