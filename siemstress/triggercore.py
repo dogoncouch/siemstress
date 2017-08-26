@@ -31,6 +31,7 @@ from argparse import ArgumentParser
 import ConfigParser
 import json
 import MySQLdb as mdb
+import signal
 
 
 class SiemTriggerCore:
@@ -46,6 +47,13 @@ class SiemTriggerCore:
         self.password = None
         self.database = None
         self.rules = {}
+
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
+
+
+    def sigterm_handler(self, signal, frame):
+        """Exits cleanly on sigterm"""
+        exit(0)
 
 
 

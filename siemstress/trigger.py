@@ -32,6 +32,8 @@ from random import randrange
 from datetime import datetime
 import MySQLdb as mdb
 import json
+from sys import exit
+import signal
 
 
 class SiemTrigger:
@@ -44,6 +46,14 @@ class SiemTrigger:
         self.database = database
         self.rule = rule
         self.tzone = None
+
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
+
+
+    def sigterm_handler(self, signal, frame):
+        """Exits cleanly on sigterm"""
+        exit(0)
+
 
 
     def watch_rule(self):
