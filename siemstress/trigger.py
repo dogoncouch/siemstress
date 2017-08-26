@@ -43,17 +43,12 @@ class SiemTrigger:
     def __init__(self, server, user, password, database, rule):
         """Initialize trigger object"""
         
-        # Thread stopping
-        super(SiemTrigger, self).__init__()
-        self._stop_event = threading.Event()
-
         self.server = server
         self.user = user
         self.password = password
         self.database = database
         self.rule = rule
         self.tzone = None
-        me = threading.currentThread()
 
         #signal.signal(signal.SIGTERM, self.sigterm_handler)
 
@@ -87,6 +82,8 @@ class SiemTrigger:
         while True:
 
             if me.stopped():
+                with open('dead.letter', 'a') as f:
+                    f.write('Thread stopped.')
                 exit(0)
 
             # Check the rule:
@@ -152,35 +149,35 @@ class SiemTrigger:
                 cur.close()
             con.close()
 
-    def start_rule(self, server, user, password, database, rule, oneshot):
-        """Initialize trigger object and start watching"""
+def start_rule(server, user, password, database, rule, oneshot):
+    """Initialize trigger object and start watching"""
 
-        # Create table if it doesn't exist:
-        con = mdb.connect(server, user, password, database)
-        with con:
-            cur = con.cursor()
-            cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['OutTable'] + \
-                    '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'DateStamp TIMESTAMP, ' + \
-                    'TZone NVARCHAR(5), ' + \
-                    'SourceRule NVARCHAR(25), ' + \
-                    'Severity TINYINT UNSIGNED, ' + \
-                    'SourceTable NVARCHAR(25), ' + \
-                    'EventLimit INT, EventCount INT, ' + \
-                    'TimeInt INT, ' + \
-                    'Message NVARCHAR(1000), ' + \
-                    'SourceIDs NVARCHAR(2000))')
-            cur.close()
-        con.close()
+    # Create table if it doesn't exist:
+    con = mdb.connect(server, user, password, database)
+    with con:
+        cur = con.cursor()
+        cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['OutTable'] + \
+                '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                'DateStamp TIMESTAMP, ' + \
+                'TZone NVARCHAR(5), ' + \
+                'SourceRule NVARCHAR(25), ' + \
+                'Severity TINYINT UNSIGNED, ' + \
+                'SourceTable NVARCHAR(25), ' + \
+                'EventLimit INT, EventCount INT, ' + \
+                'TimeInt INT, ' + \
+                'Message NVARCHAR(1000), ' + \
+                'SourceIDs NVARCHAR(2000))')
+        cur.close()
+    con.close()
 
-        sentry = SiemTrigger(server, user, password, database, rule)
+    sentry = SiemTrigger(server, user, password, database, rule)
 
-        if oneshot:
-            sentry.check_rule()
-        
-        else:
-            # Before starting, sleep randomly up to rule interval to stagger
-            # database use:
-            sleep(randrange(0, int(rule['TimeInt']) * 60))
+    if oneshot:
+        sentry.check_rule()
+    
+    else:
+        # Before starting, sleep randomly up to rule interval to stagger
+        # database use:
+        sleep(randrange(0, int(rule['TimeInt']) * 60))
 
-            sentry.watch_rule()
+        sentry.watch_rule()
