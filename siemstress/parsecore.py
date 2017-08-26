@@ -32,6 +32,7 @@ import os
 import MySQLdb as mdb
 from argparse import ArgumentParser
 import ConfigParser
+import json
 
 
 
@@ -233,6 +234,8 @@ class LiveParser:
 
                     # extattrs = self.parse_ext(message, ext)
                     # ext = list of tuples - [(name, regex)]
+
+                    extattrs = json.dumps(extattrs)
 
                     # Put our attributes in our table:
                     con = mdb.connect(self.server, self.user,
