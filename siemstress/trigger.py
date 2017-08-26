@@ -51,7 +51,7 @@ class SiemTrigger:
 
 
     def sigterm_handler(self, signal, frame):
-        """Exits cleanly on sigterm"""
+        """Exit cleanly on sigterm"""
         exit(0)
 
 
