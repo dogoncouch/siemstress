@@ -115,7 +115,7 @@ query options:
     siemquery --range 20170726020000-20170726050000 -s auth --grep fail
 
 #### Notes
-CLI arguments that are not time-related can be used more than once (except config/section).
+Arguments under `query options` that are not time-related can be used more than once.
 
 ### Siemtrigger
 `siemtrigger` is a CLI tool to trigger SIEM events based on siemstress database analysis.
