@@ -31,6 +31,7 @@ from time import altzone
 from random import randrange
 from datetime import datetime
 import MySQLdb as mdb
+import json
 
 
 class SiemTrigger:
@@ -102,7 +103,7 @@ class SiemTrigger:
     
         # Evaluate the results:
         if len(rows) > int(self.rule['EventLimit']):
-            idtags = str([int(row[0]) for row in rows])
+            idtags = json.dumps([int(row[0]) for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
