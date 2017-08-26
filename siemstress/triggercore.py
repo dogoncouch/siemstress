@@ -236,7 +236,7 @@ class SiemTriggerCore:
 
     
 class StoppableThread(threading.Thread):
-    def __init__(self):
+    def __init__(self, args):
         super(StoppableThread, self).__init__()
         self._stop_event = threading.Event()
 
