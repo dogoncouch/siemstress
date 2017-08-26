@@ -142,9 +142,9 @@ class LiveParser:
                 ' (DateStamp, FDateStamp, ' + \
                 'TZone, RawStamp, Facility, Severity, SourceHost, ' + \
                 'SourcePort, DestHost, DestPort, Process, PID, Protocol, ' + \
-                'Message) VALUES ' + \
+                'Message, Extended) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
-                '%s, %s, %s, %s, %s)'
+                '%s, %s, %s, %s, %s, %s)'
 
         if not self.args.tzone:
             if time.daylight:
@@ -181,7 +181,8 @@ class LiveParser:
                     'Process NVARCHAR(25), ' + \
                     'PID MEDIUMINT UNSIGNED, ' + \
                     'Protocol NVARCHAR(5), ' + \
-                    'Message NVARCHAR(2000))')
+                    'Message NVARCHAR(2000), '
+                    'Extended NVARCHAR(1000))')
             cur.close()
         con.close()
 
@@ -225,6 +226,13 @@ class LiveParser:
                     else:
                         datestamp = '.'.join(intdatestamp,
                                 tstamp[1].ljust(6, '0'))
+                    
+                    # Parse extended attributes according to config.
+                    # name/regex - use regex for findall, store under name
+                    extattrs = {}
+
+                    # extattrs = self.parse_ext(message, ext)
+                    # ext = list of tuples - [(name, regex)]
 
                     # Put our attributes in our table:
                     con = mdb.connect(self.server, self.user,
@@ -240,7 +248,8 @@ class LiveParser:
                                     entry['dest_host'], entry['dest_port'],
                                     entry['source_process'],
                                     entry['source_pid'],
-                                    entry['protocol'], entry['message']))
+                                    entry['protocol'], entry['message'],
+                                    extattrs))
                         con.commit()
                         cur.close()
                     con.close()
