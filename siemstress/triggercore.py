@@ -203,7 +203,7 @@ class SiemTriggerCore:
         self.threads = []
         for r in self.rules:
             if r['IsEnabled'] == 1:
-                thread = StoppableThread(name=r,
+                thread = threading.Thread(name=r,
                         target=siemstress.trigger.start_rule,
                         args=(self.server, self.user, self.password,
                         self.database, r, self.args.oneshot))
@@ -229,10 +229,10 @@ class SiemTriggerCore:
         except KeyboardInterrupt:
             self.stop_threads()
             exit(0)
-        except Exception as err:
-            self.stop_threads()
-            exit(0)
-            print('Error: ' + str(err))
+        #except Exception as err:
+        #    self.stop_threads()
+        #    exit(0)
+        #    print('Error: ' + str(err))
 
     
 class StoppableThread(threading.Thread):
