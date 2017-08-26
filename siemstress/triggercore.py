@@ -206,7 +206,7 @@ class SiemTriggerCore:
                 thread = threading.Thread(name=r,
                         target=siemstress.trigger.start_rule,
                         args=(self.server, self.user, self.password,
-                        self.database, r, self.args.oneshot))
+                        self.database, r, self.args.oneshot), daemon=True)
                 thread.start()
 
             self.threads.append(thread)
