@@ -47,12 +47,12 @@ class SiemTrigger:
         self.rule = rule
         self.tzone = None
 
-        signal.signal(signal.SIGTERM, self.sigterm_handler)
+        #signal.signal(signal.SIGTERM, self.sigterm_handler)
 
 
-    def sigterm_handler(self, signal, frame):
-        """Exit cleanly on sigterm"""
-        exit(0)
+    #def sigterm_handler(self, signal, frame):
+    #    """Exit cleanly on sigterm"""
+    #    exit(0)
 
 
 
