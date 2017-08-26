@@ -227,6 +227,9 @@ class SiemTriggerCore:
                 exit(0)
             self.start_triggers()
 
+            while True:
+                sleep(10)
+
         except KeyboardInterrupt:
             #self.stop_threads()
             exit(0)
