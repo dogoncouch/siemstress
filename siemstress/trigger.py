@@ -63,7 +63,7 @@ class SiemTrigger:
         """Watch a trigger rule"""
 
         # Set up thread stopping:
-        me = threading.currentThread()
+        #me = threading.currentThread()
 
         # Set time zone:
         if daylight:
@@ -81,10 +81,11 @@ class SiemTrigger:
 
         while True:
 
-            if me.stopped():
-                with open('dead.letter', 'a') as f:
-                    f.write('Thread stopped.')
-                exit(0)
+            # Check for stopped thread:
+            #if me.stopped():
+            #    with open('dead.letter', 'a') as f:
+            #        f.write('Thread stopped.')
+            #    exit(0)
 
             # Check the rule:
             self.check_rule()
