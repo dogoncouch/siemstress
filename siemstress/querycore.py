@@ -210,36 +210,6 @@ class QueryCore:
 
 
 
-    def simple_query_siem(self):
-        """Query SQL database for log events (simplified)"""
-        
-
-        query = SiemQuery(server = self.server, user = self.user,
-                password = self.password, database = self.database)
-
-        desc, rows = query.simple_query(table = self.table,
-                last = self.args.last, shost = self.args.shost,
-                process = self.args.process, grep = self.args.grep)
-
-        if not self.args.silent:
-            print "%9s %20s %18s %14s %14s %s" % (
-                    desc[self.displayfields[0]][0],
-                    desc[self.displayfields[1]][0],
-                    desc[self.displayfields[2]][0],
-                    desc[self.displayfields[3]][0],
-                    desc[self.displayfields[4]][0],
-                    desc[self.displayfields[5]][0])
-        
-            for row in rows:
-                print "%9s %20s %18s %14s %14s %s" % (
-                        row[self.displayfields[0]],
-                        row[self.displayfields[1]],
-                        row[self.displayfields[2]],
-                        row[self.displayfields[3]],
-                        row[self.displayfields[4]],
-                        row[self.displayfields[5]])
-
-
     def query_siem(self):
         """Query SQL database for log events"""
         
@@ -272,21 +242,23 @@ class QueryCore:
         if self.args.verbose: print("SQL:\n" + qstatement)
 
         if not self.args.silent:
-            print("%9s %20s %18s %14s %14s %s" % (
+            print("%9s %20s %18s %14s %10s %10s %s" % (
                     self.displayfields[0],
                     self.displayfields[1],
                     self.displayfields[2],
                     self.displayfields[3],
                     self.displayfields[4],
-                    self.displayfields[5]))
+                    self.displayfields[5],
+                    self.displayfields[6]))
                    
             for row in rows:
-                print("%9s %20s %18s %14s %14s %s" % (
+                print("%9s %20s %18s %14s %10s %10s %s" % (
                         row[self.displayfields[0]],
                         row[self.displayfields[1]],
                         row[self.displayfields[2]],
                         row[self.displayfields[3]],
                         row[self.displayfields[4]],
+                        row[self.displayfields[6]],
                         row[self.displayfields[5]]))
 
         if self.args.outjson:
