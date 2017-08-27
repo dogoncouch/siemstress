@@ -27,7 +27,7 @@
     {
       "EventLimit": 0,
       "IsEnabled": 1,
-      "Message": "Over 1 motion event between 9pm and 7am",
+      "Message": "Over 0 motion event between 9pm and 7am",
       "OutTable": "SIEMAuth",
       "RuleName": "VIS_NightMove",
       "SQLQuery": "SELECT Id FROM Visual WHERE DateStamp >= timestamp(date_sub(now(), interval 10 hour)) AND (Message LIKE \"%PIR: Motion%\")",
