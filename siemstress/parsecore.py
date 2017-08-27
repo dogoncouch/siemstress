@@ -79,7 +79,7 @@ class LiveParser:
                 action = 'store', dest = 'tzone',
                 help = ("set the offset to UTC (e.g. '+0500')"))
         self.arg_parser.add_argument('file',
-                type = FileType('r'), nargs = '*',
+                type = FileType('r'), nargs = '?',
                 help = ('set a file to follow'))
 
         self.args = self.arg_parser.parse_args()
