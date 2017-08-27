@@ -4,15 +4,18 @@ siemparse - CLI tool to parse lines from standard input into a siemstress databa
 
 .SH SYNOPSIS
 
-\fBsiemparse\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR]
+\fBsiemparse\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR] [\fIfile\fR]
 
 .SH DESCRIPTION
-\fBsiemparse\fR is a CLI tool to parse syslog lines from standard input into a siemstress database.
+\fBsiemparse\fR is a CLI tool to parse syslog lines from a log file or standard input into a siemstress database.
 
 .SH OPTIONS
 
   usage: \fBsiemparse\fR [\fBoptions\fR]
   
+  positional arguments:
+    file        set a file to follow
+
   optional arguments:
     -h, --help  show this help message and exit
     --version   show program's version number and exit
@@ -23,8 +26,8 @@ siemparse - CLI tool to parse lines from standard input into a siemstress databa
     -z TZONE    set the offset to UTC (e.g. '+0500')
 
 .SH EXAMPLES
-    tail -n 0 -f /var/log/messages | siemparse
-    tail -n 0 -f /var/log/auth.log | siemparse -s auth
+    siemparse /var/log/messages
+    siemparse /var/log/auth.log
 
 .SH SEE ALSO
     siemstress(7)

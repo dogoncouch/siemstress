@@ -31,6 +31,7 @@ import sys
 import os
 import MySQLdb as mdb
 from argparse import ArgumentParser
+from argparse import FileType
 import ConfigParser
 import json
 
@@ -77,6 +78,9 @@ class LiveParser:
         self.arg_parser.add_argument('-z',
                 action = 'store', dest = 'tzone',
                 help = ("set the offset to UTC (e.g. '+0500')"))
+        self.arg_parser.add_argument('file',
+                type = FileType('r'),
+                help = ('set a file to follow'))
 
         self.args = self.arg_parser.parse_args()
 
@@ -132,6 +136,10 @@ class LiveParser:
 
     def parse_entries(self):
         """Parse log entries from standard input"""
+
+        # Read to the end of the file:
+        self.args.file.read()
+        
         recent_datestamp = '0000000000'
         oldtnum = 0
         ymdstamp = datetime.now().strftime('%Y%m%d')
@@ -190,7 +198,9 @@ class LiveParser:
 
         while True:
 
-            line = sys.stdin.readline()
+            #line = sys.stdin.readline()
+            # Check for a new line:
+            line = self.args.file.readline()
 
             if line:
                 # Do the parsing

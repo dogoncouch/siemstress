@@ -34,7 +34,7 @@ The default siemstress config file location is `/etc/siemstress.conf` (`config/s
 ## Tools
 
 ### Siemparse
-`siemparse` is a CLI tool to parse log lines from standard input into a siemstress database.
+`siemparse` is a CLI tool to parse log lines from a log file or standard input into a siemstress database.
 
 #### Options
 
@@ -42,6 +42,10 @@ The default siemstress config file location is `/etc/siemstress.conf` (`config/s
 
 usage: siemparse [-h] [--version] [--clear] [--force] [-q] [-c CONFIG]
                  [-s SECTION] [-z TZONE]
+                 file
+
+positional arguments:
+  file        set a file to follow
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -55,8 +59,8 @@ optional arguments:
 ```
 
 #### Examples
-    tail -n 0 -f /var/log/messages | siemparse
-    tail -n 0 -f /var/log/auth.log | siemparse -s auth
+    siemparse /var/log/messages
+    siemparse -s auth /var/log/auth.log
 
 ### Siemquery
 `siemquery` is a CLI tool to query a siemstress database.
