@@ -37,14 +37,14 @@ class SiemConnect:
 
     def __init__(self, server='127.0.0.1', user='siemstress',
             password='siems2bfine', database='siemstressdb'):
-    self.server = server
-    self.user = user
-    self.password = password
-    self.database = database
-    self.con = None
-    self.cur = None
+        self.server = server
+        self.user = user
+        self.password = password
+        self.database = database
+        self.con = None
+        self.cur = None
 
-    self.connect()
+        self.connect()
 
 
     def connect(self):
