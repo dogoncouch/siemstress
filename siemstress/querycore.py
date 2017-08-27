@@ -258,8 +258,8 @@ class QueryCore:
                         row[self.displayfields[2]],
                         row[self.displayfields[3]],
                         row[self.displayfields[4]],
-                        row[self.displayfields[6]],
-                        row[self.displayfields[5]]))
+                        row[self.displayfields[5]],
+                        row[self.displayfields[6]]))
 
         if self.args.outjson:
             jrows = []
