@@ -128,13 +128,14 @@ class SiemTrigger:
             idtags = json.dumps([int(row[0]) for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            magnitute = len(rows) // self.rule['Severity']
 
             outstatement = 'INSERT INTO ' + \
                     self.rule['OutTable'] + \
                     '(DateStamp, TZone, ' + \
                     'SourceRule, Severity, SourceTable, EventLimit, ' + \
-                    'EventCount, TimeInt, Message, SourceIDs) ' + \
-                    'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                    'EventCount, Magnitude, TimeInt, Message, SourceIDs) ' + \
+                    'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
             # Send an event to the database:
             con = mdb.connect(self.server, self.user,
@@ -144,7 +145,7 @@ class SiemTrigger:
                 cur.execute(outstatement, (datestamp, self.tzone,
                     self.rule['RuleName'], self.rule['Severity'],
                     self.rule['SourceTable'],
-                    self.rule['EventLimit'], len(rows),
+                    self.rule['EventLimit'], len(rows), magnitude,
                     self.rule['TimeInt'], self.rule['Message'],
                     idtags))
                 cur.close()
@@ -164,8 +165,10 @@ def start_rule(server, user, password, database, rule, oneshot):
                 'SourceRule NVARCHAR(25), ' + \
                 'Severity TINYINT UNSIGNED, ' + \
                 'SourceTable NVARCHAR(25), ' + \
-                'EventLimit INT, EventCount INT, ' + \
-                'TimeInt INT, ' + \
+                'EventLimit INT UNSIGNED, ' + \
+                'EventCount INT UNSIGNED, ' + \
+                'Magnitute INT UNSIGNED, ' + \
+                'TimeInt INT UNSIGNED, ' + \
                 'Message NVARCHAR(1000), ' + \
                 'SourceIDs NVARCHAR(2000))')
         cur.close()
