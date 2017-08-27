@@ -229,6 +229,11 @@ class SiemTriggerCore:
             self.start_triggers()
 
             while True:
+                isAlive = False
+                for thread in self.threads:
+                    if thread.isAlive():
+                        isAlive = True
+                if not isAlive: exit(0)
                 sleep(10)
 
         except KeyboardInterrupt:

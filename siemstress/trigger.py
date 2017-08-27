@@ -164,7 +164,6 @@ def start_rule(server, user, password, database, rule, oneshot):
 
     if oneshot or int(rule['TimeInt']) == 0:
         sentry.check_rule()
-        exit(0)
     
     else:
         # Before starting, sleep randomly up to rule interval to stagger
