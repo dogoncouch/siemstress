@@ -128,7 +128,8 @@ class SiemTrigger:
             idtags = json.dumps([int(row[0]) for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-            magnitude = ((len(rows) // self.rule['EventLimit']) // 2) * \
+            magnitude = (((len(rows) // \
+                    (self.rule['EventLimit']) + 1) // 2) + 1) * \
                     ( 7 - self.rule['Severity'])
 
             outstatement = 'INSERT INTO ' + \

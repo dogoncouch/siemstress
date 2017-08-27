@@ -25,7 +25,7 @@
   ],
   "RULESVis7am": [
     {
-      "EventLimit": 1,
+      "EventLimit": 0,
       "IsEnabled": 1,
       "Message": "Over 1 motion event between 9pm and 7am",
       "OutTable": "SIEMAuth",
