@@ -128,7 +128,7 @@ class SiemTrigger:
             idtags = json.dumps([int(row[0]) for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-            magnitute = len(rows) // self.rule['Severity']
+            magnitude = len(rows) // self.rule['Severity']
 
             outstatement = 'INSERT INTO ' + \
                     self.rule['OutTable'] + \
@@ -167,7 +167,7 @@ def start_rule(server, user, password, database, rule, oneshot):
                 'SourceTable NVARCHAR(25), ' + \
                 'EventLimit INT UNSIGNED, ' + \
                 'EventCount INT UNSIGNED, ' + \
-                'Magnitute INT UNSIGNED, ' + \
+                'Magnitude INT UNSIGNED, ' + \
                 'TimeInt INT UNSIGNED, ' + \
                 'Message NVARCHAR(1000), ' + \
                 'SourceIDs NVARCHAR(2000))')
