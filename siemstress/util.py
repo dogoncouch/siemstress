@@ -36,7 +36,7 @@ import MySQLdb as mdb
 class SiemConnect:
 
     def __init__(self, server='127.0.0.1', user='siemstress',
-            password='siems2bfine', database='siemstressdb')
+            password='siems2bfine', database='siemstressdb'):
     self.server = server
     self.user = user
     self.password = password
