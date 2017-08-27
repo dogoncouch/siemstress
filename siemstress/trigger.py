@@ -129,7 +129,7 @@ class SiemTrigger:
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
             magnitude = (((len(rows) // \
-                    (self.rule['EventLimit']) + 1) // 2) + 1) * \
+                    (self.rule['EventLimit']) + 1) // 2) + 5) * \
                     ( 7 - self.rule['Severity'])
 
             outstatement = 'INSERT INTO ' + \
