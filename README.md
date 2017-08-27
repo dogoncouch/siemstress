@@ -42,7 +42,7 @@ The default siemstress config file location is `/etc/siemstress.conf` (`config/s
 
 usage: siemparse [-h] [--version] [--clear] [--force] [-q] [-c CONFIG]
                  [-s SECTION] [-z TZONE]
-                 [file [file ...]]
+                 [file]
 
 positional arguments:
   file        set a file to follow
