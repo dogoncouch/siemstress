@@ -50,20 +50,10 @@ class SiemTrigger:
         self.rule = rule
         self.tzone = None
 
-        #signal.signal(signal.SIGTERM, self.sigterm_handler)
-
-
-    #def sigterm_handler(self, signal, frame):
-    #    """Exit cleanly on sigterm"""
-    #    exit(0)
-
 
 
     def watch_rule(self):
         """Watch a trigger rule"""
-
-        # Set up thread stopping:
-        #me = threading.currentThread()
 
         # Set time zone:
         if daylight:
@@ -80,12 +70,6 @@ class SiemTrigger:
             self.tzone = '+' + self.tzone
 
         while True:
-
-            # Check for stopped thread:
-            #if me.stopped():
-            #    with open('dead.letter', 'a') as f:
-            #        f.write('Thread stopped.')
-            #    exit(0)
 
             # Check the rule:
             self.check_rule()
@@ -178,8 +162,9 @@ def start_rule(server, user, password, database, rule, oneshot):
 
     sentry = SiemTrigger(server, user, password, database, rule)
 
-    if oneshot or rule['TimeInt'] == 0:
+    if oneshot or int(rule['TimeInt']) == 0:
         sentry.check_rule()
+        exit(0)
     
     else:
         # Before starting, sleep randomly up to rule interval to stagger
