@@ -177,6 +177,9 @@ def start_rule(server, user, password, database, rule, oneshot):
 
     sentry = SiemTrigger(server, user, password, database, rule)
 
+    if rule['TimeInt'] = '0':
+        oneshot = True
+
     if oneshot:
         sentry.check_rule()
     
