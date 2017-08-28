@@ -40,21 +40,25 @@ The default siemstress config file location is `/etc/siemstress.conf` (`config/s
 
 ```
 
-usage: siemparse [-h] [--version] [--clear] [--force] [-q] [-c CONFIG]
-                 [-s SECTION] [-z TZONE]
+usage: siemparse [-h] [--version] [--clear] [--force] [--import FILE]
+                 [--export FILE] [--table TABLE] [-c CONFIG] [-s SECTION]
+                 [-z TZONE]
                  [file]
 
 positional arguments:
-  file        set a file to follow
+  file           set a file to follow
 
 optional arguments:
-  -h, --help  show this help message and exit
-  --version   show program's version number and exit
-  --clear     delete the SQL table for selected section
-  --force     really delete the table
-  -c CONFIG   set the config file
-  -s SECTION  set the config section
-  -z TZONE    set the offset to UTC (e.g. '+0500')
+  -h, --help     show this help message and exit
+  --version      show program's version number and exit
+  --clear        delete the SQL table for selected section
+  --force        really delete the table
+  --import FILE  set a JSON file to import helpers
+  --export FILE  set a JSON file to export helpers
+  --table TABLE  set a helper table to export
+  -c CONFIG      set the config file
+  -s SECTION     set the config section
+  -z TZONE       set the offset to UTC (e.g. '+0500')
 
 ```
 
@@ -144,8 +148,8 @@ optional arguments:
 
 #### Examples
 
-    siemtrigger --table RULESAuth --import doc/example_rules.json
-    siemtrigger -c config/siemstress.conf -s rulesauth
+    siemtrigger --import doc/example_rules.json
+    siemtrigger -c config/db.conf -s rulesauth
 
 ## Copyright
 MIT License

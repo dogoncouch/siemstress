@@ -66,7 +66,7 @@ class QueryCore:
                 version = '%(prog)s ' + str(__version__))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
-                default = '/etc/siemstress/siemstress.conf',
+                default = '/etc/siemstress/db.conf',
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'section',
@@ -183,6 +183,13 @@ class QueryCore:
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
+        sectionfile = config.get('siemstress', 'sectionfile')
+
+        if not sectionfile.startswith('/'):
+            sectionfile = '/' + '/'.join(os.path.abspath(myconf).split('/')[:-1])
+
+        config.read(sectionfile)
+        
         if self.args.tables:
             self.tables = self.args.tables
         else:

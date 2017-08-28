@@ -23,8 +23,8 @@ siemtrigger - CLI tool to trigger SIEM events based on siemstress database analy
     --export FILE  set a JSON file to export rules
 
 .SH EXAMPLES
-    siemtrigger --table RULESAuth --import doc/example_rules.json
-    siemtrigger -c config/siemstress.conf -s rulesauth
+    siemtrigger --import config/example_rules.json
+    siemtrigger -c config/db.conf -s rulesauth
 
 .SH SEE ALSO
     siemstress(7)
@@ -32,7 +32,8 @@ siemtrigger - CLI tool to trigger SIEM events based on siemstress database analy
     siemquery(1)
 
 .SH FILES
-    /etc/siemstress/siemstress.conf
+    /etc/siemstress/db.conf
+    /etc/siemstress/sections.conf
     /usr/share/doc/siemstress/example_rules.json
     /usr/share/doc/siemstress/README.md
     /usr/share/doc/siemstress/LICENSE

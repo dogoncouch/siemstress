@@ -43,9 +43,11 @@ from siemstress import __version__
 ourdata = [(join(prefix, 'share/man/man1'),
         ['doc/siemparse.1', 'doc/siemquery.1', 'doc/siemtrigger.1',
             'doc/siemstress.7']),
-        (join(prefix, '/etc/siemstress'), ['config/siemstress.conf']),
+        (join(prefix, '/etc/siemstress'),
+            ['config/db.conf', 'config/sections.conf']),
         (join(prefix, 'share/doc/siemstress'), ['README.md', 'LICENSE',
-            'CHANGELOG.md', 'doc/example_rules.json'])]
+            'CHANGELOG.md', 'config/example_rules.json',
+            'config/example_rules.json'])]
 
 setup(name = 'siemstress', version = str(__version__),
         description = 'A very basic Security Information and Event Management system (SIEM)',

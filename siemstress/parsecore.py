@@ -81,7 +81,7 @@ class LiveParser:
                 help = ('set a helper table to export'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
-                default = '/etc/siemstress/siemstress.conf',
+                default = '/etc/siemstress/db.conf',
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'section',
@@ -104,13 +104,20 @@ class LiveParser:
         config = ConfigParser.ConfigParser()
         if os.path.isfile(self.args.config):
             myconf = self.args.config
-        else: myconf = 'config/siemstress.conf'
+        else: myconf = 'config/db.conf'
         config.read(myconf)
 
         self.server = config.get('siemstress', 'server')
         self.user = config.get('siemstress', 'user')
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
+        sectionfile = config.get('siemstress', 'sectionfile')
+
+        if not sectionfile.startswith('/'):
+            sectionfile = '/' + '/'.join(os.path.abspath(myconf).split('/')[:-1])
+
+        config.read(sectionfile)
+        
         self.table = config.get(self.args.section, 'table')
         self.helpers = config.get(self.args.section, 'helpers')
         try:
