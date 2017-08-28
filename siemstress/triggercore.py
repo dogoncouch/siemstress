@@ -95,7 +95,7 @@ class SiemTriggerCore:
         config = ConfigParser.ConfigParser()
         if os.path.isfile(self.args.config):
             myconf = self.args.config
-        else: myconf = 'config/siemstress.conf'
+        else: myconf = 'config/db.conf'
         config.read(myconf)
 
         # Read /etc/triggers.d/*.conf in a for loop

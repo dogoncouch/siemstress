@@ -176,7 +176,7 @@ class QueryCore:
         config = ConfigParser.ConfigParser()
         if os.path.isfile(self.args.config):
             myconf = (config)
-        else: myconf = 'config/siemstress.conf'
+        else: myconf = 'config/db.conf'
         config.read(myconf)
 
         self.server = config.get('siemstress', 'server')
