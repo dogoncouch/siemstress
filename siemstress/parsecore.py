@@ -162,8 +162,8 @@ class LiveParser:
                         '(%s, %s)'
 
                 for h in helpers[table]:
-                    cur.execute(insertstatement, (table['var_name'],
-                        table['reg_exp']))
+                    cur.execute(insertstatement, (h['var_name'],
+                        h['reg_exp']))
             cur.close()
         con.close()
 
