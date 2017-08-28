@@ -67,6 +67,18 @@ class LiveParser:
         self.arg_parser.add_argument('--force',
                 action = 'store_true', dest = 'force',
                 help = ('really delete the table'))
+        self.arg_parser.add_argument('--import',
+                action = 'store', dest = 'importfile',
+                metavar = 'FILE',
+                help = ('set a JSON file to import helpers'))
+        self.arg_parser.add_argument('--export',
+                action = 'store', dest = 'exportfile',
+                metavar = 'FILE',
+                help = ('set a JSON file to export helpers'))
+        self.arg_parser.add_argument('--table',
+                action = 'append', dest = 'tables',
+                metavar = 'TABLE',
+                help = ('set a helper table to export'))
         self.arg_parser.add_argument('-c',
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/siemstress.conf',
@@ -115,6 +127,63 @@ class LiveParser:
             self.parser = logdissect.parsers.nohost.ParseModule()
         elif self.parsername == 'tcpdump':
             self.parser = logdissect.parsers.tcpdump.ParseModule()
+
+
+
+    def import_helperss(self):
+        """Import helperss from a JSON file"""
+        
+        with open(self.args.importfile, 'r') as f:
+            helpers = json.loads(f.read())
+
+        # Create table if it doesn't exist:
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+        with con:
+            cur = con.cursor()
+            for table in helpers:
+                cur.execute('CREATE TABLE IF NOT EXISTS ' + \
+                        table + \
+                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'var_name NVARCHAR(25), ' + \
+                        'reg_exp NVARCHAR(200))')
+            cur.close()
+        con.close()
+        
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+        with con:
+            cur = con.cursor()
+            for table in helpers:
+                # Set up SQL insert statement:
+                insertstatement = 'INSERT INTO ' + table + \
+                        '(var_name, reg_exp) VALUES ' + \
+                        '(%s, %s)'
+
+                for h in helpers[table]:
+                    cur.execute(insertstatement, (table['var_name'],
+                        table['reg_exp']))
+            cur.close()
+        con.close()
+
+
+    def export_helpers(self):
+        """Export helpers from a table into a JSON file"""
+
+        helpers = {}
+        con = mdb.connect(self.server, self.user, self.password,
+                self.database)
+        with con:
+            cur = con.cursor(mdb.cursors.DictCursor)
+            for table in self.args.tables:
+                cur.execute('SELECT * FROM ' + table)
+                helpers[table] = cur.fetchall()
+            cur.close()
+        con.close()
+
+        with open(self.args.exportfile, 'w') as f:
+            f.write(json.dumps(helpers, indent=2, sort_keys=True,
+                separators=(',', ': ')) + '\n')
 
 
 
