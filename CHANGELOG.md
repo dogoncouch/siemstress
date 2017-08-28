@@ -1,6 +1,10 @@
 # Change log
 Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 
+## [Unreleased]
+### Changed
+- Split config into 2 files (db, sections)
+
 ## [0.5-alpha] - 2017-08-28
 ### Added
 - `siemparse` now parses from file or stdin
