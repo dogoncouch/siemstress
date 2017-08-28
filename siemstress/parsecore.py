@@ -131,7 +131,7 @@ class LiveParser:
 
 
 
-    def import_helperss(self):
+    def import_helpers(self):
         """Import helperss from a JSON file"""
         
         with open(self.args.importfile, 'r') as f:
