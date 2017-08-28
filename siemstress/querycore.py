@@ -187,7 +187,7 @@ class QueryCore:
 
         if not sectionfile.startswith('/'):
             sectionfile = '/'.join(os.path.abspath(myconf).split('/')[:-1]) + \
-                    sectionfile
+                    '/' + sectionfile
 
         config.read(sectionfile)
         

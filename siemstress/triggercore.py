@@ -107,7 +107,8 @@ class SiemTriggerCore:
         sectionfile = config.get('siemstress', 'sectionfile')
 
         if not sectionfile.startswith('/'):
-            sectionfile = '/' + '/'.join(os.path.abspath(myconf).split('/')[:-1])
+            sectionfile = '/'.join(os.path.abspath(myconf).split('/')[:-1]) + \
+                    '/' + sectionfile
 
         config.read(sectionfile)
 
