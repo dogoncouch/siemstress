@@ -30,9 +30,9 @@
       "Message": "Over 0 motion events in one hour at night",
       "OutTable": "SIEMVis",
       "RuleName": "VIS_NightMoves",
-      "SQLQuery": "SELECT Id FROM Visual WHERE DateStamp >= timestamp(date_sub(now(), interval 1 hour)) AND (Message LIKE \"%Motion%\")",
+      "SQLQuery": "SELECT Id FROM Visual WHERE DateStamp >= timestamp(date_sub(now(), interval 1 hour)) AND (Message LIKE \"%PIR: Motion%\")",
       "Severity": 4,
-      "SourceTable": "Auth",
+      "SourceTable": "Visual",
       "TimeInt": 0
     }
   ]
