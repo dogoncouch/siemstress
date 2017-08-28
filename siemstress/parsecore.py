@@ -112,6 +112,7 @@ class LiveParser:
         self.password = config.get('siemstress', 'password')
         self.database = config.get('siemstress', 'database')
         self.table = config.get(self.args.section, 'table')
+        self.helpers = config.get(self.args.section, 'helpers')
         try:
             self.parsername = config.get(self.args.section, 'parser')
         except Exception:
@@ -243,7 +244,7 @@ class LiveParser:
                 self.password, self.database)
         
         with con:
-            cur = con.cursor()
+            cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
                     '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'DateStamp TIMESTAMP, ' + \
@@ -261,9 +262,21 @@ class LiveParser:
                     'Protocol NVARCHAR(5), ' + \
                     'Message NVARCHAR(2000), '
                     'Extended NVARCHAR(1000))')
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.helpers + \
+                    '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'var_name NVARCHAR(25), ' + \
+                    'reg_exp NVARCHAR(200))')
+            cur.execute('SELECT * FROM ' + self.helpers)
+            helpers = cur.fetchall()
             cur.close()
         con.close()
 
+        rehelpers = []
+        for h in helpers:
+            reh = {}
+            reh['var_name'] = h['var_name']
+            reh['reg_exp'] = re.compile(h['reg_exp'])
+            rehelpers.append(reh)
 
         while True:
 
@@ -307,19 +320,20 @@ class LiveParser:
                         datestamp = '.'.join(intdatestamp,
                                 tstamp[1].ljust(6, '0'))
                     
-                    # Parse extended attributes according to config.
-                    # name/regex - use regex for findall, store under name
+                    # Parse extended attributes:
                     extattrs = {}
 
-                    # extattrs = self.parse_ext(message, ext)
-                    # ext = list of tuples - [(name, regex)]
+                    for h in rehelpers:
+                        mlist = h['reg_exp'].findall(entry['message'])
+
+                        extattrs[h['var_name']] = mlist
 
                     extattrs = json.dumps(extattrs)
+
 
                     # Put our attributes in our table:
                     con = mdb.connect(self.server, self.user,
                             self.password, self.database)
-        
                     with con:
                         cur = con.cursor()
                         cur.execute(self.sqlstatement,
