@@ -364,6 +364,10 @@ class LiveParser:
             self.get_config()
             if self.args.clearsiem:
                 self.clear_siem()
+            elif self.args.importfile:
+                self.import_helpers()
+            elif self.args.exportfile:
+                self.export_helpers()
             else:
                 self.parse_entries()
 
