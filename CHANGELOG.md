@@ -1,16 +1,17 @@
 # Change log
 Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 
-## [Unreleased]
+## [0.5-alpha] - 2017-08-28
 ### Added
 - `siemparse` now parses from file or stdin
 - Example visual rules
-- Parse helpers for extended attributes (json string)
+- Parse helpers for user-definable extended attributes (json string)
+- Example helpers
 
 ### Changed
 - Trigger rules with TimeInt of 0 automatically start as oneshot
 - Updated magnitude logic
-
+- Default rules output to same table
 
 ## [0.4-alpha] - 2017-08-26
 ### Fixed
