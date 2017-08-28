@@ -47,7 +47,7 @@ ourdata = [(join(prefix, 'share/man/man1'),
             ['config/db.conf', 'config/sections.conf']),
         (join(prefix, 'share/doc/siemstress'), ['README.md', 'LICENSE',
             'CHANGELOG.md', 'config/example_rules.json',
-            'config/example_rules.json'])]
+            'config/example_helpers.json'])]
 
 setup(name = 'siemstress', version = str(__version__),
         description = 'A very basic Security Information and Event Management system (SIEM)',
