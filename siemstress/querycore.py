@@ -277,8 +277,9 @@ class QueryCore:
                     jrow['DateStamp'] = \
                             jrow['DateStamp'].strftime('%Y%m%d%H%M%S')
                 if 'FDateStamp' in jrow:
-                    jrow['FDateStamp'] = \
-                            float(jrow['FDateStamp'])
+                    jrow['FDateStamp'] = float(jrow['FDateStamp'])
+                if 'Extended' in jrow:
+                    jrow['Extended'] = json.loads(jrow['Extended']
                 jrows.append(jrow)
 
             with open(self.args.outjson, 'w') as f:
