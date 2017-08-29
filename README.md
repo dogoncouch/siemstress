@@ -4,9 +4,14 @@ A very basic Security Information and Event Management system (SIEM)
 ## Index
 
 - [Introduction](#introduction)
-  - [Screenshot](#screenshot)
   - [Description](#description)
+  - [Overview](#overview)
+    - [Database](#database)
+    - [JSON output](#json-output)
+    - [The future](#the-future)
   - [Installing](#installing)
+    - [Database setup](#database-setup)
+    - [Config](#config)
 - [Tools](#tools)
   - [siemparse](#siemparse)
   - [siemquery](#siemquery)
@@ -15,29 +20,40 @@ A very basic Security Information and Event Management system (SIEM)
 
 ## Introduction
 
-### Screenshot
-![siemstress screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/siemstress.png)
-
 ### Description
 Siemstress is a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger..
 
 ### Overview
 
+#### Database
 Siemstress uses a database (MariaDB) to store the following information:
 
 - Parsed events - Parsed events are syslog events from files that are being parsed by siemparse.
+![Parsed event table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events.png)
 - Helpers - these are used to help siemparse pull dynamically configurable attributes from events. Events created by helpers are stored in the `Extended` column of parsed events. This is useful for identifying IP addresses, user names, temperatures, file names, or other data that siemstress doesn't get automatically.
+![Helper table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/helpers.png)
 - Rules - Rules are conditions that are used by siemtrigger to evaluate tables of parsed events. So far there is only one type of rule: the limit rule. Limit rules have a set of criteria, and a time interval. If there are more events in a time interval that meet these criteria than the set limit, a SIEM event is created using the message defined by the rule. Rules also have a severity, which works like syslog severity; 0 is the most severe, and 7 is the least (the specific syslog severity levels are not used).
+![Rule table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/rules.png)
 - SIEM events - SIEM events are created by rules that evaluate parsed events. They are stored in separate tables, and are meant to be monitored. Each SIEM event has a magnitude, which is calculated using rule severity, and the ratio of event count to the rule's event limit. SIEM events also contain a list of source event IDs.
+![SIEM event table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/SIEMevents.png)
+
+#### JSON output
+`siemquery` terminal output does not show all columns. To view all attributes, including the extended attributes parsed by helpers, use the `--json` option to store the output in a JSON file. This can also be useful for data visualization and manipulation using programs like Jupyter.
+![JSON file screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events-json.png)
+
+#### The future
+Siemstress is open source and completely free, and our plan is to stay that way. The developers have always enjoyed the accessibility of free, open source software; it is not only free to use, but free to learn about, and allows anyone (with the necessary hardware) the opportunity to be a part of the tech community.
+
+Siemstress is still under development. In the future, it will include more rule types, state tables, and a more streamlined process for starting and stopping all of its services. It may include an optional web interface, but the intention is to stay UI agnostic.
 
 ### Installing
 
 See the latest instructions on the [releases page](https://github.com/dogoncouch/siemstress/releases).
 
-### Database Setup
+#### Database Setup
 siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
 
-### Config
+#### Config
 The default siemstress config file location is `/etc/siemstress.conf` (`config/siemstress.conf` if working in the repository).
 
 ## Tools
