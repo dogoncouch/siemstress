@@ -21,6 +21,15 @@ A very basic Security Information and Event Management system (SIEM)
 ### Description
 Siemstress is a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger..
 
+### Overview
+
+Siemstress uses a database (MariaDB) to store the following information:
+
+- Parsed events - Parsed events are syslog events from files that are being parsed by siemparse.
+- Helpers - these are used to help siemparse pull dynamically configurable attributes from events. Events created by helpers are stored in the `Extended` column of parsed events. This is useful for identifying IP addresses, user names, temperatures, file names, or other data that siemstress doesn't get automatically.
+- Rules - Rules are conditions that are used to evaluate tables of parsed events. So far there is only one type of rule: the limit rule. Limit rules have a set of criteria, and a time interval. If there are more events in a time interval that meet these criteria than the set limit, a SIEM event is created using the message defined by the rule. Rules also have a severity, which works like syslog severity; 0 is the most sever, and 7 is the least (he specific syslog severity levels are not used).
+- SIEM events - SIEM events are created by rules that evaluate parsed events. They are stored in separate tables, and are meant to be monitored. Each SIEM event has a magnitude, which is calculated using rule severity, and the ratio of event count to the rule's event limit. SIEM events also contain a list of source event IDs.
+
 ### Installing
 
 See the latest instructions on the [releases page](https://github.com/dogoncouch/siemstress/releases).
