@@ -336,7 +336,8 @@ class LiveParser:
 
                         extattrs[h['var_name']] = mlist
 
-                    extattrs = json.dumps(extattrs)
+                    #extattrs = json.dumps(extattrs)
+                    extattrs = str(extattrs)
 
 
                     # Put our attributes in our table:
