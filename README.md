@@ -54,9 +54,6 @@ siemstress is developed and tested using MariaDB as an SQL server. You will need
 ### Config
 The default siemstress config file location is `/etc/siemstress/db.conf` (`config/db.conf` if working in the repository). This file contains information needed to connect to the database. There is also a section config file in the same directory called `sections.conf` that contains information about tables.
 
-### Data transport
-
-
 ## Tools
 
 ### Siemparse
