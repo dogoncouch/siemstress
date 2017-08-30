@@ -52,7 +52,7 @@ Siemstress is still under development. In the future, it will include more rule 
 See the latest instructions on the [releases page](https://github.com/dogoncouch/siemstress/releases).
 
 ### Database Setup
-siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it. Update `db.conf` with your server address, database name, and login credentials.
+siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
 
 ### Config
 The default siemstress config file location is `/etc/siemstress/db.conf` (`config/db.conf` if working in the repository). This file contains information needed to connect to the database. There is also a section config file in the same directory called `sections.conf` that contains information about tables.
