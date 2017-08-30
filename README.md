@@ -8,6 +8,7 @@ A very basic Security Information and Event Management system (SIEM)
   - [Overview](#overview)
     - [Database](#database)
     - [JSON output](#json-output)
+    - [Design principals](#design-principals)
     - [The future](#the-future)
 - [Installing](#installing)
   - [Database setup](#database-setup)
@@ -43,6 +44,9 @@ Siemstress uses a database (MariaDB) to store the following information:
 #### JSON output
 `siemquery` terminal output does not show all attributes. To view all attributes, including the extended attributes parsed by helpers, use the `--json` option to store the output in a JSON file. This can also be useful for data visualization and manipulation using programs like Jupyter.
 ![JSON file screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events-json.png)
+
+#### Design principals
+Siemstress is designed to parse data, and organize it into prioritized, manageable streams of relevant information. It was originally designed as a basis for artificial intelligence research, and has since been used for network security, physical security, and data collection.
 
 #### The future
 Siemstress is still under development. In the future, it will include more rule types, state tables, and a more streamlined process for starting and stopping all of its services. It may include an optional web interface, but the intention is to stay UI agnostic.
