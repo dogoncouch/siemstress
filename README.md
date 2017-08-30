@@ -9,9 +9,9 @@ A very basic Security Information and Event Management system (SIEM)
     - [Database](#database)
     - [JSON output](#json-output)
     - [The future](#the-future)
-  - [Installing](#installing)
-    - [Database setup](#database-setup)
-    - [Config](#config)
+- [Installing](#installing)
+  - [Database setup](#database-setup)
+  - [Config](#config)
 - [Tools](#tools)
   - [siemparse](#siemparse)
   - [siemquery](#siemquery)
@@ -21,7 +21,7 @@ A very basic Security Information and Event Management system (SIEM)
 ## Introduction
 
 ### Description
-Siemstress is a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger..
+Siemstress is a lightweight but powerful security information and event management (SIEM) system. It uses a database and a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger.
 
 ### Overview
 
@@ -42,19 +42,20 @@ Siemstress uses a database (MariaDB) to store the following information:
 ![JSON file screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events-json.png)
 
 #### The future
-Siemstress is open source and completely free, and our plan is to stay that way. The developers have always enjoyed the accessibility of free, open source software; it is not only free to use, but free to learn about, and allows anyone (with the necessary hardware) the opportunity to be a part of the tech community.
-
 Siemstress is still under development. In the future, it will include more rule types, state tables, and a more streamlined process for starting and stopping all of its services. It may include an optional web interface, but the intention is to stay UI agnostic.
 
-### Installing
+## Installing
 
 See the latest instructions on the [releases page](https://github.com/dogoncouch/siemstress/releases).
 
-#### Database Setup
-siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it. The server
+### Database Setup
+siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it. Update `db.conf` with your server address, database name, and login credentials.
 
-#### Config
+### Config
 The default siemstress config file location is `/etc/siemstress/db.conf` (`config/db.conf` if working in the repository). This file contains information needed to connect to the database. There is also a section config file in the same directory called `sections.conf` that contains information about tables.
+
+### Data transport
+
 
 ## Tools
 
