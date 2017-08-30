@@ -337,7 +337,7 @@ class LiveParser:
                         try:
                             extattrs[h['var_name']].append(mlist)
                         except KeyError:
-                            exattrs[h['var_name']] = mlist
+                            extattrs[h['var_name']] = mlist
 
                     extattrs = json.dumps(extattrs)
 
