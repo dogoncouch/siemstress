@@ -30,10 +30,13 @@ Siemstress uses a database (MariaDB) to store the following information:
 
 - Parsed events - Parsed events are syslog (or other) events from files that are being watched by siemparse. Each event represents one line in a log file.
 ![Parsed event table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events.png)
+
 - Helpers - Helpers are used to help siemparse pull dynamically configurable attributes from events. Events created by helpers are stored in the `Extended` column of parsed events. This is useful for identifying IP addresses, user names, temperatures, file names, or other data that siemstress doesn't parse automatically.
 ![Helper table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/helpers.png)
+
 - Rules - Rules are conditions that are used by siemtrigger to evaluate tables of parsed events. So far there is only one type of rule: the limit rule. Limit rules have a set of criteria, a time interval, and an event limit. If there are more events in a time interval that meet these criteria than the set limit, a SIEM event is created using the message defined by the rule. Rules also have a severity attribute, which works like syslog severity; 0 is the most severe, and 7 is the least (the specific syslog severity levels are not used).
 ![Rule table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/rules.png)
+
 - SIEM events - SIEM events are created by rules that evaluate parsed events. They are stored in separate tables that are meant to be monitored. Each SIEM event has a magnitude, which is calculated using rule severity, and the ratio of event count to the rule's event limit. SIEM events also contain a list of source event IDs.
 ![SIEM event table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/SIEMevents.png)
 
