@@ -335,7 +335,7 @@ class LiveParser:
                         mlist = h['reg_exp'].findall(entry['message'])
 
                         try:
-                            extattrs[h['var_name']].append(x for x in mlist)
+                            extattrs[h['var_name']] += mlist
                         except KeyError:
                             extattrs[h['var_name']] = mlist
 
