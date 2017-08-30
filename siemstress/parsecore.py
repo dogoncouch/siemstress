@@ -334,7 +334,10 @@ class LiveParser:
                     for h in rehelpers:
                         mlist = h['reg_exp'].findall(entry['message'])
 
-                        extattrs[h['var_name']] = mlist
+                        try:
+                            extattrs[h['var_name']].append(mlist)
+                        except KeyError:
+                            exattrs[h['var_name']] = mlist
 
                     extattrs = json.dumps(extattrs)
 
