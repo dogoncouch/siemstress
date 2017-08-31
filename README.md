@@ -181,7 +181,7 @@ optional arguments:
 #### Examples
 
     siemtrigger --import doc/example_rules.json
-    siemtrigger -c config/db.conf -s rulesauth
+    siemtrigger -c config/db.conf --table RULESAuth
 
 ## Copyright
 MIT License
