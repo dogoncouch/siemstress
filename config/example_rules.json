@@ -34,7 +34,8 @@
       "Severity": 4,
       "SourceTable": "Visual",
       "TimeInt": 0
-    },
+    }
+  ],
   "RULESSIEMDefault": [
     {
       "EventLimit": 1,
