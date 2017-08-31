@@ -1,9 +1,11 @@
 # Change log
 Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 
-## [Unreleased]
+## [0.6-alpha] - 2017-08-31
 ### Changed
 - Split config into 2 files (db, sections)
+- Update example rules
+- Update helper logic
 
 ## [0.5-alpha] - 2017-08-28
 ### Added
