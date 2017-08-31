@@ -42,7 +42,7 @@
       "Message": "Continued pam auth fail incidents in 1 hour",
       "OutTable": "SIEMDefault",
       "RuleName": "PAM_AuthFail_1h",
-      "SQLQuery": "SELECT Id FROM Auth WHERE DateStamp >= timestamp(date_sub(now(), interval 1 hour)) AND (RuleName LIKE \"PAM_AuthFail_10m\")",
+      "SQLQuery": "SELECT Id FROM SIEMDefault WHERE DateStamp >= timestamp(date_sub(now(), interval 1 hour)) AND (RuleName LIKE \"PAM_AuthFail_10m\")",
       "Severity": 3,
       "SourceTable": "SIEMDefault",
       "TimeInt": 60
@@ -53,7 +53,7 @@
       "Message": "Continued pam auth fail incidents for root in 1 hour",
       "OutTable": "SIEMDefault",
       "RuleName": "PAM_RootFail_1h",
-      "SQLQuery": "SELECT Id FROM Auth WHERE DateStamp >= timestamp(date_sub(now(), interval 1 hour)) AND (RuleName LIKE \"PAM_RootFail_10m\")",
+      "SQLQuery": "SELECT Id FROM SIEMDefault WHERE DateStamp >= timestamp(date_sub(now(), interval 1 hour)) AND (RuleName LIKE \"PAM_RootFail_10m\")",
       "Severity": 1,
       "SourceTable": "SIEMDefault",
       "TimeInt": 60
