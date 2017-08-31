@@ -37,7 +37,7 @@
     },
   "RULESSIEMDefault": [
     {
-      "EventLimit": 2,
+      "EventLimit": 1,
       "IsEnabled": 1,
       "Message": "Continued pam auth fail incidents in 1 hour",
       "OutTable": "SIEMDefault",
@@ -48,7 +48,7 @@
       "TimeInt": 60
     },
     {
-      "EventLimit": 2,
+      "EventLimit": 1,
       "IsEnabled": 1,
       "Message": "Continued pam auth fail incidents for root in 1 hour",
       "OutTable": "SIEMDefault",
