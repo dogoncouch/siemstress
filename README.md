@@ -46,7 +46,9 @@ Siemstress uses a database (MariaDB) to store the following information:
 ![JSON file screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events-json.png)
 
 #### Design principals
-Siemstress is designed to parse data, and organize it into prioritized, manageable streams of relevant information. It was originally designed as a basis for artificial intelligence research, and has since been used for network security, physical security, and data collection.
+Siemstress is designed to parse data, and organize it into prioritized, manageable streams of relevant information. One of the goals is to remain as simple as possible. Parsing data from specific applications is left to user configurable parse helpers, and user interfaces beyond the command line are left to other programs.
+
+Siemstress was originally designed as a basis for artificial intelligence research, and has since been used for network security, physical security, and data collection.
 
 #### The future
 Siemstress is still under development. In the future, it will include more rule types, state tables, and a more streamlined process for starting and stopping all of its services. It may include an optional web interface, but the intention is to stay UI agnostic.
