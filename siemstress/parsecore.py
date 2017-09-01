@@ -253,9 +253,9 @@ class LiveParser:
                 tzone = '+' + tzone
 
         
+        # Make sure the table exists:
         con = mdb.connect(self.db['host'], self.db['user'],
                 self.db['password'], self.db['database'])
-        
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
@@ -293,7 +293,6 @@ class LiveParser:
 
         while True:
 
-            #line = sys.stdin.readline()
             # Check for a new line:
             line = self.args.file.readline()
 
@@ -333,7 +332,7 @@ class LiveParser:
                         datestamp = '.'.join(intdatestamp,
                                 tstamp[1].ljust(6, '0'))
                     
-                    # Parse extended attributes:
+                    # Parse extended attributes from helpers:
                     extattrs = {}
 
                     for h in rehelpers:
