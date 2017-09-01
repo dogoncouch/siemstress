@@ -162,8 +162,10 @@ def start_rule(server, user, password, database, rule, oneshot):
 
     sentry = SiemTrigger(server, user, password, database, rule)
 
-    if oneshot or int(rule['TimeInt']) == 0:
+    if oneshot:
         sentry.check_rule()
+    elif int(rule['TimeInt']) == 0:
+        pass
     
     else:
         # Before starting, sleep randomly up to rule interval to stagger
