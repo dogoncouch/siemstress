@@ -348,8 +348,8 @@ class LiveParser:
 
 
                     # Put our attributes in our table:
-                con = mdb.connect(self.db['host'], self.db['user'],
-                        self.db['password'], self.db['database'])
+                    con = mdb.connect(self.db['host'], self.db['user'],
+                            self.db['password'], self.db['database'])
                     with con:
                         cur = con.cursor()
                         cur.execute(self.sqlstatement,
