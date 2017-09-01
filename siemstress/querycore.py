@@ -23,14 +23,8 @@
 #_SOFTWARE.
 
 from siemstress import __version__
-#import logdissect.parsers
-#import time
-#from datetime import datetime
-#import re
-#import sys
 import os
 from time import strftime
-#import MySQLdb as mdb
 from argparse import ArgumentParser
 import ConfigParser
 from siemstress.query import SiemQuery
@@ -48,12 +42,7 @@ class QueryCore:
         self.query_args = self.arg_parser.add_argument_group('query options')
         self.config = None
 
-        #self.parser = None
-        #self.parsername = None
-        self.server = None
-        self.user = None
-        self.password = None
-        self.database = None
+        self.db = {}
         self.tables = []
         self.displayfields = None
 
@@ -179,10 +168,10 @@ class QueryCore:
         else: myconf = 'config/db.conf'
         config.read(myconf)
 
-        self.server = config.get('siemstress', 'server')
-        self.user = config.get('siemstress', 'user')
-        self.password = config.get('siemstress', 'password')
-        self.database = config.get('siemstress', 'database')
+        self.db['host'] = config.get('siemstress', 'server')
+        self.db['user'] = config.get('siemstress', 'user')
+        self.db['password'] = config.get('siemstress', 'password')
+        self.db['database'] = config.get('siemstress', 'database')
         sectionfile = config.get('siemstress', 'sectionfile')
 
         if not sectionfile.startswith('/'):
@@ -198,8 +187,7 @@ class QueryCore:
         try:
             self.displayfields = [x for x in config.get(
                 self.args.section, 'displayfields').split(',')]
-        except Exception:
-            # To Do: narrow down exception
+        except ConfigParser.NoSectionError:
             self.displayfields = ['Id', 'DateStamp', 'SourceHost', 
                     'Process', 'PID', 'Message']
 
@@ -208,13 +196,16 @@ class QueryCore:
     def clear_siem(self):
         """Clear SQL table specified in section"""
 
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
 
         with con:
             cur = con.cursor()
 
             cur.execute('DROP TABLE IF EXISTS ' + self.table)
+
+        cur.close()
+        con.close()
 
 
 
@@ -222,8 +213,7 @@ class QueryCore:
         """Query SQL database for log events"""
         
 
-        query = SiemQuery(server = self.server, user = self.user,
-                password = self.password, database = self.database)
+        query = SiemQuery(self.db)
 
         qstatement, rows = query.query(tables = self.tables,
                 last = self.args.last, daterange = self.args.range,

@@ -33,13 +33,9 @@ import MySQLdb as mdb
 
 class SiemQuery:
 
-    def __init__(self, server='127.0.0.1', user='siemstress',
-            password='siems2bfine', database='siemstressdb'):
+    def __init__(self, db):
         """Initialize query object"""
-        self.server = server
-        self.user = user
-        self.password = password
-        self.database = database
+        self.db = db
 
 
     def simple_query(self, table='default', last='24h', shost=None,
@@ -62,8 +58,8 @@ class SiemQuery:
         if grep: qstatement.append("AND Message LIKE \"%" + grep + "%\"")
 
         qstatement = " ".join(qstatement)
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
 
         with con:
             cur = con.cursor()
@@ -71,6 +67,8 @@ class SiemQuery:
 
             rows = cur.fetchall()
             desc = cur.description
+        cur.close()
+        con.close()
 
         return desc, rows
 
@@ -262,8 +260,8 @@ class SiemQuery:
 
         # Connect and execute
         qstatement = " ".join(qstatement)
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -271,5 +269,8 @@ class SiemQuery:
             
             cur.execute(qstatement)
             rows = cur.fetchall()
+        
+        cur.close()
+        con.close()
 
         return qstatement, rows

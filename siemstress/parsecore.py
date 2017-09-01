@@ -48,10 +48,11 @@ class LiveParser:
 
         self.parser = None
         self.parsername = None
-        self.server = None
-        self.user = None
-        self.password = None
-        self.database = None
+        self.db = {}
+        #self.server = None
+        #self.user = None
+        #self.password = None
+        #self.database = None
         self.table = None
 
 
@@ -107,10 +108,10 @@ class LiveParser:
         else: myconf = 'config/db.conf'
         config.read(myconf)
 
-        self.server = config.get('siemstress', 'server')
-        self.user = config.get('siemstress', 'user')
-        self.password = config.get('siemstress', 'password')
-        self.database = config.get('siemstress', 'database')
+        self.db['host'] = config.get('siemstress', 'server')
+        self.db['user'] = config.get('siemstress', 'user')
+        self.db['password'] = config.get('siemstress', 'password')
+        self.db['database'] = config.get('siemstress', 'database')
         sectionfile = config.get('siemstress', 'sectionfile')
 
         if not sectionfile.startswith('/'):
@@ -146,8 +147,8 @@ class LiveParser:
             helpers = json.loads(f.read())
 
         # Create table if it doesn't exist:
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
         with con:
             cur = con.cursor()
             for table in helpers:
@@ -159,8 +160,8 @@ class LiveParser:
             cur.close()
         con.close()
         
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
         with con:
             cur = con.cursor()
             for table in helpers:
@@ -180,8 +181,8 @@ class LiveParser:
         """Export helpers from a table into a JSON file"""
 
         helpers = {}
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             for table in self.args.tables:
@@ -200,13 +201,17 @@ class LiveParser:
         """Clear SQL table specified in section"""
 
         if self.args.force:
-            con = mdb.connect(self.server, self.user, self.password,
-                    self.database)
+            con = mdb.connect(self.db['host'], self.db['user'],
+                    self.db['password'], self.db['database'])
         
             with con:
                 cur = con.cursor()
         
                 cur.execute('DROP TABLE IF EXISTS ' + self.table)
+
+            cur.close()
+            con.close()
+
         else: print("Use --force if you really want to drop table (" + \
                 self.table + ")")
 
@@ -248,8 +253,8 @@ class LiveParser:
                 tzone = '+' + tzone
 
         
-        con = mdb.connect(self.server, self.user,
-                self.password, self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
         
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -343,8 +348,8 @@ class LiveParser:
 
 
                     # Put our attributes in our table:
-                    con = mdb.connect(self.server, self.user,
-                            self.password, self.database)
+                con = mdb.connect(self.db['host'], self.db['user'],
+                        self.db['password'], self.db['database'])
                     with con:
                         cur = con.cursor()
                         cur.execute(self.sqlstatement,
