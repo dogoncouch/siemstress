@@ -43,10 +43,7 @@ class SiemTriggerCore:
         self.args = None
         self.arg_parser = ArgumentParser()
 
-        self.server = None
-        self.user = None
-        self.password = None
-        self.database = None
+        self.db = {}
         self.rules = {}
         self.threads = []
 
@@ -76,14 +73,6 @@ class SiemTriggerCore:
         self.arg_parser.add_argument('--oneshot',
                 action = 'store_true',
                 help = ('check database once and exit'))
-        self.arg_parser.add_argument('--import',
-                action = 'store', dest = 'importfile',
-                metavar = 'FILE',
-                help = ('set a JSON file to import rules'))
-        self.arg_parser.add_argument('--export',
-                action = 'store', dest = 'exportfile',
-                metavar = 'FILE',
-                help = ('set a JSON file to export rules'))
 
         self.args = self.arg_parser.parse_args()
 
@@ -100,10 +89,10 @@ class SiemTriggerCore:
 
         # Read /etc/triggers.d/*.conf in a for loop
 
-        self.server = config.get('siemstress', 'server')
-        self.user = config.get('siemstress', 'user')
-        self.password = config.get('siemstress', 'password')
-        self.database = config.get('siemstress', 'database')
+        self.db['server'] = config.get('siemstress', 'server')
+        self.db['user'] = config.get('siemstress', 'user')
+        self.db['password'] = config.get('siemstress', 'password')
+        self.db['database'] = config.get('siemstress', 'database')
         sectionfile = config.get('siemstress', 'sectionfile')
 
         if not sectionfile.startswith('/'):
@@ -119,8 +108,8 @@ class SiemTriggerCore:
 
         self.rules = []
         for table in self.args.tables:
-            con = mdb.connect(self.server, self.user,
-                    self.password, self.database)
+            con = mdb.connect(self.db['server'], self.db['user'],
+                    self.db['password'], self.db['database'])
             with con:
                 cur = con.cursor(mdb.cursors.DictCursor)
                 cur.execute('SELECT * FROM ' + table)
@@ -129,79 +118,6 @@ class SiemTriggerCore:
             con.close()
             self.rules = self.rules + list(rules)
 
-
-
-    def import_rules(self):
-        """Import rules from a JSON file"""
-        
-        with open(self.args.importfile, 'r') as f:
-            rules = json.loads(f.read())
-
-        # Create table if it doesn't exist:
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
-        with con:
-            cur = con.cursor()
-            for table in rules:
-                cur.execute('CREATE TABLE IF NOT EXISTS ' + \
-                        table + \
-                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                        'RuleName NVARCHAR(25), ' + \
-                        'IsEnabled BOOLEAN, Severity TINYINT, ' + \
-                        'TimeInt INT, EventLimit INT, ' + \
-                        'SQLQuery NVARCHAR(1000), ' + \
-                        'SourceTable NVARCHAR(25), ' + \
-                        'OutTable NVARCHAR(25), ' + \
-                        'Message NVARCHAR(1000))')
-            cur.close()
-        con.close()
-        
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
-        with con:
-            cur = con.cursor()
-            for table in rules:
-                # Set up SQL insert statement:
-                insertstatement = 'INSERT INTO ' + table + \
-                        '(RuleName, IsEnabled, Severity, ' + \
-                        'TimeInt, EventLimit, SQLQuery, ' + \
-                        'SourceTable, OutTable, Message) VALUES ' + \
-                        '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
-
-
-                for rule in rules[table]:
-                    cur.execute(insertstatement, (rule['RuleName'],
-                        rule['IsEnabled'], rule['Severity'],
-                        rule['TimeInt'], rule['EventLimit'], 
-                        rule['SQLQuery'], rule['SourceTable'],
-                        rule['OutTable'], rule['Message']))
-            cur.close()
-        con.close()
-
-
-    def export_rules(self):
-        """Export rules from a table into a JSON file"""
-
-        rules = {}
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            for table in self.args.tables:
-                cur.execute('SELECT * FROM ' + table)
-                rules[table] = cur.fetchall()
-            cur.close()
-        con.close()
-
-        with open(self.args.exportfile, 'w') as f:
-            f.write(json.dumps(rules, indent=2, sort_keys=True,
-                separators=(',', ': ')) + '\n')
-
-
-
-#    def stop_threads(self):
-#        for thread in self.threads:
-#            thread.stop()
 
 
     def start_triggers(self):
@@ -213,8 +129,9 @@ class SiemTriggerCore:
             if r['IsEnabled'] == 1:
                 thread = threading.Thread(name=r,
                         target=siemstress.trigger.start_rule,
-                        args=(self.server, self.user, self.password,
-                        self.database, r, self.args.oneshot))
+                        args=(self.db['server'], self.db['user'],
+                            self.db['password'], self.db['database'],
+                            r, self.args.oneshot))
                 thread.daemon = True
                 thread.start()
 
@@ -226,13 +143,7 @@ class SiemTriggerCore:
         try:
             self.get_args()
             self.get_config()
-            if self.args.importfile:
-                self.import_rules()
-                exit(0)
             self.get_rules()
-            if self.args.exportfile:
-                self.export_rules()
-                exit(0)
             self.start_triggers()
 
             while True:

@@ -41,6 +41,73 @@ class SIEMMgr:
         self.table = None
 
 
+    def import_rules(self, importfile):
+        """Import rules from a JSON file"""
+        
+        with open(importfile, 'r') as f:
+            rules = json.loads(f.read())
+
+        # Create table if it doesn't exist:
+        con = mdb.connect(self.db['server', self.db['user',
+            self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor()
+            for table in rules:
+                cur.execute('CREATE TABLE IF NOT EXISTS ' + \
+                        table + \
+                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'RuleName NVARCHAR(25), ' + \
+                        'IsEnabled BOOLEAN, Severity TINYINT, ' + \
+                        'TimeInt INT, EventLimit INT, ' + \
+                        'SQLQuery NVARCHAR(1000), ' + \
+                        'SourceTable NVARCHAR(25), ' + \
+                        'OutTable NVARCHAR(25), ' + \
+                        'Message NVARCHAR(1000))')
+            cur.close()
+        con.close()
+        
+        con = mdb.connect(self.db['server', self.db['user',
+            self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor()
+            for table in rules:
+                # Set up SQL insert statement:
+                insertstatement = 'INSERT INTO ' + table + \
+                        '(RuleName, IsEnabled, Severity, ' + \
+                        'TimeInt, EventLimit, SQLQuery, ' + \
+                        'SourceTable, OutTable, Message) VALUES ' + \
+                        '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+
+
+                for rule in rules[table]:
+                    cur.execute(insertstatement, (rule['RuleName'],
+                        rule['IsEnabled'], rule['Severity'],
+                        rule['TimeInt'], rule['EventLimit'], 
+                        rule['SQLQuery'], rule['SourceTable'],
+                        rule['OutTable'], rule['Message']))
+            cur.close()
+        con.close()
+
+
+    def export_rules(self, tables, exportfile):
+        """Export rules from a table into a JSON file"""
+
+        rules = {}
+        con = mdb.connect(self.db['server', self.db['user',
+            self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor(mdb.cursors.DictCursor)
+            for table in tables:
+                cur.execute('SELECT * FROM ' + table)
+                rules[table] = cur.fetchall()
+            cur.close()
+        con.close()
+
+        with open(exportfile, 'w') as f:
+            f.write(json.dumps(rules, indent=2, sort_keys=True,
+                separators=(',', ': ')) + '\n')
+
+
 
     def import_helpers(self, importfile):
         """Import helperss from a JSON file"""
