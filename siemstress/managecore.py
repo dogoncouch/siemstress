@@ -23,8 +23,7 @@
 #_SOFTWARE.
 
 from siemstress import __version__
-from siemstress.parse import LiveParser
-import logdissect.parsers
+from siemstress.manage import SIEMMgr
 import time
 from datetime import datetime
 import re
@@ -38,7 +37,7 @@ import json
 
 
 
-class ParseCore:
+class ManageCore:
 
     def __init__(self):
         """Initialize live parser"""
@@ -47,8 +46,6 @@ class ParseCore:
         self.arg_parser = ArgumentParser()
         self.config = None
 
-        self.parser = None
-        self.parsername = None
         self.db = {}
         self.table = None
 
@@ -63,16 +60,27 @@ class ParseCore:
                 action = 'store', dest = 'config',
                 default = '/etc/siemstress/db.conf',
                 help = ('set the config file'))
-        self.arg_parser.add_argument('-s',
-                action = 'store', dest = 'section',
-                default = 'default',
-                help = ('set the config section'))
-        self.arg_parser.add_argument('-z',
-                action = 'store', dest = 'tzone',
-                help = ("set the offset to UTC (e.g. '+0500')"))
+        self.arg_parser.add_argument('--clear',
+                action = 'store_true', dest = 'clearsiem',
+                help = ('delete the SQL table for selected section'))
+        self.arg_parser.add_argument('--force',
+                action = 'store_true', dest = 'force',
+                help = ('really delete the table'))
+        self.arg_parser.add_argument('--importhelpers',
+                action = 'store', dest = 'importhelpers',
+                metavar = 'FILE',
+                help = ('set a JSON file to import helpers'))
+        self.arg_parser.add_argument('--exporthelpers',
+                action = 'store', dest = 'exporthelpers',
+                metavar = 'FILE',
+                help = ('set a JSON file to export helpers'))
+        self.arg_parser.add_argument('--table',
+                action = 'append', dest = 'tables',
+                metavar = 'TABLE',
+                help = ('set a helper table to export'))
         self.arg_parser.add_argument('file',
                 type = FileType('r'), nargs = '?',
-                help = ('set a file to follow'))
+                help = ('set a file to import/export'))
 
         self.args = self.arg_parser.parse_args()
 
@@ -99,34 +107,22 @@ class ParseCore:
 
         config.read(sectionfile)
         
-        self.table = config.get(self.args.section, 'table')
-        self.helpers = config.get(self.args.section, 'helpers')
-        try:
-            self.parsername = config.get(self.args.section, 'parser')
-        except Exception:
-            # To Do: narrow down exception
-            self.parsername = 'syslogbsd'
 
 
-        if self.parsername == 'syslogbsd':
-            self.parser = logdissect.parsers.syslogbsd.ParseModule()
-        elif self.parsername == 'syslogiso':
-            self.parser = logdissect.parsers.syslogiso.ParseModule()
-        elif self.parsername == 'nohost':
-            self.parser = logdissect.parsers.nohost.ParseModule()
-        elif self.parsername == 'tcpdump':
-            self.parser = logdissect.parsers.tcpdump.ParseModule()
-
-
-
-    def run_parse(self):
+    def run_manage(self):
         try:
             self.get_args()
             self.get_config()
-            parser = LiveParser(self.db, self.table, self.helpers,
-                    tzone=self.args.tzone)
-
-            parser.parse_entries(self.args.file, self.parsername)
+            if self.args.clearsiem:
+                mgr = SIEMMgr(self.db)
+                mgr.clear_table(self.table, force=self.args.force)
+            elif self.args.importfile:
+                mgr = SIEMMgr(self.db)
+                mgr.import_helpers(self.args.importhelpers)
+            elif self.args.exporthelpers:
+                mgr = SIEMMgr(self.db)
+                mgr.export_helpers(self.args.tables,
+                        self.args.exporthelpers)
 
         except KeyboardInterrupt:
             pass
