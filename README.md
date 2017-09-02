@@ -17,6 +17,7 @@ A very basic Security Information and Event Management system (SIEM)
   - [siemparse](#siemparse)
   - [siemquery](#siemquery)
   - [siemtrigger](#siemtrigger)
+  - [siemmanage](#siemmanage)
 - [Copyright](#copyright)
 
 ## Introduction
