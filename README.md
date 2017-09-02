@@ -202,7 +202,7 @@ optional arguments:
 #### Examples
 
     siemmanage --importhelpers config/example_helpers.json
-    siemmanage --exportrules --table RULESAuth
+    siemmanage --exportrules rules.json --table RULESAuth
     siemmanage --clear --force --table Auth
 
 ## Copyright
