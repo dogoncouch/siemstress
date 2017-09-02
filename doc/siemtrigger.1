@@ -4,7 +4,7 @@ siemtrigger - CLI tool to trigger SIEM events based on siemstress database analy
 
 .SH SYNOPSIS
 
-\fBsiemtrigger\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fB--table \fITABLE\fR] [\fB--oneshot\fR] [\fB--import \fIFILE\fR] [\fB--export \fIFILE\fR]
+\fBsiemtrigger\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fB--table \fITABLE\fR] [\fB--oneshot\fR]
 
 .SH DESCRIPTION
 \fBsiemtrigger\fR is a tool to trigger SIEM events based on siemstress database analysis.
@@ -19,17 +19,15 @@ siemtrigger - CLI tool to trigger SIEM events based on siemstress database analy
     -c CONFIG      set the config file
     --table TABLE  set a rule table
     --oneshot      check database once and exit
-    --import FILE  set a JSON file to import rules
-    --export FILE  set a JSON file to export rules
 
 .SH EXAMPLES
-    siemtrigger --import config/example_rules.json
-    siemtrigger -c config/db.conf -s rulesauth
+    siemtrigger -c config/db.conf --table RULESAuth
 
 .SH SEE ALSO
     siemstress(7)
     siemparse(1)
     siemquery(1)
+    siemmanage(1)
 
 .SH FILES
     /etc/siemstress/db.conf

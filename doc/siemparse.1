@@ -4,7 +4,7 @@ siemparse - CLI tool to parse lines from standard input into a siemstress databa
 
 .SH SYNOPSIS
 
-\fBsiemparse\fR [\fB-h] [\fB--version\fR] [\fB--clear\fR] [\fB--force\fR] [\fB--import \fIFILE\fR] [\fB--export \fIFILE\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR] [\fIfile\fR]
+\fBsiemparse\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fb-s \fISECTION\fR] [\fB-z \fITZONE\fR] [\fIfile\fR]
 
 .SH DESCRIPTION
 \fBsiemparse\fR is a CLI tool to parse syslog lines from a log file or standard input into a siemstress database.
@@ -19,24 +19,19 @@ siemparse - CLI tool to parse lines from standard input into a siemstress databa
   optional arguments:
     -h, --help     show this help message and exit
     --version      show program's version number and exit
-    --clear        delete the SQL table for selected section
-    --force        really delete the table
-    --import FILE  set a JSON file to import helpers
-    --export FILE  set a JSON file to export helpers
-    --table TABLE  set a helper table to export
     -c CONFIG      set the config file
     -s SECTION     set the config section
     -z TZONE       set the offset to UTC (e.g. '+0500')
 
 .SH EXAMPLES
-    siemparse --import config/example_helpers.json
     siemparse /var/log/messages
-    siemparse /var/log/auth.log
+    siemparse -s auth /var/log/auth.log
 
 .SH SEE ALSO
     siemstress(7)
     siemquery(1)
     siemtrigger(1)
+    siemmanage(1)
 
 .SH FILES
     /etc/siemstress/db.conf

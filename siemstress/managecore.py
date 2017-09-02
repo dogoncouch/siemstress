@@ -86,9 +86,6 @@ class ManageCore:
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
                 help = ('set a helper table to export'))
-        self.arg_parser.add_argument('file',
-                type = FileType('r'), nargs = '?',
-                help = ('set a file to import/export'))
 
         self.args = self.arg_parser.parse_args()
 
@@ -123,7 +120,7 @@ class ManageCore:
             self.get_config()
             if self.args.clearsiem:
                 mgr = SIEMMgr(self.db)
-                mgr.clear_table(self.table, force=self.args.force)
+                mgr.clear_table(self.args.tables, force=self.args.force)
             # Rules:
             elif self.args.importrules:
                 mgr = SIEMMgr(self.db)
@@ -149,10 +146,10 @@ class ManageCore:
     
     
 def main():
-    parser = ParseCore()
-    parser.run_parse()
+    mgr = ManageCore()
+    mgr.run_manage()
 
 
 if __name__ == "__main__":
-    parser = ParseCore()
-    parser.run_parse()
+    mgr = ManageCore()
+    mgr.run_manage()

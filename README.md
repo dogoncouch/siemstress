@@ -22,7 +22,7 @@ A very basic Security Information and Event Management system (SIEM)
 ## Introduction
 
 ### Description
-Siemstress is a lightweight but powerful security information and event management (SIEM) system. It uses a database and a suite of CLI tools for managing log events, and automating event analysis. It comes with three programs: siemparse, siemquery, and siemtrigger.
+Siemstress is a lightweight but powerful security information and event management (SIEM) system. It uses a database and a suite of CLI tools for managing log events, and automating event analysis. It comes with four programs: siemparse, siemquery, siemtrigger, and siemmanage.
 
 ### Overview
 
@@ -72,25 +72,18 @@ The default siemstress config file location is `/etc/siemstress/db.conf` (`confi
 
 ```
 
-usage: siemparse [-h] [--version] [--clear] [--force] [--import FILE]
-                 [--export FILE] [--table TABLE] [-c CONFIG] [-s SECTION]
-                 [-z TZONE]
+usage: siemparse [-h] [--version] [-c CONFIG] [-s SECTION] [-z TZONE]
                  [file]
 
 positional arguments:
-  file           set a file to follow
+  file        set a file to follow
 
 optional arguments:
-  -h, --help     show this help message and exit
-  --version      show program's version number and exit
-  --clear        delete the SQL table for selected section
-  --force        really delete the table
-  --import FILE  set a JSON file to import helpers
-  --export FILE  set a JSON file to export helpers
-  --table TABLE  set a helper table to export
-  -c CONFIG      set the config file
-  -s SECTION     set the config section
-  -z TZONE       set the offset to UTC (e.g. '+0500')
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit
+  -c CONFIG   set the config file
+  -s SECTION  set the config section
+  -z TZONE    set the offset to UTC (e.g. '+0500')
 
 ```
 
@@ -165,7 +158,6 @@ Arguments under `query options` that are not time-related can be used more than 
 ```
 
 usage: siemtrigger [-h] [--version] [-c CONFIG] [--table TABLE] [--oneshot]
-                   [--import FILE] [--export FILE]
 
 optional arguments:
   -h, --help     show this help message and exit
@@ -173,15 +165,44 @@ optional arguments:
   -c CONFIG      set the config file
   --table TABLE  set a rule table
   --oneshot      check database once and exit
-  --import FILE  set a JSON file to import rules
-  --export FILE  set a JSON file to export rules
 
 ```
 
 #### Examples
 
-    siemtrigger --import config/example_rules.json
     siemtrigger --table RULESAuth
+
+### Siemmanage
+`siemmanage` is a tool for clearing SIEM tables, and importing and exporting rules and helpers.
+
+#### Options
+
+```
+
+usage: siemmanage [-h] [--version] [-c CONFIG] [--clear] [--force]
+                  [--importrules FILE] [--exportrules FILE]
+                  [--importhelpers FILE] [--exporthelpers FILE]
+                  [--table TABLE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  -c CONFIG             set the config file
+  --clear               delete the SQL table for selected section
+  --force               really delete the table
+  --importrules FILE    set a JSON file to import rules
+  --exportrules FILE    set a JSON file to export rules
+  --importhelpers FILE  set a JSON file to import helpers
+  --exporthelpers FILE  set a JSON file to export helpers
+  --table TABLE         set a helper table to export
+
+```
+
+#### Examples
+
+    siemmanage --importhelpers config/example_helpers.json
+    siemmanage --exportrules --table RULESAuth
+    siemmanage --clear --force --table Auth
 
 ## Copyright
 MIT License

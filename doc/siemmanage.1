@@ -1,29 +1,44 @@
-.TH SIEMSTRESS 7
+.TH SIEMMANAGE 1
 .SH NAME
-siemstress - a CLI based Security Information and Event Management (SIEM) system
+siemmanage - CLI tool for managing SIEM tables
+
+.SH SYNOPSIS
+
+\fBsiemmanage\fR [\fB-h] [\fB--version\fR] [\fB-c \fICONFIG\fR] [\fB--clear\fR] [\fB--force\fR] [\fB--importrules \fIFILE\fR] [\fB--exportrules \fIFILE\fR] [\fB--imporhelpers \fIFILE\fR] [\fB--exporthelpers \fIFILE\fR] [\fB--table \fITABLE\fR]
 
 .SH DESCRIPTION
-\fBsiemstress\fR is a suite of CLI tools for managing log events, and automating event analysis. It comes with four programs: siemparse, siemquery, siemtrigger, and siemmanage.
+\fBsiemmanage\fR is a tool for clearing SIEM tables, and importing and exporting rules and helpers.
 
-\fBsiemparse\fR is a CLI tool to parse syslog lines from standard input into a siemstress database.
+.SH OPTIONS
+  
+  usage: \fBsiemtrigger\fR [\fBoptions\fR]
 
-\fBsiemquery\fR is a CLI tool to query a siemstress database.
+  optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  -c CONFIG             set the config file
+  --clear               delete the SQL table for selected section
+  --force               really delete the table
+  --importrules FILE    set a JSON file to import rules
+  --exportrules FILE    set a JSON file to export rules
+  --importhelpers FILE  set a JSON file to import helpers
+  --exporthelpers FILE  set a JSON file to export helpers
+  --table TABLE         set a helper table to export
 
-\fBsiemtrigger\fR is a CLI tool to trigger SIEM events based on siemstress database analysis.
-
-\fBsiemmanage\fR is a CLI tool to manage SIEM tables.
+.SH EXAMPLES
+    siemmanage --importhelpers config/example_helpers.json
+    siemmanage --exportfules --table RULESAuth
+    siemmanage --clear --force --table Auth
 
 .SH SEE ALSO
+    siemstress(7)
     siemparse(1)
     siemquery(1)
     siemtrigger(1)
-    siemmanage(1)
 
 .SH FILES
     /etc/siemstress/db.conf
     /etc/siemstress/sections.conf
-    /usr/share/doc/siemstress/example_rules.json
-    /usr/share/doc/siemstress/example_helpers.json
     /usr/share/doc/siemstress/README.md
     /usr/share/doc/siemstress/LICENSE
     /usr/share/doc/siemstress/CHANGELOG.md

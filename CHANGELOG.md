@@ -1,11 +1,20 @@
 # Change log
 Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 
+## [Unreleased]
+### Added
+- `siemmanage` management tool (clear/import/export)
+
+### Changed
+- Split parser UI from functions
+
+
 ## [0.6-alpha] - 2017-08-31
 ### Changed
 - Split config into 2 files (db, sections)
 - Update example rules
 - Update helper logic
+
 
 ## [0.5-alpha] - 2017-08-28
 ### Added
@@ -18,6 +27,7 @@ Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 - Trigger rules with TimeInt of 0 automatically start as oneshot
 - Updated magnitude logic
 - Default rules output to same table
+
 
 ## [0.4-alpha] - 2017-08-26
 ### Fixed

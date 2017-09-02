@@ -42,7 +42,8 @@ from siemstress import __version__
 
 ourdata = [(join(prefix, 'share/man/man1'),
         ['doc/siemparse.1', 'doc/siemquery.1', 'doc/siemtrigger.1',
-            'doc/siemstress.7']),
+            'doc/siemmanage.1']),
+        (join(prefix, 'share/man/man7'), ['doc/siemstress.7']),
         (join(prefix, '/etc/siemstress'),
             ['config/db.conf', 'config/sections.conf']),
         (join(prefix, 'share/doc/siemstress'), ['README.md', 'LICENSE',
@@ -63,13 +64,14 @@ setup(name = 'siemstress', version = str(__version__),
         entry_points = \
                 { 'console_scripts': [ 'siemparse = siemstress.parsecore:main',
                     'siemquery = siemstress.querycore:main',
-                    'siemtrigger = siemstress.triggercore:main' ]},
+                    'siemtrigger = siemstress.triggercore:main',
+                    'siemmanage = siemstress.managecore:main' ]},
         data_files = ourdata,
-        classifiers = ["Development Status :: 2 - Pre-Alpha",
+        classifiers = ["Development Status :: 3 - Alpha",
             "Environment :: Console",
             "Intended Audience :: System Administrators",
             "License :: OSI Approved :: MIT License",
             "Natural Language :: English",
             "Operating System :: POSIX",
             "Programming Language :: Python :: 2",
-            "Topic :: System :: Systems Administration"])
+            "Topic :: System :: Monitoring"])
