@@ -89,7 +89,7 @@ class SiemTriggerCore:
 
         # Read /etc/triggers.d/*.conf in a for loop
 
-        self.db['server'] = config.get('siemstress', 'server')
+        self.db['host'] = config.get('siemstress', 'server')
         self.db['user'] = config.get('siemstress', 'user')
         self.db['password'] = config.get('siemstress', 'password')
         self.db['database'] = config.get('siemstress', 'database')
@@ -108,7 +108,7 @@ class SiemTriggerCore:
 
         self.rules = []
         for table in self.args.tables:
-            con = mdb.connect(self.db['server'], self.db['user'],
+            con = mdb.connect(self.db['host'], self.db['user'],
                     self.db['password'], self.db['database'])
             with con:
                 cur = con.cursor(mdb.cursors.DictCursor)
@@ -129,9 +129,7 @@ class SiemTriggerCore:
             if r['IsEnabled'] == 1:
                 thread = threading.Thread(name=r,
                         target=siemstress.trigger.start_rule,
-                        args=(self.db['server'], self.db['user'],
-                            self.db['password'], self.db['database'],
-                            r, self.args.oneshot))
+                        args=(self.db, r, self.args.oneshot))
                 thread.daemon = True
                 thread.start()
 

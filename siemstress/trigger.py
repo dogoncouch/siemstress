@@ -40,13 +40,10 @@ from sys import exit
 
 class SiemTrigger:
 
-    def __init__(self, server, user, password, database, rule):
+    def __init__(self, db, rule):
         """Initialize trigger object"""
         
-        self.server = server
-        self.user = user
-        self.password = password
-        self.database = database
+        self.db = db
         self.rule = rule
         self.tzone = None
 
@@ -98,8 +95,8 @@ class SiemTrigger:
                 self.tzone = '+' + self.tzone
 
         # Query the database:
-        con = mdb.connect(self.server, self.user, self.password,
-                self.database)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
         with con:
             cur = con.cursor()
             cur.execute(self.rule['SQLQuery'])
@@ -124,8 +121,8 @@ class SiemTrigger:
                     'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
             # Send an event to the database:
-            con = mdb.connect(self.server, self.user,
-                    self.password, self.database)
+            con = mdb.connect(self.db['host'], self.db['user'],
+                    self.db['password'], self.db['database'])
             with con:
                 cur = con.cursor()
                 cur.execute(outstatement, (datestamp, self.tzone,
@@ -137,11 +134,11 @@ class SiemTrigger:
                 cur.close()
             con.close()
 
-def start_rule(server, user, password, database, rule, oneshot):
+def start_rule(db, rule, oneshot):
     """Initialize trigger object and start watching"""
 
     # Create table if it doesn't exist:
-    con = mdb.connect(server, user, password, database)
+    con = mdb.connect(db['host'], db['user'], db['password'], db['database'])
     with con:
         cur = con.cursor()
         cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['OutTable'] + \
@@ -160,7 +157,8 @@ def start_rule(server, user, password, database, rule, oneshot):
         cur.close()
     con.close()
 
-    sentry = SiemTrigger(server, user, password, database, rule)
+    sentry = SiemTrigger(db['host'], db['user'], db['password'],
+            db['database'], rule)
 
     if oneshot:
         sentry.check_rule()
