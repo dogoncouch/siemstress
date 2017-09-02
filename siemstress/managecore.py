@@ -66,6 +66,14 @@ class ManageCore:
         self.arg_parser.add_argument('--force',
                 action = 'store_true', dest = 'force',
                 help = ('really delete the table'))
+        self.arg_parser.add_argument('--importrules',
+                action = 'store', dest = 'importrules',
+                metavar = 'FILE',
+                help = ('set a JSON file to import rules'))
+        self.arg_parser.add_argument('--exportrules',
+                action = 'store', dest = 'exportrules',
+                metavar = 'FILE',
+                help = ('set a JSON file to export rules'))
         self.arg_parser.add_argument('--importhelpers',
                 action = 'store', dest = 'importhelpers',
                 metavar = 'FILE',
@@ -116,7 +124,16 @@ class ManageCore:
             if self.args.clearsiem:
                 mgr = SIEMMgr(self.db)
                 mgr.clear_table(self.table, force=self.args.force)
-            elif self.args.importfile:
+            # Rules:
+            elif self.args.importrules:
+                mgr = SIEMMgr(self.db)
+                mgr.import_rules(self.args.importrules)
+            elif self.args.exportrules:
+                mgr = SIEMMgr(self.db)
+                mgr.export_rules(self.args.tables,
+                        self.args.exportrules)
+            # Helpers:
+            elif self.args.importhelpers:
                 mgr = SIEMMgr(self.db)
                 mgr.import_helpers(self.args.importhelpers)
             elif self.args.exporthelpers:
