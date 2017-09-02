@@ -50,7 +50,7 @@ class LiveParser:
 
 
 
-    def get_parser(parsername):
+    def get_parser(self, parsername):
         """Load the parser"""
 
         if parsername == 'syslogbsd':
@@ -63,7 +63,7 @@ class LiveParser:
             self.parser = logdissect.parsers.tcpdump.ParseModule()
 
 
-    def parse_entries(inputfile):
+    def parse_entries(self, inputfile):
         """Parse log entries from a file like object"""
 
         # Read to the end of the file:
