@@ -22,7 +22,7 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
-from siemstress.parsecore import LiveParser
+from siemstress.parsecore import ParseCore
 
-parser = LiveParser()
+parser = ParseCore()
 parser.run_parse()
