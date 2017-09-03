@@ -85,7 +85,7 @@ class ManageCore:
         self.arg_parser.add_argument('--table',
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
-                help = ('set a helper table to export'))
+                help = ('set a helper/rule table to export'))
 
         self.args = self.arg_parser.parse_args()
 
