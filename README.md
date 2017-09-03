@@ -195,7 +195,7 @@ optional arguments:
   --exportrules FILE    set a JSON file to export rules
   --importhelpers FILE  set a JSON file to import helpers
   --exporthelpers FILE  set a JSON file to export helpers
-  --table TABLE         set a helper/rule table to export
+  --table TABLE         set a table
 
 ```
 
