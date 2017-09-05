@@ -27,6 +27,13 @@ Siemstress is a lightweight but powerful security information and event manageme
 
 ### Overview
 
+#### Design principles
+Siemstress is designed to parse data, and organize it into prioritized, manageable streams of relevant information. The goal is a streamlined open source information management system that embodies unix design principles. It should be simple, modular, and useful beyond its original scope.
+
+Parsing data from specific applications is left to user configurable parse helpers, and user interfaces beyond the command line are left to other programs. Core functions are contained in modules that are meant to be as useful to other programs as they are to ours.
+
+Siemstress was originally designed as a basis for artificial intelligence research, and has since been used for network security, physical security, and data collection.
+
 #### Database
 Siemstress uses a database (MariaDB) to store the following information:
 
@@ -46,23 +53,20 @@ Siemstress uses a database (MariaDB) to store the following information:
 `siemquery` terminal output does not show all attributes. To view all attributes, including the extended attributes parsed by helpers, use the `--json` option to store the output in a JSON file. This can also be useful for data visualization and manipulation using programs like Jupyter.
 ![JSON file screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events-json.png)
 
-#### Design principals
-Siemstress is designed to parse data, and organize it into prioritized, manageable streams of relevant information. One of the goals is to remain as simple as possible. Parsing data from specific applications is left to user configurable parse helpers, and user interfaces beyond the command line are left to other programs.
-
-Siemstress was originally designed as a basis for artificial intelligence research, and has since been used for network security, physical security, and data collection.
-
 #### The future
-Siemstress is still under development. In the future, it will include more rule types, state tables, and a more streamlined process for starting and stopping all of its services. It may include an optional web interface, but the intention is to stay UI agnostic.
+Siemstress is still in the early stages of development. In the future, it will include more rule types, state tables, host tables, and a more streamlined process for starting and stopping all of its services. It may include an optional web interface, but the intention is to remain UI agnostic. Any interface beyond the command line will be part of a separate package.
 
 ## Installing
 
 See the latest instructions on the [releases page](https://github.com/dogoncouch/siemstress/releases).
 
 ### Database Setup
-siemstress is developed and tested using MariaDB as an SQL server. You will need to create a database, and a user with permissions on it.
+siemstress is developed and tested using MariaDB as an SQL server. Refer to instructions for installing MariaDB on your operating system or distribution. You will need to create a database, and a user with permissions on it.
 
 ### Config
-The default siemstress config file location is `/etc/siemstress/db.conf` (`config/db.conf` if working in the repository). This file contains information needed to connect to the database. There is also a section config file in the same directory called `sections.conf` that contains information about tables.
+The default siemstress config file location is `/etc/siemstress/db.conf` (`config/db.conf` if working in the repository). This file contains information needed to connect to the database, and should be updated with the proper server location, credentials, and database instance name.
+
+There is also a section config file in the same directory called `sections.conf` that contains information about tables. This file needs more documentation.
 
 ## Tools
 
