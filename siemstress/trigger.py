@@ -157,8 +157,7 @@ def start_rule(db, rule, oneshot):
         cur.close()
     con.close()
 
-    sentry = SiemTrigger(db['host'], db['user'], db['password'],
-            db['database'], rule)
+    sentry = SiemTrigger(db, rule)
 
     if oneshot:
         sentry.check_rule()
