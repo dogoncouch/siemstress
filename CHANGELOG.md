@@ -1,6 +1,10 @@
 # Change log
 Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 
+## [0.7.1-alpha] - 2017-09-06
+### Fixed
+- `siemmanage` and `siemtrigger` bugs
+
 ## [0.7-alpha] - 2017-08-31
 ### Added
 - `siemmanage` management tool (clear/import/export)
