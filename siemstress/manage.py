@@ -48,7 +48,7 @@ class SIEMMgr:
             rules = json.loads(f.read())
 
         # Create table if it doesn't exist:
-        con = mdb.connect(self.db['server'], self.db['user'],
+        con = mdb.connect(self.db['host'], self.db['user'],
             self.db['password'], self.db['database'])
         with con:
             cur = con.cursor()
@@ -66,7 +66,7 @@ class SIEMMgr:
             cur.close()
         con.close()
         
-        con = mdb.connect(self.db['server'], self.db['user'],
+        con = mdb.connect(self.db['host'], self.db['user'],
             self.db['password'], self.db['database'])
         with con:
             cur = con.cursor()
@@ -93,7 +93,7 @@ class SIEMMgr:
         """Export rules from a table into a JSON file"""
 
         rules = {}
-        con = mdb.connect(self.db['server'], self.db['user'],
+        con = mdb.connect(self.db['host'], self.db['user'],
             self.db['password'], self.db['database'])
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
