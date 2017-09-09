@@ -1,6 +1,12 @@
 # Change log
 Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 
+## [Unreleased]
+
+### Changed
+- `siemparse` sleeps 0.1 on no line (much less idle CPU usage)
+
+
 ## [0.7.1-alpha] - 2017-09-06
 ### Fixed
 - `siemmanage` and `siemtrigger` bugs
