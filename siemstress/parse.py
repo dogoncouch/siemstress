@@ -217,6 +217,9 @@ class LiveParser:
                     # To Do: raise an error here.
                     print('No Match: ' + ourline)
 
+            else:
+                time.sleep(0.1)
+
 
 
     def parse_file(self, filename, parser):
