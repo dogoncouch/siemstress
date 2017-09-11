@@ -27,7 +27,7 @@ import os
 from time import strftime
 from argparse import ArgumentParser
 import ConfigParser
-from siemstress.query import SiemQuery
+import siemstress.query
 import json
 
 
@@ -212,11 +212,10 @@ class QueryCore:
     def query_siem(self):
         """Query SQL database for log events"""
         
-
-        query = SiemQuery(self.db)
-
-        qstatement, rows = query.query(tables = self.tables,
-                last = self.args.last, daterange = self.args.range,
+        qstatement, rows = siemstress.query.query(self.db,
+                tables = self.tables,
+                last = self.args.last,
+                daterange = self.args.range,
                 ids = self.args.ids,
                 sourcehosts = self.args.shosts,
                 sourceports = self.args.sports,

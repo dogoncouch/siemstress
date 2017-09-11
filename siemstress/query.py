@@ -31,246 +31,237 @@ import os
 import MySQLdb as mdb
 
 
-class SiemQuery:
+def simple_query(db, table='default', last='24h', shost=None,
+        process=None, grep=None):
+    """Query siemstress SQL database for events (simplified)"""
 
-    def __init__(self, db):
-        """Initialize query object"""
-        self.db = db
+    qstatement = []
+    qstatement.append("SELECT * FROM " + table)
+    
+    if last[-1:] == 'm': timeint = 'minute'
+    elif last[-1:] == 's': timeint = 'second'
+    elif last[-1:] == 'd': timeint = 'day'
+    else: timeint = 'hour'
+
+    qstatement.append("WHERE DateStamp >= timestamp(date_sub(now(), " + \
+            "interval " + str(int(last[:-1])) + " " + timeint + "))")
+    
+    if shost: qstatement.append("AND SourceHost LIKE \"" + shost + "\"")
+    if process: qstatement.append("AND Process LIKE \"" + process + "\"")
+    if grep: qstatement.append("AND Message LIKE \"%" + grep + "%\"")
+
+    qstatement = " ".join(qstatement)
+    con = mdb.connect(db['host'], db['user'], db['password'], db['database'])
+
+    with con:
+        cur = con.cursor()
+        cur.execute(qstatement)
+
+        rows = cur.fetchall()
+        desc = cur.description
+    cur.close()
+    con.close()
+
+    return desc, rows
+
+def query(db, tables=[], columns=[],
+        last=None, daterange=None, ids=[], sourcehosts=[],
+        sourceports=[], desthosts=[], destports=[], processes=[],
+        pids=[], protocols=[], greps = [],
+        rsourcehosts=[], rsourceports=[], rdesthosts=[],
+        rdestports=[], rprocesses=[], rpids=[], rprotocols=[],
+        rgreps=[], rulequery=False):
+    """Query siemstress SQL database for events"""
+    
+    lastunits = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}
+    
+    qstatement = []
+
+    # Select statement (columns)
+    if columns:
+        statement = "SELECT " + columns[0]
+        for column in columns[1:]:
+            statement += ", " + column
+    else:
+        statement = "SELECT *"
+    qstatement.append(statement)
+    
+    # From statement (tables)
+    statement = "FROM " + tables[0]
+    for table in tables[1:]:
+        statement += ", " + table
+    qstatement.append(statement)
+
+    # Initial where statement (time period)
+    if daterange:
+        startdate, enddate = daterange.split('-')
+        statement = "WHERE DateStamp BETWEEN \"" + startdate + \
+                "\" AND \"" + enddate + "\""
+    elif last:
+        lastunit = lastunits[last[-1]]
+        lastnum = last[:-1]
+
+        statement = "WHERE DateStamp >= " + \
+                "timestamp(date_sub(now(), interval " + \
+                lastnum + " " + lastunit + "))"
+    else:
+        statement = "WHERE DateStamp >= " + \
+                "timestamp(date_sub(now(), interval " + \
+                "1 day))"
+    qstatement.append(statement)
 
 
-    def simple_query(self, table='default', last='24h', shost=None,
-            process=None, grep=None):
-        """Query siemstress SQL database for events (simplified)"""
-
-        qstatement = []
-        qstatement.append("SELECT * FROM " + table)
-        
-        if last[-1:] == 'm': timeint = 'minute'
-        elif last[-1:] == 's': timeint = 'second'
-        elif last[-1:] == 'd': timeint = 'day'
-        else: timeint = 'hour'
-
-        qstatement.append("WHERE DateStamp >= timestamp(date_sub(now(), " + \
-                "interval " + str(int(last[:-1])) + " " + timeint + "))")
-        
-        if shost: qstatement.append("AND SourceHost LIKE \"" + shost + "\"")
-        if process: qstatement.append("AND Process LIKE \"" + process + "\"")
-        if grep: qstatement.append("AND Message LIKE \"%" + grep + "%\"")
-
-        qstatement = " ".join(qstatement)
-        con = mdb.connect(self.db['host'], self.db['user'],
-                self.db['password'], self.db['database'])
-
-        with con:
-            cur = con.cursor()
-            cur.execute(qstatement)
-
-            rows = cur.fetchall()
-            desc = cur.description
-        cur.close()
-        con.close()
-
-        return desc, rows
-
-    def query(self, tables=[], columns=[],
-            last=None, daterange=None, ids=[], sourcehosts=[],
-            sourceports=[], desthosts=[], destports=[], processes=[],
-            pids=[], protocols=[], greps = [],
-            rsourcehosts=[], rsourceports=[], rdesthosts=[],
-            rdestports=[], rprocesses=[], rpids=[], rprotocols=[],
-            rgreps=[], rulequery=False):
-        """Query siemstress SQL database for events"""
-        
-        lastunits = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}
-        
-        qstatement = []
-
-        # Select statement (columns)
-        if columns:
-            statement = "SELECT " + columns[0]
-            for column in columns[1:]:
-                statement += ", " + column
-        else:
-            statement = "SELECT *"
+    # Include attributes
+    if ids:
+        statement = "AND (Id LIKE \"" + \
+                ids[0] + "\""
+        for i in ids[1:]:
+            statement += " OR Id LIKE \"" + i + "\""
+        statement += ")"
         qstatement.append(statement)
-        
-        # From statement (tables)
-        statement = "FROM " + tables[0]
-        for table in tables[1:]:
-            statement += ", " + table
+
+    if sourcehosts:
+        statement = "AND (SourceHost LIKE \"" + \
+                sourcehosts[0] + "\""
+        for host in sourcehosts[1:]:
+            statement += " OR SourceHost LIKE \"" + host + "\""
+        statement += ")"
         qstatement.append(statement)
 
-        # Initial where statement (time period)
-        if daterange:
-            startdate, enddate = daterange.split('-')
-            statement = "WHERE DateStamp BETWEEN \"" + startdate + \
-                    "\" AND \"" + enddate + "\""
-        elif last:
-            lastunit = lastunits[last[-1]]
-            lastnum = last[:-1]
+    if sourceports:
+        statement = "AND (SourcePort LIKE \"" + \
+                sourceports[0] + "\""
+        for port in sourceports[1:]:
+            statement += " OR SourcePort LIKE \"" + port + "\""
+        statement += ")"
+        qstatement.append(statement)
 
-            statement = "WHERE DateStamp >= " + \
-                    "timestamp(date_sub(now(), interval " + \
-                    lastnum + " " + lastunit + "))"
-        else:
-            statement = "WHERE DateStamp >= " + \
-                    "timestamp(date_sub(now(), interval " + \
-                    "1 day))"
+    if desthosts:
+        statement = "AND (DestHost LIKE \"" + \
+                desthosts[0] + "\""
+        for host in desthosts[1:]:
+            statement += " OR DestHost LIKE \"" + host + "\""
+        statement += ")"
+        qstatement.append(statement)
+
+    if destports:
+        statement = "AND (DestPort LIKE \"" + \
+                destports[0] + "\""
+        for port in destports[1:]:
+            statement += " OR DestPort LIKE \"" + port + "\""
+        statement += ")"
+        qstatement.append(statement)
+
+    if processes:
+        statement = "AND (Process LIKE \"" + \
+                processes[0] + "\""
+        for process in processes[1:]:
+            statement += " OR Process LIKE \"" + process + "\""
+        statement += ")"
+        qstatement.append(statement)
+    
+    if pids:
+        statement = "AND (PID LIKE \"" + \
+                pids[0] + "\""
+        for pid in pids[1:]:
+            statement += " OR PID LIKE \"" + pid + "\""
+        statement += ")"
+        qstatement.append(statement)
+    
+    if protocols:
+        statement = "AND (Protocol LIKE \"" + \
+                protocols[0] + "\""
+        for protocol in protocols[1:]:
+            statement += " OR Protocol LIKE \"" + protocol + "\""
+        statement += ")"
+        qstatement.append(statement)
+    
+    if greps:
+        statement = "AND (Message LIKE \"%" + \
+                greps[0] + "%\""
+        for grep in greps[1:]:
+            statement += " OR Message LIKE \"%" + grep + "%\""
+        statement += ")"
+        qstatement.append(statement)
+
+    # Filter out attributes
+    if rsourcehosts:
+        statement = "AND (SourceHost NOT LIKE \"" + \
+                rsourcehosts[0] + "\""
+        for host in rsourcehosts[1:]:
+            statement += " AND SourceHost NOT LIKE \"" + host + "\""
+        statement += ")"
+        qstatement.append(statement)
+
+    if rsourceports:
+        statement = "AND (SourcePort NOT LIKE \"" + \
+                rsourceports[0] + "\""
+        for port in rsourceports[1:]:
+            statement += " AND SourcePort NOT LIKE \"" + port + "\""
+        statement += ")"
+        qstatement.append(statement)
+
+    if rdesthosts:
+        statement = "AND (DestHost NOT LIKE \"" + \
+                rdesthosts[0] + "\""
+        for host in rdesthosts[1:]:
+            statement += " AND DestHost NOT LIKE \"" + host + "\""
+        statement += ")"
+        qstatement.append(statement)
+
+    if rdestports:
+        statement = "AND (DestPort NOT LIKE \"" + \
+                rdestports[0] + "\""
+        for port in rdestports[1:]:
+            statement += " AND DestPort NOT LIKE \"" + port + "\""
+        statement += ")"
+        qstatement.append(statement)
+
+    if rprocesses:
+        statement = "AND (Process NOT LIKE \"" + \
+                rprocesses[0] + "\""
+        for process in rprocesses[1:]:
+            statement += " AND Process NOT LIKE \"" + process + "\""
+        statement += ")"
+        qstatement.append(statement)
+    
+    if rpids:
+        statement = "AND (PID NOT LIKE \"" + \
+                rpids[0] + "\""
+        for pid in rpids[1:]:
+            statement += " AND PID NOT LIKE \"" + pid + "\""
+        statement += ")"
+        qstatement.append(statement)
+    
+    if rprotocols:
+        statement = "AND (Protocol NOT LIKE \"" + \
+                rprotocols[0] + "\""
+        for protocol in rprotocols[1:]:
+            statement += " AND Protocol NOT LIKE \"" + protocol + "\""
+        statement += ")"
+        qstatement.append(statement)
+    
+    if rgreps:
+        statement = "AND (Message NOT LIKE \"%" + \
+                rgreps[0] + "%\""
+        for grep in rgreps[1:]:
+            statement += "AND Message NOT LIKE \"%" + grep + "%\""
+        statement += ")"
         qstatement.append(statement)
 
 
-        # Include attributes
-        if ids:
-            statement = "AND (Id LIKE \"" + \
-                    ids[0] + "\""
-            for i in ids[1:]:
-                statement += " OR Id LIKE \"" + i + "\""
-            statement += ")"
-            qstatement.append(statement)
+    # Connect and execute
+    qstatement = " ".join(qstatement)
+    con = mdb.connect(db['host'], db['user'], db['password'], db['database'])
 
-        if sourcehosts:
-            statement = "AND (SourceHost LIKE \"" + \
-                    sourcehosts[0] + "\""
-            for host in sourcehosts[1:]:
-                statement += " OR SourceHost LIKE \"" + host + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if sourceports:
-            statement = "AND (SourcePort LIKE \"" + \
-                    sourceports[0] + "\""
-            for port in sourceports[1:]:
-                statement += " OR SourcePort LIKE \"" + port + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if desthosts:
-            statement = "AND (DestHost LIKE \"" + \
-                    desthosts[0] + "\""
-            for host in desthosts[1:]:
-                statement += " OR DestHost LIKE \"" + host + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if destports:
-            statement = "AND (DestPort LIKE \"" + \
-                    destports[0] + "\""
-            for port in destports[1:]:
-                statement += " OR DestPort LIKE \"" + port + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if processes:
-            statement = "AND (Process LIKE \"" + \
-                    processes[0] + "\""
-            for process in processes[1:]:
-                statement += " OR Process LIKE \"" + process + "\""
-            statement += ")"
-            qstatement.append(statement)
+    with con:
+        cur = con.cursor(mdb.cursors.DictCursor)
+        if rulequery: qstatement = 'SELECT * FROM ' + ', '.join(tables)
         
-        if pids:
-            statement = "AND (PID LIKE \"" + \
-                    pids[0] + "\""
-            for pid in pids[1:]:
-                statement += " OR PID LIKE \"" + pid + "\""
-            statement += ")"
-            qstatement.append(statement)
-        
-        if protocols:
-            statement = "AND (Protocol LIKE \"" + \
-                    protocols[0] + "\""
-            for protocol in protocols[1:]:
-                statement += " OR Protocol LIKE \"" + protocol + "\""
-            statement += ")"
-            qstatement.append(statement)
-        
-        if greps:
-            statement = "AND (Message LIKE \"%" + \
-                    greps[0] + "%\""
-            for grep in greps[1:]:
-                statement += " OR Message LIKE \"%" + grep + "%\""
-            statement += ")"
-            qstatement.append(statement)
+        cur.execute(qstatement)
+        rows = cur.fetchall()
+    
+    cur.close()
+    con.close()
 
-        # Filter out attributes
-        if rsourcehosts:
-            statement = "AND (SourceHost NOT LIKE \"" + \
-                    rsourcehosts[0] + "\""
-            for host in rsourcehosts[1:]:
-                statement += " AND SourceHost NOT LIKE \"" + host + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if rsourceports:
-            statement = "AND (SourcePort NOT LIKE \"" + \
-                    rsourceports[0] + "\""
-            for port in rsourceports[1:]:
-                statement += " AND SourcePort NOT LIKE \"" + port + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if rdesthosts:
-            statement = "AND (DestHost NOT LIKE \"" + \
-                    rdesthosts[0] + "\""
-            for host in rdesthosts[1:]:
-                statement += " AND DestHost NOT LIKE \"" + host + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if rdestports:
-            statement = "AND (DestPort NOT LIKE \"" + \
-                    rdestports[0] + "\""
-            for port in rdestports[1:]:
-                statement += " AND DestPort NOT LIKE \"" + port + "\""
-            statement += ")"
-            qstatement.append(statement)
-
-        if rprocesses:
-            statement = "AND (Process NOT LIKE \"" + \
-                    rprocesses[0] + "\""
-            for process in rprocesses[1:]:
-                statement += " AND Process NOT LIKE \"" + process + "\""
-            statement += ")"
-            qstatement.append(statement)
-        
-        if rpids:
-            statement = "AND (PID NOT LIKE \"" + \
-                    rpids[0] + "\""
-            for pid in rpids[1:]:
-                statement += " AND PID NOT LIKE \"" + pid + "\""
-            statement += ")"
-            qstatement.append(statement)
-        
-        if rprotocols:
-            statement = "AND (Protocol NOT LIKE \"" + \
-                    rprotocols[0] + "\""
-            for protocol in rprotocols[1:]:
-                statement += " AND Protocol NOT LIKE \"" + protocol + "\""
-            statement += ")"
-            qstatement.append(statement)
-        
-        if rgreps:
-            statement = "AND (Message NOT LIKE \"%" + \
-                    rgreps[0] + "%\""
-            for grep in rgreps[1:]:
-                statement += "AND Message NOT LIKE \"%" + grep + "%\""
-            statement += ")"
-            qstatement.append(statement)
-
-
-        # Connect and execute
-        qstatement = " ".join(qstatement)
-        con = mdb.connect(self.db['host'], self.db['user'],
-                self.db['password'], self.db['database'])
-
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            if rulequery: qstatement = 'SELECT * FROM ' + ', '.join(tables)
-            
-            cur.execute(qstatement)
-            rows = cur.fetchall()
-        
-        cur.close()
-        con.close()
-
-        return qstatement, rows
+    return qstatement, rows
