@@ -55,14 +55,14 @@ class SIEMMgr:
             for table in rules:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + \
                         table + \
-                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                        'RuleName NVARCHAR(25), ' + \
-                        'IsEnabled BOOLEAN, Severity TINYINT, ' + \
-                        'TimeInt INT, EventLimit INT, ' + \
-                        'SQLQuery NVARCHAR(1000), ' + \
-                        'SourceTable NVARCHAR(25), ' + \
-                        'OutTable NVARCHAR(25), ' + \
-                        'Message NVARCHAR(1000))')
+                        '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'rule_name NVARCHAR(25), ' + \
+                        'is_enabled BOOLEAN, severity TINYINT, ' + \
+                        'time_int INT, event_limit INT, ' + \
+                        'sql_query NVARCHAR(1000), ' + \
+                        'source_table NVARCHAR(25), ' + \
+                        'out_table NVARCHAR(25), ' + \
+                        'message NVARCHAR(1000))')
             cur.close()
         con.close()
         
@@ -73,18 +73,18 @@ class SIEMMgr:
             for table in rules:
                 # Set up SQL insert statement:
                 insertstatement = 'INSERT INTO ' + table + \
-                        '(RuleName, IsEnabled, Severity, ' + \
-                        'TimeInt, EventLimit, SQLQuery, ' + \
-                        'SourceTable, OutTable, Message) VALUES ' + \
+                        '(rule_name, is_enabled, severity, ' + \
+                        'time_int, event_limit, sql_query, ' + \
+                        'source_table, out_table, message) VALUES ' + \
                         '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
 
                 for rule in rules[table]:
-                    cur.execute(insertstatement, (rule['RuleName'],
-                        rule['IsEnabled'], rule['Severity'],
-                        rule['TimeInt'], rule['EventLimit'], 
-                        rule['SQLQuery'], rule['SourceTable'],
-                        rule['OutTable'], rule['Message']))
+                    cur.execute(insertstatement, (rule['rule_name'],
+                        rule['is_enabled'], rule['severity'],
+                        rule['time_int'], rule['event_limit'], 
+                        rule['sql_query'], rule['source_table'],
+                        rule['out_table'], rule['message']))
             cur.close()
         con.close()
 
@@ -123,7 +123,7 @@ class SIEMMgr:
             for table in helpers:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + \
                         table + \
-                        '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                         'var_name NVARCHAR(25), ' + \
                         'reg_exp NVARCHAR(200))')
             cur.close()

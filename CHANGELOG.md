@@ -2,9 +2,9 @@
 Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 
 ## [Unreleased]
-
 ### Changed
 - `siemparse` sleeps 0.1 on no line (much less idle CPU usage)
+- Update column/table names (broke backwards compatibility)
 
 
 ## [0.7.1-alpha] - 2017-09-06

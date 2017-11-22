@@ -111,8 +111,8 @@ class QueryCore:
                 help = ('match a source process'))
         self.query_args.add_argument('--pid',
                 action = 'append', dest = 'pids',
-                metavar = 'PID',
-                help = ('match a source Process ID'))
+                metavar = 'pid',
+                help = ('match a source process ID'))
         self.query_args.add_argument('--protocol',
                 action = 'append', dest = 'protocols',
                 metavar = 'PROTOCOL',
@@ -143,8 +143,8 @@ class QueryCore:
                 help = ('filter out a source process'))
         self.query_args.add_argument('--rpid',
                 action = 'append', dest = 'rpids',
-                metavar = 'PID',
-                help = ('filter out a source Process ID'))
+                metavar = 'pid',
+                help = ('filter out a source process ID'))
         self.query_args.add_argument('--rprotocol',
                 action = 'append', dest = 'rprotocols',
                 metavar = 'PROTOCOL',
@@ -188,8 +188,8 @@ class QueryCore:
             self.displayfields = [x for x in config.get(
                 self.args.section, 'displayfields').split(',')]
         except ConfigParser.NoSectionError:
-            self.displayfields = ['Id', 'DateStamp', 'SourceHost', 
-                    'Process', 'PID', 'Message']
+            self.displayfields = ['id', 'date_stamp', 'source_host', 
+                    'process', 'pid', 'message']
 
 
 
@@ -262,13 +262,13 @@ class QueryCore:
             jrows = []
             for row in rows:
                 jrow = row
-                if 'DateStamp' in jrow:
-                    jrow['DateStamp'] = \
-                            jrow['DateStamp'].strftime('%Y%m%d%H%M%S')
-                if 'FDateStamp' in jrow:
-                    jrow['FDateStamp'] = float(jrow['FDateStamp'])
-                if 'Extended' in jrow:
-                    jrow['Extended'] = json.loads(jrow['Extended'])
+                if 'date_stamp' in jrow:
+                    jrow['date_stamp'] = \
+                            jrow['date_stamp'].strftime('%Y%m%d%H%M%S')
+                if 'f_date_stamp' in jrow:
+                    jrow['f_date_stamp'] = float(jrow['f_date_stamp'])
+                if 'extended' in jrow:
+                    jrow['extended'] = json.loads(jrow['extended'])
                 jrows.append(jrow)
 
             with open(self.args.outjson, 'w') as f:

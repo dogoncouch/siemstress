@@ -1,5 +1,5 @@
 {
-  "HELPERSAuth": [
+  "helpers_auth": [
     {
       "reg_exp": "user[=\\s]([A-Za-z0-9-_]*\\.?[A-Za-z0-9-_]+)",
       "var_name": "users"
@@ -17,7 +17,7 @@
       "var_name": "ip4s"
     }
   ],
-  "HELPERSVis": [
+  "helpers_vis": [
     {
       "reg_exp": "file: ([A-Za-z0-9-_]*\\.?[A-Za-z0-9-_]+)",
       "var_name": "files"

@@ -77,10 +77,10 @@ class LiveParser:
         # It should only be used for development purposes on closed
         # systems.
         self.sqlstatement = 'INSERT INTO ' + self.table + \
-                ' (DateStamp, FDateStamp, ' + \
-                'TZone, RawStamp, Facility, Severity, SourceHost, ' + \
-                'SourcePort, DestHost, DestPort, Process, PID, Protocol, ' + \
-                'Message, Extended) VALUES ' + \
+                ' (date_stamp, f_date_stamp, ' + \
+                't_zone, raw_stamp, facility, severity, source_host, ' + \
+                'source_port, dest_host, DestPort, process, pid, protocol, ' + \
+                'message, extended) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
                 '%s, %s, %s, %s, %s, %s)'
 
@@ -105,24 +105,24 @@ class LiveParser:
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
-                    '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'DateStamp TIMESTAMP, ' + \
-                    'FDateStamp DECIMAL(20, 1), ' + \
-                    'TZone NVARCHAR(5), '+ \
-                    'RawStamp NVARCHAR(80), ' + \
-                    'Facility NVARCHAR(15), ' + \
-                    'Severity NVARCHAR(10), ' + \
-                    'SourceHost NVARCHAR(25), ' + \
-                    'SourcePort NVARCHAR(25), ' + \
-                    'DestHost NVARCHAR(25), ' + \
+                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'date_stamp TIMESTAMP, ' + \
+                    'f_date_stamp DECIMAL(20, 1), ' + \
+                    't_zone NVARCHAR(5), '+ \
+                    'raw_stamp NVARCHAR(80), ' + \
+                    'facility NVARCHAR(15), ' + \
+                    'severity NVARCHAR(10), ' + \
+                    'source_host NVARCHAR(25), ' + \
+                    'source_port NVARCHAR(25), ' + \
+                    'dest_host NVARCHAR(25), ' + \
                     'DestPort NVARCHAR(25), ' + \
-                    'Process NVARCHAR(25), ' + \
-                    'PID MEDIUMINT UNSIGNED, ' + \
-                    'Protocol NVARCHAR(5), ' + \
-                    'Message NVARCHAR(2000), '
-                    'Extended NVARCHAR(1000))')
+                    'process NVARCHAR(25), ' + \
+                    'pid MEDIUMINT UNSIGNED, ' + \
+                    'protocol NVARCHAR(5), ' + \
+                    'message NVARCHAR(2000), '
+                    'extended NVARCHAR(1000))')
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.helpers + \
-                    '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'var_name NVARCHAR(25), ' + \
                     'reg_exp NVARCHAR(200))')
             cur.execute('SELECT * FROM ' + self.helpers)

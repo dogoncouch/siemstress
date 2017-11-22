@@ -72,7 +72,7 @@ class SiemTrigger:
             self.check_rule()
         
             # Wait until the next interval
-            sleep(int(self.rule['TimeInt']) * 60)
+            sleep(int(self.rule['time_int']) * 60)
 
 
 
@@ -99,25 +99,25 @@ class SiemTrigger:
                 self.db['password'], self.db['database'])
         with con:
             cur = con.cursor()
-            cur.execute(self.rule['SQLQuery'])
+            cur.execute(self.rule['sql_query'])
             rows = cur.fetchall()
             cur.close()
         con.close()
     
         # Evaluate the results:
-        if len(rows) > int(self.rule['EventLimit']):
+        if len(rows) > int(self.rule['event_limit']):
             idtags = json.dumps([int(row[0]) for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
             magnitude = ((len(rows) // \
-                    (self.rule['EventLimit'] + 1) // 2) + 5) * \
-                    ( 7 - self.rule['Severity'])
+                    (self.rule['event_limit'] + 1) // 2) + 5) * \
+                    ( 7 - self.rule['severity'])
 
             outstatement = 'INSERT INTO ' + \
-                    self.rule['OutTable'] + \
-                    '(DateStamp, TZone, ' + \
-                    'SourceRule, Severity, SourceTable, EventLimit, ' + \
-                    'EventCount, Magnitude, TimeInt, Message, SourceIDs) ' + \
+                    self.rule['out_table'] + \
+                    '(date_stamp, t_zone, ' + \
+                    'source_rule, severity, source_table, event_limit, ' + \
+                    'event_count, magnitude, time_int, message, source_ids) ' + \
                     'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
             # Send an event to the database:
@@ -126,10 +126,10 @@ class SiemTrigger:
             with con:
                 cur = con.cursor()
                 cur.execute(outstatement, (datestamp, self.tzone,
-                    self.rule['RuleName'], self.rule['Severity'],
-                    self.rule['SourceTable'],
-                    self.rule['EventLimit'], len(rows), magnitude,
-                    self.rule['TimeInt'], self.rule['Message'],
+                    self.rule['rule_name'], self.rule['severity'],
+                    self.rule['source_table'],
+                    self.rule['event_limit'], len(rows), magnitude,
+                    self.rule['time_int'], self.rule['message'],
                     idtags))
                 cur.close()
             con.close()
@@ -141,19 +141,19 @@ def start_rule(db, rule, oneshot):
     con = mdb.connect(db['host'], db['user'], db['password'], db['database'])
     with con:
         cur = con.cursor()
-        cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['OutTable'] + \
-                '(Id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                'DateStamp TIMESTAMP, ' + \
-                'TZone NVARCHAR(5), ' + \
-                'SourceRule NVARCHAR(25), ' + \
-                'Severity TINYINT UNSIGNED, ' + \
-                'SourceTable NVARCHAR(25), ' + \
-                'EventLimit INT UNSIGNED, ' + \
-                'EventCount INT UNSIGNED, ' + \
-                'Magnitude INT UNSIGNED, ' + \
-                'TimeInt INT UNSIGNED, ' + \
-                'Message NVARCHAR(1000), ' + \
-                'SourceIDs NVARCHAR(2000))')
+        cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['out_table'] + \
+                '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                'date_stamp TIMESTAMP, ' + \
+                't_zone NVARCHAR(5), ' + \
+                'source_rule NVARCHAR(25), ' + \
+                'severity TINYINT UNSIGNED, ' + \
+                'source_table NVARCHAR(25), ' + \
+                'event_limit INT UNSIGNED, ' + \
+                'event_count INT UNSIGNED, ' + \
+                'magnitude INT UNSIGNED, ' + \
+                'time_int INT UNSIGNED, ' + \
+                'message NVARCHAR(1000), ' + \
+                'source_ids NVARCHAR(2000))')
         cur.close()
     con.close()
 
@@ -161,12 +161,12 @@ def start_rule(db, rule, oneshot):
 
     if oneshot:
         sentry.check_rule()
-    elif int(rule['TimeInt']) == 0:
+    elif int(rule['time_int']) == 0:
         pass
     
     else:
         # Before starting, sleep randomly up to rule interval to stagger
         # database use:
-        sleep(randrange(0, int(rule['TimeInt']) * 60))
+        sleep(randrange(0, int(rule['time_int']) * 60))
 
         sentry.watch_rule()
