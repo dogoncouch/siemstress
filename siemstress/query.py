@@ -47,7 +47,8 @@ def simple_query(db, table='default', last='24h', shost=None,
             "interval " + str(int(last[:-1])) + " " + timeint + "))")
     
     if shost: qstatement.append("AND source_host LIKE \"" + shost + "\"")
-    if process: qstatement.append("AND process LIKE \"" + process + "\"")
+    if process:
+        qstatement.append("AND source_process LIKE \"" + process + "\"")
     if grep: qstatement.append("AND message LIKE \"%" + grep + "%\"")
 
     qstatement = " ".join(qstatement)
@@ -145,26 +146,26 @@ def query(db, tables=[], columns=[],
         qstatement.append(statement)
 
     if destports:
-        statement = "AND (DestPort LIKE \"" + \
+        statement = "AND (dest_port LIKE \"" + \
                 destports[0] + "\""
         for port in destports[1:]:
-            statement += " OR DestPort LIKE \"" + port + "\""
+            statement += " OR dest_port LIKE \"" + port + "\""
         statement += ")"
         qstatement.append(statement)
 
     if processes:
-        statement = "AND (process LIKE \"" + \
+        statement = "AND (source_process LIKE \"" + \
                 processes[0] + "\""
         for process in processes[1:]:
-            statement += " OR process LIKE \"" + process + "\""
+            statement += " OR source_process LIKE \"" + process + "\""
         statement += ")"
         qstatement.append(statement)
     
     if pids:
-        statement = "AND (pid LIKE \"" + \
+        statement = "AND (source_pid LIKE \"" + \
                 pids[0] + "\""
         for pid in pids[1:]:
-            statement += " OR pid LIKE \"" + pid + "\""
+            statement += " OR source_pid LIKE \"" + pid + "\""
         statement += ")"
         qstatement.append(statement)
     
@@ -210,26 +211,26 @@ def query(db, tables=[], columns=[],
         qstatement.append(statement)
 
     if rdestports:
-        statement = "AND (DestPort NOT LIKE \"" + \
+        statement = "AND (dest_port NOT LIKE \"" + \
                 rdestports[0] + "\""
         for port in rdestports[1:]:
-            statement += " AND DestPort NOT LIKE \"" + port + "\""
+            statement += " AND dest_port NOT LIKE \"" + port + "\""
         statement += ")"
         qstatement.append(statement)
 
     if rprocesses:
-        statement = "AND (process NOT LIKE \"" + \
+        statement = "AND (source_process NOT LIKE \"" + \
                 rprocesses[0] + "\""
         for process in rprocesses[1:]:
-            statement += " AND process NOT LIKE \"" + process + "\""
+            statement += " AND source_process NOT LIKE \"" + process + "\""
         statement += ")"
         qstatement.append(statement)
     
     if rpids:
-        statement = "AND (pid NOT LIKE \"" + \
+        statement = "AND (source_pid NOT LIKE \"" + \
                 rpids[0] + "\""
         for pid in rpids[1:]:
-            statement += " AND pid NOT LIKE \"" + pid + "\""
+            statement += " AND source_pid NOT LIKE \"" + pid + "\""
         statement += ")"
         qstatement.append(statement)
     

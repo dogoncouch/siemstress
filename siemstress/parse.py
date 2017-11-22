@@ -79,7 +79,8 @@ class LiveParser:
         self.sqlstatement = 'INSERT INTO ' + self.table + \
                 ' (date_stamp, f_date_stamp, ' + \
                 't_zone, raw_stamp, facility, severity, source_host, ' + \
-                'source_port, dest_host, DestPort, process, pid, protocol, ' + \
+                'source_port, dest_host, dest_port, source_process, ' + \
+                'source_pid, protocol, ' + \
                 'message, extended) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
                 '%s, %s, %s, %s, %s, %s)'
@@ -115,9 +116,9 @@ class LiveParser:
                     'source_host NVARCHAR(25), ' + \
                     'source_port NVARCHAR(25), ' + \
                     'dest_host NVARCHAR(25), ' + \
-                    'DestPort NVARCHAR(25), ' + \
-                    'process NVARCHAR(25), ' + \
-                    'pid MEDIUMINT UNSIGNED, ' + \
+                    'dest_port NVARCHAR(25), ' + \
+                    'source_process NVARCHAR(25), ' + \
+                    'source_pid MEDIUMINT UNSIGNED, ' + \
                     'protocol NVARCHAR(5), ' + \
                     'message NVARCHAR(2000), '
                     'extended NVARCHAR(1000))')
