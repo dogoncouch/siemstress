@@ -16,15 +16,5 @@
       "reg_exp": "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
       "var_name": "ip4s"
     }
-  ],
-  "helpers_vis": [
-    {
-      "reg_exp": "file: ([A-Za-z0-9-_]*\\.?[A-Za-z0-9-_]+)",
-      "var_name": "files"
-    },
-    {
-      "reg_exp": "length: (\\d\\d:\\d\\d)",
-      "var_name": "lengths"
-    }
   ]
 }

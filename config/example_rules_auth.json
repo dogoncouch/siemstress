@@ -44,18 +44,5 @@
       "source_table": "SIEMDefault",
       "time_int": 60
     }
-  ],
-  "rules_night": [
-    {
-      "event_limit": 0,
-      "is_enabled": 1,
-      "message": "Over 0 motion events in one hour at night",
-      "out_table": "SIEMDefault",
-      "rule_name": "VIS_NightMoves",
-      "sql_query": "SELECT Id FROM Visual WHERE DateStamp >= timestamp(date_sub(now(), interval 1 hour)) AND (message LIKE \"%PIR: Motion%\")",
-      "severity": 4,
-      "source_table": "Visual",
-      "time_int": 0
-    }
   ]
 }
