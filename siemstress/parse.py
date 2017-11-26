@@ -110,6 +110,7 @@ class LiveParser:
                     'date_stamp TIMESTAMP, ' + \
                     'f_date_stamp DECIMAL(20, 1), ' + \
                     't_zone NVARCHAR(5), '+ \
+                    'date_stamp_utc TIMESTAMP, ' + \
                     'raw_stamp NVARCHAR(80), ' + \
                     'facility NVARCHAR(15), ' + \
                     'severity NVARCHAR(10), ' + \
