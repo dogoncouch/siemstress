@@ -69,7 +69,7 @@ class LiveParser:
 
         # Get hostname, file name:
         parsepath = os.path.abspath(inputfile.name)
-        parsehost = socket.gethostname()
+        parsehost = socket.getfqdn()
 
         # Read to the end of the file:
         inputfile.read()
