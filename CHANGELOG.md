@@ -5,6 +5,7 @@ Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 ### Changed
 - `siemparse` sleeps 0.1 on no line (much less idle CPU usage)
 - Update column/table names (broke backwards compatibility)
+- Update magnitude logic (prioritize severity)
 
 ### Added
 - `parsed_on` and `source_file` columns
