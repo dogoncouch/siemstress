@@ -91,6 +91,8 @@ class LiveParser:
                 '%s, %s, %s, %s, %s, %s, %s, %s)'
 
         if not self.tzone:
+            # To Do: Move this into self._get_tzone() function,
+            # and add a time delta to calculate UTC datestamp.
             if time.daylight:
                 tzone = \
                         str(int(float(time.altzone) / 60 // 60)).rjust(2,
@@ -103,6 +105,7 @@ class LiveParser:
                         str(int(float(time.timezone) / 60 % 60)).ljust(2, '0')
             if not '-' in tzone:
                 tzone = '+' + tzone
+            # End self._get_tzone() stuff
 
         
         # Make sure the table exists:
@@ -159,8 +162,10 @@ class LiveParser:
 
                 if entry:
 
+                    # To Do: Only check y/m/d
                     if float(entry['tstamp']) < oldtnum:
                         ymdstamp = datetime.now().strftime('%Y%m%d')
+                        # To Do: Set tzone, tzonedelta
                     oldtnum = float(entry['tstamp'])
                     
                 
