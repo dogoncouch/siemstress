@@ -68,7 +68,7 @@ class LiveParser:
         """Parse log entries from a file like object"""
 
         # Get hostname, file name:
-        parsepath = os.path.abspath(inputfile)
+        parsepath = os.path.abspath(inputfile.name)
         parsehost = socket.gethostname()
 
         # Read to the end of the file:
