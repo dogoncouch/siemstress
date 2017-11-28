@@ -125,7 +125,7 @@ class ManageCore:
                     mgr.clear_table(self.args.tables)
                 else:
                     print("Use --force option if you really want to " + \
-                            "drop table (" + table + ")"
+                            "drop table (" + table + ")")
             # Rules:
             elif self.args.importrules:
                 mgr = SIEMMgr(self.db)
