@@ -6,6 +6,9 @@ Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 - `siemparse` sleeps 0.1 on no line (much less idle CPU usage)
 - Update column/table names (broke backwards compatibility)
 
+### Added
+- `parsed_on` and `source_file` columns
+- `date_stamp_utc` column (not implemented yet)
 
 ## [0.7.1-alpha] - 2017-09-06
 ### Fixed
