@@ -166,22 +166,16 @@ class SIEMMgr:
 
 
 
-    def clear_table(self, tables, force=False):
+    def clear_table(self, tables):
         """Clear SQL tables"""
 
-        if force:
-
-            con = mdb.connect(self.db['host'], self.db['user'],
-                    self.db['password'], self.db['database'])
-            with con:
-                cur = con.cursor()
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor()
         
-                for table in tables:
-                    cur.execute('DROP TABLE IF EXISTS ' + table)
+            for table in tables:
+                cur.execute('DROP TABLE IF EXISTS ' + table)
 
-                cur.close()
-            con.close()
-
-        # To Do: raise an error here:
-        else: print("Use --force if you really want to drop table (" + \
-                table + ")")
+            cur.close()
+        con.close()

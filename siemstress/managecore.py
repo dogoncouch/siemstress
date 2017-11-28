@@ -118,9 +118,14 @@ class ManageCore:
         try:
             self.get_args()
             self.get_config()
+            # Clear:
             if self.args.clearsiem:
-                mgr = SIEMMgr(self.db)
-                mgr.clear_table(self.args.tables, force=self.args.force)
+                if self.args.force:
+                    mgr = SIEMMgr(self.db)
+                    mgr.clear_table(self.args.tables)
+                else:
+                    print("Use --force option if you really want to " + \
+                            "drop table (" + table + ")"
             # Rules:
             elif self.args.importrules:
                 mgr = SIEMMgr(self.db)
