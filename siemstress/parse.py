@@ -29,6 +29,7 @@ from datetime import datetime
 import re
 import sys
 import os
+import socket
 import MySQLdb as mdb
 from argparse import ArgumentParser
 from argparse import FileType
@@ -66,6 +67,10 @@ class LiveParser:
     def parse_entries(self, inputfile):
         """Parse log entries from a file like object"""
 
+        # Get hostname, file name:
+        parsepath = os.path.abspath(inputfile)
+        parsehost = socket.gethostname()
+
         # Read to the end of the file:
         inputfile.read()
         
@@ -81,9 +86,9 @@ class LiveParser:
                 't_zone, raw_stamp, facility, severity, source_host, ' + \
                 'source_port, dest_host, dest_port, source_process, ' + \
                 'source_pid, protocol, ' + \
-                'message, extended) VALUES ' + \
+                'message, extended, parsed_on, source_path) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
-                '%s, %s, %s, %s, %s, %s)'
+                '%s, %s, %s, %s, %s, %s, %s, %s)'
 
         if not self.tzone:
             if time.daylight:
@@ -122,7 +127,9 @@ class LiveParser:
                     'source_pid MEDIUMINT UNSIGNED, ' + \
                     'protocol NVARCHAR(5), ' + \
                     'message NVARCHAR(2000), '
-                    'extended NVARCHAR(1000))')
+                    'extended NVARCHAR(1000), ' + \
+                    'parsed_on NVARCHAR(32), ' + \
+                    'source_path NVARCHAR(200))')
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.helpers + \
                     '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'var_name NVARCHAR(25), ' + \
@@ -208,7 +215,7 @@ class LiveParser:
                                     entry['source_process'],
                                     entry['source_pid'],
                                     entry['protocol'], entry['message'],
-                                    extattrs))
+                                    extattrs, parsehost, parsepath))
                         con.commit()
                         cur.close()
                     con.close()
