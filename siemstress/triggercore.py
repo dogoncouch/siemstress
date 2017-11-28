@@ -126,7 +126,7 @@ class SiemTriggerCore:
         # Start one thread per rule:
         self.threads = []
         for r in self.rules:
-            if r['IsEnabled'] == 1:
+            if r['is_enabled'] == 1:
                 thread = threading.Thread(name=r,
                         target=siemstress.trigger.start_rule,
                         args=(self.db, r, self.args.oneshot))
