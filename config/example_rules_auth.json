@@ -6,7 +6,7 @@
       "message": "Over 7 pam auth failure events in 10 minutes",
       "out_table": "siem_default",
       "rule_name": "PAM_AuthFail_10m",
-      "sql_query": "SELECT Id FROM Auth WHERE date_stamp >= timestamp(date_sub(now(), interval 10 minute)) AND (message LIKE \"%fail%\" AND message LIKE \"%pam%\")",
+      "sql_query": "SELECT id FROM auth WHERE date_stamp >= timestamp(date_sub(now(), interval 10 minute)) AND (message LIKE \"%fail%\" AND message LIKE \"%pam%\")",
       "severity": 5,
       "source_table": "auth",
       "time_int": 10
@@ -17,7 +17,7 @@
       "message": "Over 2 pam auth failure events for root in 10 minutes",
       "out_table": "siem_default",
       "rule_name": "PAM_RootFail_10m",
-      "sql_query": "SELECT Id FROM Auth WHERE date_stamp >= timestamp(date_sub(now(), interval 10 minute)) AND (message LIKE \"%fail%\" AND message LIKE \"%pam%\" AND message LIKE \"%root%\")",
+      "sql_query": "SELECT id FROM auth WHERE date_stamp >= timestamp(date_sub(now(), interval 10 minute)) AND (message LIKE \"%fail%\" AND message LIKE \"%pam%\" AND message LIKE \"%root%\")",
       "severity": 3,
       "source_table": "auth",
       "time_int": 10
@@ -28,7 +28,7 @@
       "message": "Continued pam auth fail incidents in 1 hour",
       "out_table": "siem_default",
       "rule_name": "PAM_AuthFail_1h",
-      "sql_query": "SELECT Id FROM siem_default WHERE date_stamp >= timestamp(date_sub(now(), interval 1 hour)) AND (source_rule = \"PAM_AuthFail_10m\")",
+      "sql_query": "SELECT id FROM siem_default WHERE date_stamp >= timestamp(date_sub(now(), interval 1 hour)) AND (source_rule = \"PAM_AuthFail_10m\")",
       "severity": 2,
       "source_table": "siem_default",
       "time_int": 60
@@ -39,7 +39,7 @@
       "message": "Continued pam auth fail incidents for root in 1 hour",
       "out_table": "siem_default",
       "rule_name": "PAM_RootFail_1h",
-      "sql_query": "SELECT Id FROM siem_default WHERE date_stamp >= timestamp(date_sub(now(), interval 1 hour)) AND (source_rule = \"PAM_RootFail_10m\")",
+      "sql_query": "SELECT id FROM siem_default WHERE date_stamp >= timestamp(date_sub(now(), interval 1 hour)) AND (source_rule = \"PAM_RootFail_10m\")",
       "severity": 0,
       "source_table": "siem_default",
       "time_int": 60
