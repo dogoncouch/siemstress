@@ -26,6 +26,7 @@ from siemstress import __version__
 import logdissect.parsers
 import time
 from datetime import datetime
+from datetime import timedelta
 import re
 import sys
 import os
@@ -47,7 +48,9 @@ class LiveParser:
         self.db = db
         self.table = table
         self.helpers = helpers
+        self.supertzone = tzone
         self.tzone = tzone
+        self.tdelta = None
 
 
 
@@ -75,36 +78,24 @@ class LiveParser:
         inputfile.read()
         
         recent_datestamp = '0000000000'
-        oldtnum = 0
+        oldymdnum = 0
         ymdstamp = datetime.now().strftime('%Y%m%d')
 
         # NOTE: The default password is on a publicly available git repo.
         # It should only be used for development purposes on closed
         # systems.
         self.sqlstatement = 'INSERT INTO ' + self.table + \
-                ' (date_stamp, f_date_stamp, ' + \
+                ' (date_stamp, f_date_stamp, date_stamp_utc, ' + \
                 't_zone, raw_stamp, facility, severity, source_host, ' + \
                 'source_port, dest_host, dest_port, source_process, ' + \
                 'source_pid, protocol, ' + \
                 'message, extended, parsed_on, source_path) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
-                '%s, %s, %s, %s, %s, %s, %s, %s)'
+                '%s, %s, %s, %s, %s, %s, %s, %s %s)'
 
-        if not self.tzone:
+        self._get_tzone()
             # To Do: Move this into self._get_tzone() function,
             # and add a time delta to calculate UTC datestamp.
-            if time.daylight:
-                tzone = \
-                        str(int(float(time.altzone) / 60 // 60)).rjust(2,
-                                '0') + \
-                        str(int(float(time.altzone) / 60 % 60)).ljust(2, '0')
-            else:
-                tzone = \
-                        str(int(float(time.timezone) / 60 // 60)).rjust(2,
-                                '0') + \
-                        str(int(float(time.timezone) / 60 % 60)).ljust(2, '0')
-            if not '-' in tzone:
-                tzone = '+' + tzone
             # End self._get_tzone() stuff
 
         
@@ -115,10 +106,10 @@ class LiveParser:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
                     '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'date_stamp TIMESTAMP, ' + \
+                    'date_stamp TIMESTAMP(6), ' + \
                     'f_date_stamp DECIMAL(20, 1), ' + \
+                    'date_stamp_utc TIMESTAMP(6), ' + \
                     't_zone NVARCHAR(5), '+ \
-                    'date_stamp_utc TIMESTAMP, ' + \
                     'raw_stamp NVARCHAR(80), ' + \
                     'facility NVARCHAR(15), ' + \
                     'severity NVARCHAR(10), ' + \
@@ -162,11 +153,10 @@ class LiveParser:
 
                 if entry:
 
-                    # To Do: Only check y/m/d
-                    if float(entry['tstamp']) < oldtnum:
+                    if float(entry['tstamp'][0:8]) < oldymdnum:
                         ymdstamp = datetime.now().strftime('%Y%m%d')
-                        # To Do: Set tzone, tzonedelta
-                    oldtnum = float(entry['tstamp'])
+                        self._get_tzone()
+                    oldymdnum = str(int(entry['tstamp']))[0:8]
                     
                 
                     # Set datestamp
@@ -176,11 +166,11 @@ class LiveParser:
                         entry['month'] = ymdstamp[4:6]
                     if not entry['day']:
                         entry['day'] = ymdstamp[6:8]
-                    if self.tzone:
-                        entry['tzone'] = self.tzone
+                    if self.supertzone:
+                        entry['tzone'] = self.supertzone
                     else:
                         if not entry['tzone']:
-                            entry['tzone'] = tzone
+                            entry['tzone'] = self.tzone
                 
                     tstamp = entry['tstamp'].split('.')
                     intdatestamp = \
@@ -191,6 +181,12 @@ class LiveParser:
                     else:
                         datestamp = '.'.join(intdatestamp,
                                 tstamp[1].ljust(6, '0'))
+
+                    datestampobj = datetime.strptime(datestamp,
+                            '%Y%m%d%H%M%S.%f')
+                    datestamputcobj = datestampobj + tdelta
+                    datestamputc = datetime.strftime(datestamputcobj,
+                            '%Y%m%d%H%M%S.%f')
                     
                     # Parse extended attributes from helpers:
                     extattrs = {}
@@ -212,7 +208,9 @@ class LiveParser:
                     with con:
                         cur = con.cursor()
                         cur.execute(self.sqlstatement,
-                                (intdatestamp, datestamp,
+                                # Trying switch to fractional datestamp
+                                #(intdatestamp, datestamp, datestamputc,
+                                (datestamp, datestamp, datestamputc,
                                     entry['tzone'], entry['raw_stamp'], 
                                     entry['facility'], entry['severity'],
                                     entry['source_host'], entry['source_port'],
@@ -234,6 +232,37 @@ class LiveParser:
             else:
                 time.sleep(0.1)
 
+
+    def _get_tzone(self):
+        """Establish time zone (tzone) and delta to UTC (tdelta)"""
+        if self.supertzone:
+            # Get tzone:
+            if time.daylight:
+                tzone = \
+                        str(int(float(time.altzone) / 60 // 60)).rjust(2,
+                                '0') + \
+                        str(int(float(time.altzone) / 60 % 60)).ljust(2, '0')
+            else:
+                tzone = \
+                        str(int(float(time.timezone) / 60 // 60)).rjust(2,
+                                '0') + \
+                        str(int(float(time.timezone) / 60 % 60)).ljust(2, '0')
+            if not '-' in tzone and not '+' in tzone:
+                tzone = '+' + tzone
+
+        else:
+            tzone = self.supertzone
+
+        # Get time delta:
+        if tzone[0] == '-':
+            tdelta = timedelta(hours = -int(tzone[1:3]),
+                    minutes = -int(tzone[3:5]))
+        else:
+            tdelta = timedelta(hours = int(tzone[1:3]),
+                    minutes = int(tzone[3:5]))
+
+        self.tzone = tzone
+        self.tdelta = tdelta
 
 
     def parse_file(self, filename, parser):
