@@ -10,7 +10,7 @@ Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 ### Added
 - `parsed_on` and `source_file` columns
 - `date_stamp_utc` column
-- Fractional SQL timestamps
+- Fractional SQL timestamps (not working with siemquery)
 
 ## [0.7.1-alpha] - 2017-09-06
 ### Fixed
