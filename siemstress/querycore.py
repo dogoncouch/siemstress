@@ -275,11 +275,15 @@ class QueryCore:
                 if 'date_stamp_int' in jrow:
                     jrow['date_stamp_int'] = \
                             jrow['date_stamp_int'].strftime('%Y%m%d%H%M%S')
+                if 'date_stamp_utc_int' in jrow:
+                    jrow['date_stamp_utc_int'] = \
+                            jrow['date_stamp_utc_int'].strftime('%Y%m%d%H%M%S')
                 if 'date_stamp_utc' in jrow:
                     try:
                         jrow['date_stamp_utc'] = \
                                 jrow['date_stamp_utc'].strftime('%Y%m%d%H%M%S.%f')
-                    except Exception: jrow['date_stamp_utc'] = None
+                    except Exception:
+                        jrow['date_stamp_utc'] = jrow['date_stamp_utc_int']
                 if 'extended' in jrow:
                     jrow['extended'] = json.loads(jrow['extended'])
                 jrows.append(jrow)

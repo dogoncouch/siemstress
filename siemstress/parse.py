@@ -85,12 +85,13 @@ class LiveParser:
         # It should only be used for development purposes on closed
         # systems.
         self.sqlstatement = 'INSERT INTO ' + self.table + \
-                ' (date_stamp, date_stamp_int, date_stamp_utc, ' + \
+                ' (date_stamp, date_stamp_int, ' + \
+                'date_stamp_utc, date_stamp_utc_int, ' + \
                 't_zone, raw_stamp, facility, severity, source_host, ' + \
                 'source_port, dest_host, dest_port, source_process, ' + \
                 'source_pid, protocol, ' + \
                 'message, extended, parsed_on, source_path) VALUES ' + \
-                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
+                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
                 '%s, %s, %s, %s, %s, %s, %s, %s, %s)'
         
         # Make sure the table exists:
@@ -103,6 +104,7 @@ class LiveParser:
                     'date_stamp TIMESTAMP(6), ' + \
                     'date_stamp_int TIMESTAMP, ' + \
                     'date_stamp_utc TIMESTAMP(6), ' + \
+                    'date_stamp_utc_int TIMESTAMP, ' + \
                     't_zone NVARCHAR(5), '+ \
                     'raw_stamp NVARCHAR(80), ' + \
                     'facility NVARCHAR(15), ' + \
@@ -177,6 +179,7 @@ class LiveParser:
                     datestamputcobj = datestampobj + self.tdelta
                     datestamputc = datetime.strftime(datestamputcobj,
                             '%Y%m%d%H%M%S.%f')
+                    datestamputcint = datestamputc.split('.')[0]
                     
                     # Parse extended attributes from helpers:
                     extattrs = {}
@@ -198,9 +201,8 @@ class LiveParser:
                     with con:
                         cur = con.cursor()
                         cur.execute(self.sqlstatement,
-                                # Trying switch to fractional datestamp
-                                #(intdatestamp, datestamp, datestamputc,
-                                (datestamp, datestampint, datestamputc,
+                                (datestamp, datestampint,
+                                    datestamputc, datestamputcint,
                                     entry['tzone'], entry['raw_stamp'], 
                                     entry['facility'], entry['severity'],
                                     entry['source_host'], entry['source_port'],
