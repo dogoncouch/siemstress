@@ -179,7 +179,7 @@ class LiveParser:
 
                     datestampobj = datetime.strptime(datestamp,
                             '%Y%m%d%H%M%S.%f')
-                    datestamputcobj = datestampobj + tdelta
+                    datestamputcobj = datestampobj + self.tdelta
                     datestamputc = datetime.strftime(datestamputcobj,
                             '%Y%m%d%H%M%S.%f')
                     
