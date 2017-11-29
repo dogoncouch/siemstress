@@ -91,7 +91,7 @@ class LiveParser:
                 'source_pid, protocol, ' + \
                 'message, extended, parsed_on, source_path) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
-                '%s, %s, %s, %s, %s, %s, %s, %s %s)'
+                '%s, %s, %s, %s, %s, %s, %s, %s, %s)'
         
         # Make sure the table exists:
         con = mdb.connect(self.db['host'], self.db['user'],
