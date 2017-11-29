@@ -79,6 +79,7 @@ class SiemTrigger:
     def check_rule(self):
         """Check a trigger rule"""
         
+        # To Do: Add date_stamp_utc/int logic
         if not self.tzone:
             # Set time zone:
             if daylight:
