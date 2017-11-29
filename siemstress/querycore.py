@@ -268,8 +268,8 @@ class QueryCore:
                                 jrow['date_stamp'].strftime('%Y%m%d%H%M%S.%f')
                     except Exception: jrow['date_stamp'] = None
                 if 'date_stamp_int' in jrow:
-                    jrow['date_stamp'] = \
-                            jrow['date_stamp'].strftime('%Y%m%d%H%M%S')
+                    jrow['date_stamp_int'] = \
+                            jrow['date_stamp_int'].strftime('%Y%m%d%H%M%S')
                 if 'date_stamp_utc' in jrow:
                     jrow['date_stamp_utc'] = \
                             jrow['date_stamp_utc'].strftime('%Y%m%d%H%M%S.%f')
