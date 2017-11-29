@@ -261,6 +261,7 @@ class QueryCore:
         if self.args.outjson:
             jrows = []
             for row in rows:
+                # To Do: update fractional datestamps
                 jrow = row
                 if 'date_stamp' in jrow:
                     try:
@@ -271,10 +272,10 @@ class QueryCore:
                     jrow['date_stamp_int'] = \
                             jrow['date_stamp_int'].strftime('%Y%m%d%H%M%S')
                 if 'date_stamp_utc' in jrow:
-                    jrow['date_stamp_utc'] = \
-                            jrow['date_stamp_utc'].strftime('%Y%m%d%H%M%S.%f')
-                if 'f_date_stamp' in jrow:
-                    jrow['f_date_stamp'] = float(jrow['f_date_stamp'])
+                    try:
+                        jrow['date_stamp_utc'] = \
+                                jrow['date_stamp_utc'].strftime('%Y%m%d%H%M%S.%f')
+                    except Exception: jrow['date_stamp_utc'] = None
                 if 'extended' in jrow:
                     jrow['extended'] = json.loads(jrow['extended'])
                 jrows.append(jrow)
