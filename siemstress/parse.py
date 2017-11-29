@@ -166,16 +166,18 @@ class LiveParser:
                         if not entry['tzone']:
                             entry['tzone'] = self.tzone
                 
-                    tstamp = entry['tstamp'].split('.')
-                    # To Do: remove intdatestamp logic, f_date_stamp column
-                    intdatestamp = \
-                            ymdstamp + tstamp[0]
-                    
-                    if len(tstamp) == 1:
-                        datestamp = intdatestamp + '.000000'
-                    else:
-                        datestamp = '.'.join(intdatestamp,
-                                tstamp[1].ljust(6, '0'))
+                    #tstamp = entry['tstamp'].split('.')
+                    ## To Do: remove intdatestamp logic, f_date_stamp column
+                    #intdatestamp = \
+                    #        ymdstamp + tstamp[0]
+                    #
+                    #if len(tstamp) == 1:
+                    #    datestamp = intdatestamp + '.000000'
+                    #else:
+                    #    datestamp = '.'.join(intdatestamp,
+                    #            tstamp[1].ljust(6, '0'))
+                    if not '.' in datestamp:
+                        datestamp = datestamp + '.000000'
 
                     datestampobj = datetime.strptime(datestamp,
                             '%Y%m%d%H%M%S.%f')
