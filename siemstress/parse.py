@@ -230,7 +230,7 @@ class LiveParser:
 
     def _get_tzone(self):
         """Establish time zone (tzone) and delta to UTC (tdelta)"""
-        if self.supertzone:
+        if not self.supertzone:
             # Get tzone:
             if time.daylight:
                 tzone = \
@@ -246,7 +246,11 @@ class LiveParser:
                 tzone = '+' + tzone
 
         else:
-            tzone = self.supertzone
+            if self.supertzone[0] not in ['+', '-']:
+                # To Do: raise an error here for bad argument formatting
+                pass
+            else:
+                tzone = self.supertzone
 
         # Get time delta:
         if tzone[0] == '-':
