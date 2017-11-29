@@ -263,8 +263,16 @@ class QueryCore:
             for row in rows:
                 jrow = row
                 if 'date_stamp' in jrow:
+                    try:
+                        jrow['date_stamp'] = \
+                                jrow['date_stamp'].strftime('%Y%m%d%H%M%S.%f')
+                    except Exception: jrow['date_stamp'] = None
+                if 'date_stamp_int' in jrow:
                     jrow['date_stamp'] = \
                             jrow['date_stamp'].strftime('%Y%m%d%H%M%S')
+                if 'date_stamp_utc' in jrow:
+                    jrow['date_stamp_utc'] = \
+                            jrow['date_stamp_utc'].strftime('%Y%m%d%H%M%S.%f')
                 if 'f_date_stamp' in jrow:
                     jrow['f_date_stamp'] = float(jrow['f_date_stamp'])
                 if 'extended' in jrow:

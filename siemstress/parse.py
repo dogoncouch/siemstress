@@ -85,7 +85,7 @@ class LiveParser:
         # It should only be used for development purposes on closed
         # systems.
         self.sqlstatement = 'INSERT INTO ' + self.table + \
-                ' (date_stamp, f_date_stamp, date_stamp_utc, ' + \
+                ' (date_stamp, date_stamp_int, date_stamp_utc, ' + \
                 't_zone, raw_stamp, facility, severity, source_host, ' + \
                 'source_port, dest_host, dest_port, source_process, ' + \
                 'source_pid, protocol, ' + \
@@ -101,7 +101,7 @@ class LiveParser:
             cur.execute('CREATE TABLE IF NOT EXISTS ' + self.table + \
                     '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                     'date_stamp TIMESTAMP(6), ' + \
-                    'f_date_stamp DECIMAL(20, 1), ' + \
+                    'date_stamp_int TIMESTAMP, ' + \
                     'date_stamp_utc TIMESTAMP(6), ' + \
                     't_zone NVARCHAR(5), '+ \
                     'raw_stamp NVARCHAR(80), ' + \
@@ -180,6 +180,7 @@ class LiveParser:
 
                     if not '.' in datestamp:
                         datestamp = datestamp + '.000000'
+                    datestampint = datestamp.split('.')[0]
 
                     datestampobj = datetime.strptime(datestamp,
                             '%Y%m%d%H%M%S.%f')
@@ -209,7 +210,7 @@ class LiveParser:
                         cur.execute(self.sqlstatement,
                                 # Trying switch to fractional datestamp
                                 #(intdatestamp, datestamp, datestamputc,
-                                (datestamp, datestamp, datestamputc,
+                                (datestamp, datestampint, datestamputc,
                                     entry['tzone'], entry['raw_stamp'], 
                                     entry['facility'], entry['severity'],
                                     entry['source_host'], entry['source_port'],
