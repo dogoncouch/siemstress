@@ -70,14 +70,14 @@ class LiveParser:
     def parse_entries(self, inputfile):
         """Parse log entries from a file like object"""
 
-        # Get hostname, file name:
+        # Get hostname, file name, tzone:
         parsepath = os.path.abspath(inputfile.name)
         parsehost = socket.getfqdn()
+        self._get_tzone()
 
         # Read to the end of the file:
         inputfile.read()
         
-        recent_datestamp = '0000000000'
         oldymdnum = 0
         ymdstamp = datetime.now().strftime('%Y%m%d')
 
@@ -92,12 +92,6 @@ class LiveParser:
                 'message, extended, parsed_on, source_path) VALUES ' + \
                 '(%s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
                 '%s, %s, %s, %s, %s, %s, %s, %s %s)'
-
-        self._get_tzone()
-            # To Do: Move this into self._get_tzone() function,
-            # and add a time delta to calculate UTC datestamp.
-            # End self._get_tzone() stuff
-
         
         # Make sure the table exists:
         con = mdb.connect(self.db['host'], self.db['user'],
@@ -173,6 +167,7 @@ class LiveParser:
                             entry['tzone'] = self.tzone
                 
                     tstamp = entry['tstamp'].split('.')
+                    # To Do: remove intdatestamp logic, f_date_stamp column
                     intdatestamp = \
                             ymdstamp + tstamp[0]
                     
