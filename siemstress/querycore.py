@@ -59,7 +59,7 @@ class QueryCore:
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'section',
-                default = 'default',
+                default = 'siem_default',
                 help = ('set the config section'))
         self.arg_parser.add_argument('--verbose',
                 action = 'store_true', dest = 'verbose',

@@ -31,7 +31,7 @@ import os
 import MySQLdb as mdb
 
 
-def simple_query(db, table='default', last='24h', shost=None,
+def simple_query(db, table='siem_default', last='24h', shost=None,
         process=None, grep=None):
     """Query siemstress SQL database for events (simplified)"""
 

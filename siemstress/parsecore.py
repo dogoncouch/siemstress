@@ -65,7 +65,7 @@ class ParseCore:
                 help = ('set the config file'))
         self.arg_parser.add_argument('-s',
                 action = 'store', dest = 'section',
-                default = 'default',
+                default = 'siem_default',
                 help = ('set the config section'))
         self.arg_parser.add_argument('-z',
                 action = 'store', dest = 'tzone',
