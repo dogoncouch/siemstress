@@ -176,6 +176,8 @@ class LiveParser:
                     #else:
                     #    datestamp = '.'.join(intdatestamp,
                     #            tstamp[1].ljust(6, '0'))
+                    datestamp = ymdstamp + entry['tstamp']
+
                     if not '.' in datestamp:
                         datestamp = datestamp + '.000000'
 
