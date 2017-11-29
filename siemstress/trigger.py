@@ -82,7 +82,7 @@ class SiemTrigger:
         # To Do: Add date_stamp_utc/int logic
         if not self.tzone:
             # Set time zone:
-            if daylight:
+            if time.localtime().tm_isdst:
                 self.tzone = \
                         str(int(float(altzone) / 60 // 60)).rjust(2,
                                 '0') + \

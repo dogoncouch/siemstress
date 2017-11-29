@@ -229,7 +229,7 @@ class LiveParser:
         """Establish time zone (tzone) and delta to UTC (tdelta)"""
         if not self.supertzone:
             # Get tzone:
-            if time.daylight:
+            if time.localtime().tm_isdst:
                 tzone = \
                         str(int(float(time.altzone) / 60 // 60)).rjust(2,
                                 '0') + \
