@@ -128,7 +128,8 @@ class SiemTrigger:
                     self.db['password'], self.db['database'])
             with con:
                 cur = con.cursor()
-                cur.execute(outstatement, (datestamp, self.tzone,
+                cur.execute(outstatement, (datestamp, datestamputc,
+                    self.tzone,
                     self.rule['rule_name'], self.rule['severity'],
                     self.rule['source_table'],
                     self.rule['event_limit'], len(rows), magnitude,
