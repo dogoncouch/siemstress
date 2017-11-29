@@ -147,7 +147,7 @@ class LiveParser:
 
                 if entry:
 
-                    if float(entry['tstamp'][0:8]) < oldymdnum:
+                    if int(entry['tstamp'][0:8]) < oldymdnum:
                         ymdstamp = datetime.now().strftime('%Y%m%d')
                         self._get_tzone()
                     oldymdnum = str(int(entry['tstamp']))[0:8]
