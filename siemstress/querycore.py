@@ -263,11 +263,15 @@ class QueryCore:
             for row in rows:
                 # To Do: update fractional datestamps
                 jrow = row
+                if 'date_stamp_int' in jrow:
+                    jrow['date_stamp_int'] = \
+                            jrow['date_stamp_int'].strftime('%Y%m%d%H%M%S')
                 if 'date_stamp' in jrow:
                     try:
                         jrow['date_stamp'] = \
                                 jrow['date_stamp'].strftime('%Y%m%d%H%M%S.%f')
-                    except Exception: jrow['date_stamp'] = None
+                    except Exception:
+                        jrow['date_stamp'] = jrow['date_stamp_int']
                 if 'date_stamp_int' in jrow:
                     jrow['date_stamp_int'] = \
                             jrow['date_stamp_int'].strftime('%Y%m%d%H%M%S')
