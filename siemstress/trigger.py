@@ -110,16 +110,18 @@ class SiemTrigger:
             idtags = json.dumps([int(row[0]) for row in rows])
 
             datestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            datestamputc = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+
             magnitude = (((len(rows) // 2) // \
                     (self.rule['event_limit'] + 1) // 2) + 5) * \
                     ( 7 - self.rule['severity'])
 
             outstatement = 'INSERT INTO ' + \
                     self.rule['out_table'] + \
-                    '(date_stamp, t_zone, ' + \
+                    '(date_stamp, date_stamp_utc, t_zone, ' + \
                     'source_rule, severity, source_table, event_limit, ' + \
                     'event_count, magnitude, time_int, message, source_ids) ' + \
-                    'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                    'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
             # Send an event to the database:
             con = mdb.connect(self.db['host'], self.db['user'],
@@ -145,6 +147,7 @@ def start_rule(db, rule, oneshot):
         cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['out_table'] + \
                 '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                 'date_stamp TIMESTAMP, ' + \
+                'date_stamp_utc TIMESTAMP, ' + \
                 't_zone NVARCHAR(5), ' + \
                 'source_rule NVARCHAR(25), ' + \
                 'severity TINYINT UNSIGNED, ' + \
