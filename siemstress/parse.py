@@ -87,7 +87,7 @@ class LiveParser:
         self.sqlstatement = 'INSERT INTO ' + self.table + \
                 ' (date_stamp, date_stamp_int, ' + \
                 'date_stamp_utc, date_stamp_utc_int, ' + \
-                't_zone, raw_stamp, facility, severity, source_host, ' + \
+                't_zone, raw_text, facility, severity, source_host, ' + \
                 'source_port, dest_host, dest_port, source_process, ' + \
                 'source_pid, protocol, ' + \
                 'message, extended, parsed_on, source_path) VALUES ' + \
@@ -106,7 +106,7 @@ class LiveParser:
                     'date_stamp_utc TIMESTAMP(6), ' + \
                     'date_stamp_utc_int TIMESTAMP, ' + \
                     't_zone NVARCHAR(5), '+ \
-                    'raw_stamp NVARCHAR(80), ' + \
+                    'raw_text NVARCHAR(2000), ' + \
                     'facility NVARCHAR(15), ' + \
                     'severity NVARCHAR(10), ' + \
                     'source_host NVARCHAR(25), ' + \
@@ -116,7 +116,7 @@ class LiveParser:
                     'source_process NVARCHAR(25), ' + \
                     'source_pid MEDIUMINT UNSIGNED, ' + \
                     'protocol NVARCHAR(5), ' + \
-                    'message NVARCHAR(2000), '
+                    'message NVARCHAR(1800), '
                     'extended NVARCHAR(1000), ' + \
                     'parsed_on NVARCHAR(32), ' + \
                     'source_path NVARCHAR(200))')
@@ -203,7 +203,7 @@ class LiveParser:
                         cur.execute(self.sqlstatement,
                                 (datestamp, datestampint,
                                     datestamputc, datestamputcint,
-                                    entry['tzone'], entry['raw_stamp'], 
+                                    entry['tzone'], ourline, 
                                     entry['facility'], entry['severity'],
                                     entry['source_host'], entry['source_port'],
                                     entry['dest_host'], entry['dest_port'],
