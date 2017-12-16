@@ -37,7 +37,7 @@ Siemstress was originally designed as a basis for artificial intelligence resear
 #### Database
 Siemstress uses a database (MariaDB) to store the following information:
 
-- Parsed events - Parsed events are syslog (or other) events from files that are being watched by siemparse. Each event represents one line in a log file.
+- Parsed events - Parsed events are syslog (or other) events from files that are being watched by siemparse. Each event represents one line in a log file. Note: siemquery does not show all fields.
 ![Parsed event table screenshot](https://github.com/dogoncouch/siemstress/blob/master/doc/images/events.png)
 
 - Helpers - Helpers are used to help siemparse pull dynamically configurable attributes from events. Events created by helpers are stored in the `Extended` column of parsed events. This is useful for identifying IP addresses, user names, temperatures, file names, or other data that siemstress doesn't parse automatically.
