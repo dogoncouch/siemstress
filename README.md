@@ -193,7 +193,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -c CONFIG             set the config file
-  --clear               delete the SQL table for selected section
+  --clear               delete the selected SQL table
   --force               really delete the table
   --importrules FILE    set a JSON file to import rules
   --exportrules FILE    set a JSON file to export rules
