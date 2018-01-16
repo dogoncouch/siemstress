@@ -136,6 +136,8 @@ class LiveParser:
             reh['reg_exp'] = re.compile(h['reg_exp'])
             rehelpers.append(reh)
 
+        is_connected = False
+        
         while True:
 
             # Check for a new line:
@@ -195,9 +197,10 @@ class LiveParser:
                     extattrs = json.dumps(extattrs)
 
 
+                    if not is_connected:
+                        con = mdb.connect(self.db['host'], self.db['user'],
+                                self.db['password'], self.db['database'])
                     # Put our attributes in our table:
-                    con = mdb.connect(self.db['host'], self.db['user'],
-                            self.db['password'], self.db['database'])
                     with con:
                         cur = con.cursor()
                         cur.execute(self.sqlstatement,
@@ -213,7 +216,7 @@ class LiveParser:
                                     extattrs, parsehost, parsepath))
                         con.commit()
                         cur.close()
-                    con.close()
+                    #con.close()
 
 
                 else:
@@ -222,6 +225,8 @@ class LiveParser:
                     print('No Match: ' + ourline)
 
             else:
+                con.close()
+                is_connected = False
                 time.sleep(0.1)
 
 
