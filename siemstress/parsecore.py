@@ -127,9 +127,10 @@ class ParseCore:
             self.get_args()
             self.get_config()
             parser = LiveParser(self.db, self.table, self.helpers,
-                    tzone=self.args.tzone, intstamps=self.args.intstamps)
+                    tzone=self.args.tzone)
 
-            parser.parse_file(self.args.file, self.parsername)
+            parser.parse_file(self.args.file, self.parsername,
+                    intstamps=self.args.intstamps)
 
         except KeyboardInterrupt:
             pass

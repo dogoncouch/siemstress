@@ -41,7 +41,7 @@ import json
 
 class LiveParser:
 
-    def __init__(self, db, table, helpers, tzone=None, intstamps=False):
+    def __init__(self, db, table, helpers, tzone=None):
         """Initialize live parser"""
 
         self.parser = None
@@ -51,7 +51,6 @@ class LiveParser:
         self.supertzone = tzone
         self.tzone = tzone
         self.tdelta = None
-        self.intstamps = intstamps
 
 
 
@@ -68,7 +67,7 @@ class LiveParser:
             self.parser = logdissect.parsers.tcpdump.ParseModule()
 
 
-    def parse_entries(self, inputfile):
+    def parse_entries(self, inputfile, intstamps=False):
         """Parse log entries from a file like object"""
 
         # Get hostname, file name, tzone:
@@ -85,7 +84,7 @@ class LiveParser:
         # NOTE: The default password is on a publicly available git repo.
         # It should only be used for development purposes on closed
         # systems.
-        if self.intstamps:
+        if intstamps:
             self.sqlstatement = 'INSERT INTO ' + self.table + \
                     ' (date_stamp, date_stamp_int, ' + \
                     'date_stamp_utc, date_stamp_utc_int, ' + \
@@ -156,7 +155,7 @@ class LiveParser:
                     datestamputcobj = datestampobj + self.tdelta
                     datestamputc = datetime.strftime(datestamputcobj,
                             '%Y%m%d%H%M%S.%f')
-                    if self.intstamps:
+                    if intstamps:
                         datestampint = datestamp.split('.')[0]
                         datestamputcint = datestamputc.split('.')[0]
                     
@@ -180,7 +179,7 @@ class LiveParser:
                     # Put our attributes in our table:
                     with con:
                         cur = con.cursor()
-                        if self.intstamps:
+                        if intstamps:
                             cur.execute(self.sqlstatement,
                                     (datestamp, datestampint,
                                         datestamputc, datestamputcint,

@@ -137,7 +137,8 @@ class ManageCore:
             # Create tables:
             if self.args.eventtable:
                 mgr = SIEMMgr(self.db)
-                mgr.create_event_table(self.args.eventtable)
+                mgr.create_event_table(self.args.eventtable,
+                        intstamps=self.args.intstamps)
             if self.args.ruleeventtable:
                 mgr = SIEMMgr(self.db)
                 mgr.create_ruleevent_table(self.args.ruleeventtable)
