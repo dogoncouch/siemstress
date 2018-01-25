@@ -141,27 +141,6 @@ class SiemTrigger:
 def start_rule(db, rule, oneshot):
     """Initialize trigger object and start watching"""
 
-    # Create table if it doesn't exist:
-    con = mdb.connect(db['host'], db['user'], db['password'], db['database'])
-    with con:
-        cur = con.cursor()
-        cur.execute('CREATE TABLE IF NOT EXISTS ' + rule['out_table'] + \
-                '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                'date_stamp TIMESTAMP, ' + \
-                'date_stamp_utc TIMESTAMP, ' + \
-                't_zone NVARCHAR(5), ' + \
-                'source_rule NVARCHAR(25), ' + \
-                'severity TINYINT UNSIGNED, ' + \
-                'source_table NVARCHAR(25), ' + \
-                'event_limit INT UNSIGNED, ' + \
-                'event_count INT UNSIGNED, ' + \
-                'magnitude INT UNSIGNED, ' + \
-                'time_int INT UNSIGNED, ' + \
-                'message NVARCHAR(1000), ' + \
-                'source_ids NVARCHAR(2000))')
-        cur.close()
-    con.close()
-
     sentry = SiemTrigger(db, rule)
 
     if oneshot:

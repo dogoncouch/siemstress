@@ -41,13 +41,95 @@ class SIEMMgr:
         self.table = None
 
 
+    def create_event_table(self, table):
+        """Create a table for events"""
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor(mdb.cursors.DictCursor)
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
+                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'date_stamp TIMESTAMP(6), ' + \
+                    'date_stamp_int TIMESTAMP, ' + \
+                    'date_stamp_utc TIMESTAMP(6), ' + \
+                    'date_stamp_utc_int TIMESTAMP, ' + \
+                    't_zone NVARCHAR(5), '+ \
+                    'raw_text NVARCHAR(2000), ' + \
+                    'facility NVARCHAR(15), ' + \
+                    'severity NVARCHAR(10), ' + \
+                    'source_host NVARCHAR(25), ' + \
+                    'source_port NVARCHAR(25), ' + \
+                    'dest_host NVARCHAR(25), ' + \
+                    'dest_port NVARCHAR(25), ' + \
+                    'source_process NVARCHAR(25), ' + \
+                    'source_pid MEDIUMINT UNSIGNED, ' + \
+                    'protocol NVARCHAR(5), ' + \
+                    'message NVARCHAR(1800), '
+                    'extended NVARCHAR(1000), ' + \
+                    'parsed_on NVARCHAR(32), ' + \
+                    'source_path NVARCHAR(200))')
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.helpers + \
+                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'var_name NVARCHAR(25), ' + \
+                    'reg_exp NVARCHAR(200))')
+            cur.execute('SELECT * FROM ' + self.helpers)
+            helpers = cur.fetchall()
+            cur.close()
+        con.close()
+
+
+    def create_ruleevent_table(self, table):
+        """Create a table for rule events"""
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor()
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
+                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'date_stamp TIMESTAMP, ' + \
+                    'date_stamp_utc TIMESTAMP, ' + \
+                    't_zone NVARCHAR(5), ' + \
+                    'source_rule NVARCHAR(25), ' + \
+                    'severity TINYINT UNSIGNED, ' + \
+                    'source_table NVARCHAR(25), ' + \
+                    'event_limit INT UNSIGNED, ' + \
+                    'event_count INT UNSIGNED, ' + \
+                    'magnitude INT UNSIGNED, ' + \
+                    'time_int INT UNSIGNED, ' + \
+                    'message NVARCHAR(1000), ' + \
+                    'source_ids NVARCHAR(2000))')
+            cur.close()
+        con.close()
+
+
+
+    def create_rule_table(self, table):
+        """Create a table for rules"""
+        con = mdb.connect(self.db['host'], self.db['user'],
+            self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor()
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + \
+                    table + \
+                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'rule_name NVARCHAR(25), ' + \
+                    'is_enabled BOOLEAN, severity TINYINT, ' + \
+                    'time_int INT, event_limit INT, ' + \
+                    'sql_query NVARCHAR(1000), ' + \
+                    'source_table NVARCHAR(25), ' + \
+                    'out_table NVARCHAR(25), ' + \
+                    'message NVARCHAR(1000))')
+            cur.close()
+        con.close()
+        
+
     def import_rules(self, importfile):
         """Import rules from a JSON file"""
         
         with open(importfile, 'r') as f:
             rules = json.loads(f.read())
 
-        # Create table if it doesn't exist:
+        # Create the table if it doesn't exist
         con = mdb.connect(self.db['host'], self.db['user'],
             self.db['password'], self.db['database'])
         with con:
@@ -109,13 +191,27 @@ class SIEMMgr:
 
 
 
+    def create_helper_table(self, table):
+        """Create a table for parse helpers"""
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
+        with con:
+            cur = con.cursor()
+            cur.execute('CREATE TABLE IF NOT EXISTS ' + \
+                    table + \
+                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                    'var_name NVARCHAR(25), ' + \
+                    'reg_exp NVARCHAR(200))')
+            cur.close()
+        con.close()
+        
+
     def import_helpers(self, importfile):
         """Import helperss from a JSON file"""
         
         with open(importfile, 'r') as f:
             helpers = json.loads(f.read())
 
-        # Create table if it doesn't exist:
         con = mdb.connect(self.db['host'], self.db['user'],
                 self.db['password'], self.db['database'])
         with con:
@@ -126,7 +222,7 @@ class SIEMMgr:
                         '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
                         'var_name NVARCHAR(25), ' + \
                         'reg_exp NVARCHAR(200))')
-            cur.close()
+                cur.close()
         con.close()
         
         con = mdb.connect(self.db['host'], self.db['user'],

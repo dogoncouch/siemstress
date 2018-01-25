@@ -86,6 +86,22 @@ class ManageCore:
                 action = 'append', dest = 'tables',
                 metavar = 'TABLE',
                 help = ('set a table'))
+        self.arg_parser.add_argument('--create-event-table',
+                action = 'store', dest = 'eventtable',
+                metavar = 'TABLE'
+                help = ('create a table for log events'))
+        self.arg_parser.add_argument('--create-ruleevent-table',
+                action = 'store', dest = 'ruleeventtable',
+                metavar = 'TABLE'
+                help = ('create a table for log events'))
+        self.arg_parser.add_argument('--create-rule-table',
+                action = 'store', dest = 'ruletable',
+                metavar = 'TABLE'
+                help = ('create a table for log events'))
+        self.arg_parser.add_argument('--create-helper-table',
+                action = 'store', dest = 'helpertable',
+                metavar = 'TABLE'
+                help = ('create a table for log events'))
 
         self.args = self.arg_parser.parse_args()
 
