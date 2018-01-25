@@ -49,43 +49,43 @@ class SIEMMgr:
             if intstamps:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
                         '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'parsed_at TIMESTAMP(6), ' + \
                         'date_stamp TIMESTAMP(6), ' + \
-                        'date_stamp_int TIMESTAMP, ' + \
                         'date_stamp_utc TIMESTAMP(6), ' + \
-                        'date_stamp_utc_int TIMESTAMP, ' + \
                         't_zone NVARCHAR(5), '+ \
-                        'raw_text NVARCHAR(2000), ' + \
-                        'facility NVARCHAR(15), ' + \
-                        'severity NVARCHAR(10), ' + \
-                        'source_host NVARCHAR(25), ' + \
-                        'source_port NVARCHAR(25), ' + \
-                        'dest_host NVARCHAR(25), ' + \
-                        'dest_port NVARCHAR(25), ' + \
-                        'source_process NVARCHAR(25), ' + \
+                        'raw_text NVARCHAR(1280), ' + \
+                        'facility TINYINT UNSIGNED, ' + \
+                        'severity TINYINT UNSIGNED, ' + \
+                        'source_host NVARCHAR(32), ' + \
+                        'source_port NVARCHAR(6), ' + \
+                        'dest_host NVARCHAR(32), ' + \
+                        'dest_port NVARCHAR(6), ' + \
+                        'source_process NVARCHAR(24), ' + \
                         'source_pid MEDIUMINT UNSIGNED, ' + \
-                        'protocol NVARCHAR(5), ' + \
-                        'message NVARCHAR(1800), '
-                        'extended NVARCHAR(1000), ' + \
+                        'protocol NVARCHAR(12), ' + \
+                        'message NVARCHAR(1024), '
+                        'extended NVARCHAR(1024), ' + \
                         'parsed_on NVARCHAR(32), ' + \
                         'source_path NVARCHAR(200))')
             else:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
                         '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'parsed_at TIMESTAMP(6), ' + \
                         'date_stamp TIMESTAMP(6), ' + \
                         'date_stamp_utc TIMESTAMP(6), ' + \
                         't_zone NVARCHAR(5), '+ \
-                        'raw_text NVARCHAR(2000), ' + \
-                        'facility NVARCHAR(15), ' + \
-                        'severity NVARCHAR(10), ' + \
-                        'source_host NVARCHAR(25), ' + \
-                        'source_port NVARCHAR(25), ' + \
-                        'dest_host NVARCHAR(25), ' + \
-                        'dest_port NVARCHAR(25), ' + \
-                        'source_process NVARCHAR(25), ' + \
+                        'raw_text NVARCHAR(1280), ' + \
+                        'facility TINYINT UNSIGNED, ' + \
+                        'severity TINYINT UNSIGNED, ' + \
+                        'source_host NVARCHAR(32), ' + \
+                        'source_port NVARCHAR(6), ' + \
+                        'dest_host NVARCHAR(32), ' + \
+                        'dest_port NVARCHAR(6), ' + \
+                        'source_process NVARCHAR(24), ' + \
                         'source_pid MEDIUMINT UNSIGNED, ' + \
-                        'protocol NVARCHAR(5), ' + \
-                        'message NVARCHAR(1800), '
-                        'extended NVARCHAR(1000), ' + \
+                        'protocol NVARCHAR(12), ' + \
+                        'message NVARCHAR(1024), '
+                        'extended NVARCHAR(1024), ' + \
                         'parsed_on NVARCHAR(32), ' + \
                         'source_path NVARCHAR(200))')
             cur.execute('SELECT * FROM ' + self.helpers)
@@ -112,8 +112,7 @@ class SIEMMgr:
                     'event_count INT UNSIGNED, ' + \
                     'magnitude INT UNSIGNED, ' + \
                     'time_int INT UNSIGNED, ' + \
-                    'message NVARCHAR(1000), ' + \
-                    'source_ids NVARCHAR(2000))')
+                    'message NVARCHAR(1000))')
             cur.close()
         con.close()
 
@@ -128,13 +127,15 @@ class SIEMMgr:
             cur.execute('CREATE TABLE IF NOT EXISTS ' + \
                     table + \
                     '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'rule_name NVARCHAR(25), ' + \
+                    'name NVARCHAR(32), ' + \
+                    'desc NVARCHAR(200), ' + \
                     'is_enabled BOOLEAN, severity TINYINT, ' + \
-                    'time_int INT, event_limit INT, ' + \
-                    'sql_query NVARCHAR(1000), ' + \
-                    'source_table NVARCHAR(25), ' + \
-                    'out_table NVARCHAR(25), ' + \
-                    'message NVARCHAR(1000))')
+                    'severity TINYINT UNSIGNED, '
+                    'time_int INT UNSIGNED, event_limit INT UNSIGNED, ' + \
+                    'sql_query NVARCHAR(1024), ' + \
+                    'source_table NVARCHAR(32), ' + \
+                    'out_table NVARCHAR(32), ' + \
+                    'message NVARCHAR(1024))')
             cur.close()
         con.close()
         
@@ -154,13 +155,14 @@ class SIEMMgr:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + \
                         table + \
                         '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                        'rule_name NVARCHAR(25), ' + \
+                        'name NVARCHAR(32), ' + \
+                        'desc NVARCHAR(200), ' + \
                         'is_enabled BOOLEAN, severity TINYINT, ' + \
                         'time_int INT, event_limit INT, ' + \
-                        'sql_query NVARCHAR(1000), ' + \
-                        'source_table NVARCHAR(25), ' + \
-                        'out_table NVARCHAR(25), ' + \
-                        'message NVARCHAR(1000))')
+                        'sql_query NVARCHAR(1024), ' + \
+                        'source_table NVARCHAR(32), ' + \
+                        'out_table NVARCHAR(32), ' + \
+                        'message NVARCHAR(1024))')
             cur.close()
         con.close()
         
@@ -171,14 +173,15 @@ class SIEMMgr:
             for table in rules:
                 # Set up SQL insert statement:
                 insertstatement = 'INSERT INTO ' + table + \
-                        '(rule_name, is_enabled, severity, ' + \
+                        '(name, desc, is_enabled, severity, ' + \
                         'time_int, event_limit, sql_query, ' + \
                         'source_table, out_table, message) VALUES ' + \
-                        '(%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                        '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
 
                 for rule in rules[table]:
-                    cur.execute(insertstatement, (rule['rule_name'],
+                    cur.execute(insertstatement, (
+                        rule['name'], rule['desc'],
                         rule['is_enabled'], rule['severity'],
                         rule['time_int'], rule['event_limit'], 
                         rule['sql_query'], rule['source_table'],
@@ -216,7 +219,9 @@ class SIEMMgr:
             cur.execute('CREATE TABLE IF NOT EXISTS ' + \
                     table + \
                     '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'var_name NVARCHAR(25), ' + \
+                    'name NVARCHAR(32), ' + \
+                    'desc NVARCHAR(200), ' + \
+                    'var_name NVARCHAR(24), ' + \
                     'reg_exp NVARCHAR(200))')
             cur.close()
         con.close()
@@ -236,7 +241,9 @@ class SIEMMgr:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + \
                         table + \
                         '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                        'var_name NVARCHAR(25), ' + \
+                        'name NVARCHAR(32), ' + \
+                        'desc NVARCHAR(200), ' + \
+                        'var_name NVARCHAR(24), ' + \
                         'reg_exp NVARCHAR(200))')
                 cur.close()
         con.close()
@@ -248,8 +255,8 @@ class SIEMMgr:
             for table in helpers:
                 # Set up SQL insert statement:
                 insertstatement = 'INSERT INTO ' + table + \
-                        '(var_name, reg_exp) VALUES ' + \
-                        '(%s, %s)'
+                        '(name, desc, var_name, reg_exp)' + \
+                        'VALUES (%s, %s %s, %s)'
 
                 for h in helpers[table]:
                     cur.execute(insertstatement, (h['var_name'],
