@@ -40,37 +40,54 @@ class SIEMMgr:
         self.db = db
 
 
-    def create_event_table(self, table):
+    def create_event_table(self, table, intstamps=False):
         """Create a table for events"""
         con = mdb.connect(self.db['host'], self.db['user'],
                 self.db['password'], self.db['database'])
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
-                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'date_stamp TIMESTAMP(6), ' + \
-                    'date_stamp_int TIMESTAMP, ' + \
-                    'date_stamp_utc TIMESTAMP(6), ' + \
-                    'date_stamp_utc_int TIMESTAMP, ' + \
-                    't_zone NVARCHAR(5), '+ \
-                    'raw_text NVARCHAR(2000), ' + \
-                    'facility NVARCHAR(15), ' + \
-                    'severity NVARCHAR(10), ' + \
-                    'source_host NVARCHAR(25), ' + \
-                    'source_port NVARCHAR(25), ' + \
-                    'dest_host NVARCHAR(25), ' + \
-                    'dest_port NVARCHAR(25), ' + \
-                    'source_process NVARCHAR(25), ' + \
-                    'source_pid MEDIUMINT UNSIGNED, ' + \
-                    'protocol NVARCHAR(5), ' + \
-                    'message NVARCHAR(1800), '
-                    'extended NVARCHAR(1000), ' + \
-                    'parsed_on NVARCHAR(32), ' + \
-                    'source_path NVARCHAR(200))')
-            cur.execute('CREATE TABLE IF NOT EXISTS ' + self.helpers + \
-                    '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
-                    'var_name NVARCHAR(25), ' + \
-                    'reg_exp NVARCHAR(200))')
+            if intstamps:
+                cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
+                        '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'date_stamp TIMESTAMP(6), ' + \
+                        'date_stamp_int TIMESTAMP, ' + \
+                        'date_stamp_utc TIMESTAMP(6), ' + \
+                        'date_stamp_utc_int TIMESTAMP, ' + \
+                        't_zone NVARCHAR(5), '+ \
+                        'raw_text NVARCHAR(2000), ' + \
+                        'facility NVARCHAR(15), ' + \
+                        'severity NVARCHAR(10), ' + \
+                        'source_host NVARCHAR(25), ' + \
+                        'source_port NVARCHAR(25), ' + \
+                        'dest_host NVARCHAR(25), ' + \
+                        'dest_port NVARCHAR(25), ' + \
+                        'source_process NVARCHAR(25), ' + \
+                        'source_pid MEDIUMINT UNSIGNED, ' + \
+                        'protocol NVARCHAR(5), ' + \
+                        'message NVARCHAR(1800), '
+                        'extended NVARCHAR(1000), ' + \
+                        'parsed_on NVARCHAR(32), ' + \
+                        'source_path NVARCHAR(200))')
+            else:
+                cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
+                        '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \
+                        'date_stamp TIMESTAMP(6), ' + \
+                        'date_stamp_utc TIMESTAMP(6), ' + \
+                        't_zone NVARCHAR(5), '+ \
+                        'raw_text NVARCHAR(2000), ' + \
+                        'facility NVARCHAR(15), ' + \
+                        'severity NVARCHAR(10), ' + \
+                        'source_host NVARCHAR(25), ' + \
+                        'source_port NVARCHAR(25), ' + \
+                        'dest_host NVARCHAR(25), ' + \
+                        'dest_port NVARCHAR(25), ' + \
+                        'source_process NVARCHAR(25), ' + \
+                        'source_pid MEDIUMINT UNSIGNED, ' + \
+                        'protocol NVARCHAR(5), ' + \
+                        'message NVARCHAR(1800), '
+                        'extended NVARCHAR(1000), ' + \
+                        'parsed_on NVARCHAR(32), ' + \
+                        'source_path NVARCHAR(200))')
             cur.execute('SELECT * FROM ' + self.helpers)
             helpers = cur.fetchall()
             cur.close()

@@ -41,7 +41,7 @@ import json
 
 class LiveParser:
 
-    def __init__(self, db, table, helpers, tzone=None):
+    def __init__(self, db, table, helpers, tzone=None, intstamps=False):
         """Initialize live parser"""
 
         self.parser = None
@@ -51,6 +51,7 @@ class LiveParser:
         self.supertzone = tzone
         self.tzone = tzone
         self.tdelta = None
+        self.intstamps = intstamps
 
 
 
@@ -84,15 +85,25 @@ class LiveParser:
         # NOTE: The default password is on a publicly available git repo.
         # It should only be used for development purposes on closed
         # systems.
-        self.sqlstatement = 'INSERT INTO ' + self.table + \
-                ' (date_stamp, date_stamp_int, ' + \
-                'date_stamp_utc, date_stamp_utc_int, ' + \
-                't_zone, raw_text, facility, severity, source_host, ' + \
-                'source_port, dest_host, dest_port, source_process, ' + \
-                'source_pid, protocol, ' + \
-                'message, extended, parsed_on, source_path) VALUES ' + \
-                '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
-                '%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        if self.intstamps:
+            self.sqlstatement = 'INSERT INTO ' + self.table + \
+                    ' (date_stamp, date_stamp_int, ' + \
+                    'date_stamp_utc, date_stamp_utc_int, ' + \
+                    't_zone, raw_text, facility, severity, source_host, ' + \
+                    'source_port, dest_host, dest_port, source_process, ' + \
+                    'source_pid, protocol, ' + \
+                    'message, extended, parsed_on, source_path) VALUES ' + \
+                    '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
+                    '%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        else:
+            self.sqlstatement = 'INSERT INTO ' + self.table + \
+                    ' (date_stamp, date_stamp_int, date_stamp_utc,' + \
+                    't_zone, raw_text, facility, severity, source_host, ' + \
+                    'source_port, dest_host, dest_port, source_process, ' + \
+                    'source_pid, protocol, ' + \
+                    'message, extended, parsed_on, source_path) VALUES ' + \
+                    '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ' + \
+                    '%s, %s, %s, %s, %s, %s, %s)'
         
         rehelpers = []
         for h in helpers:
@@ -139,14 +150,15 @@ class LiveParser:
 
                     if not '.' in datestamp:
                         datestamp = datestamp + '.000000'
-                    datestampint = datestamp.split('.')[0]
 
                     datestampobj = datetime.strptime(datestamp,
                             '%Y%m%d%H%M%S.%f')
                     datestamputcobj = datestampobj + self.tdelta
                     datestamputc = datetime.strftime(datestamputcobj,
                             '%Y%m%d%H%M%S.%f')
-                    datestamputcint = datestamputc.split('.')[0]
+                    if self.intstamps:
+                        datestampint = datestamp.split('.')[0]
+                        datestamputcint = datestamputc.split('.')[0]
                     
                     # Parse extended attributes from helpers:
                     extattrs = {}
@@ -168,17 +180,29 @@ class LiveParser:
                     # Put our attributes in our table:
                     with con:
                         cur = con.cursor()
-                        cur.execute(self.sqlstatement,
-                                (datestamp, datestampint,
-                                    datestamputc, datestamputcint,
-                                    entry['tzone'], ourline, 
-                                    entry['facility'], entry['severity'],
-                                    entry['source_host'], entry['source_port'],
-                                    entry['dest_host'], entry['dest_port'],
-                                    entry['source_process'],
-                                    entry['source_pid'],
-                                    entry['protocol'], entry['message'],
-                                    extattrs, parsehost, parsepath))
+                        if self.intstamps:
+                            cur.execute(self.sqlstatement,
+                                    (datestamp, datestampint,
+                                        datestamputc, datestamputcint,
+                                        entry['tzone'], ourline, 
+                                        entry['facility'], entry['severity'],
+                                        entry['source_host'], entry['source_port'],
+                                        entry['dest_host'], entry['dest_port'],
+                                        entry['source_process'],
+                                        entry['source_pid'],
+                                        entry['protocol'], entry['message'],
+                                        extattrs, parsehost, parsepath))
+                        else:
+                            cur.execute(self.sqlstatement,
+                                    (datestamp, datestamputc,
+                                        entry['tzone'], ourline, 
+                                        entry['facility'], entry['severity'],
+                                        entry['source_host'], entry['source_port'],
+                                        entry['dest_host'], entry['dest_port'],
+                                        entry['source_process'],
+                                        entry['source_pid'],
+                                        entry['protocol'], entry['message'],
+                                        extattrs, parsehost, parsepath))
                         con.commit()
                         cur.close()
                     #con.close()

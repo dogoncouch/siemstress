@@ -70,6 +70,9 @@ class ParseCore:
         self.arg_parser.add_argument('-z',
                 action = 'store', dest = 'tzone',
                 help = ("set the offset to UTC (e.g. '+0500')"))
+        self.arg_parser.add_argument('--intstamps',
+                action = 'store_true', dest = 'intstamps'
+                help = ("add non-fractional timestamps (becoming deprecated)"))
         self.arg_parser.add_argument('file',
                 type = FileType('r'), nargs = '?',
                 help = ('set a file to follow'))
@@ -124,7 +127,7 @@ class ParseCore:
             self.get_args()
             self.get_config()
             parser = LiveParser(self.db, self.table, self.helpers,
-                    tzone=self.args.tzone)
+                    tzone=self.args.tzone, intstamps=self.args.intstamps)
 
             parser.parse_file(self.args.file, self.parsername)
 
