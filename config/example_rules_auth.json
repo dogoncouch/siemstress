@@ -1,39 +1,43 @@
 {
   "rules_auth": [
     {
+      "desc": "Over 7 pam auth failures in 10 minutes",
       "event_limit": 7,
       "is_enabled": 1,
       "message": "Over 7 pam auth failure events in 10 minutes",
       "out_table": "siem_default",
-      "rule_name": "PAM_AuthFail_10m",
+      "name": "PAM_AuthFail_10m",
       "sql_query": "SELECT id FROM auth WHERE date_stamp >= timestamp(date_sub(now(), interval 10 minute)) AND (message LIKE \"%fail%\" AND message LIKE \"%pam%\")",
       "severity": 5,
       "source_table": "auth",
       "time_int": 10
     },
     {
+      "desc": "Over 2 pam auth failure events for root in 10 minutes",
       "event_limit": 2,
       "is_enabled": 1,
       "message": "Over 2 pam auth failure events for root in 10 minutes",
       "out_table": "siem_default",
-      "rule_name": "PAM_RootFail_10m",
+      "name": "PAM_RootFail_10m",
       "sql_query": "SELECT id FROM auth WHERE date_stamp >= timestamp(date_sub(now(), interval 10 minute)) AND (message LIKE \"%fail%\" AND message LIKE \"%pam%\" AND message LIKE \"%root%\")",
       "severity": 3,
       "source_table": "auth",
       "time_int": 10
     },
     {
+      "desc": "Continued pam auth fail incidents in 1 hour",
       "event_limit": 1,
       "is_enabled": 1,
       "message": "Continued pam auth fail incidents in 1 hour",
       "out_table": "siem_default",
-      "rule_name": "PAM_AuthFail_1h",
+      "name": "PAM_AuthFail_1h",
       "sql_query": "SELECT id FROM siem_default WHERE date_stamp >= timestamp(date_sub(now(), interval 1 hour)) AND (source_rule = \"PAM_AuthFail_10m\")",
       "severity": 2,
       "source_table": "siem_default",
       "time_int": 60
     },
     {
+      "desc": "Continued pam auth fail incidents for root in 1 hour",
       "event_limit": 1,
       "is_enabled": 1,
       "message": "Continued pam auth fail incidents for root in 1 hour",

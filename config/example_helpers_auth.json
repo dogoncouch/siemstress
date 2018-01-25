@@ -1,18 +1,26 @@
 {
   "helpers_auth": [
     {
+      "name": "users",
+      "desc": "Get users",
       "reg_exp": "user[=\\s]([A-Za-z0-9-_]*\\.?[A-Za-z0-9-_]+)",
       "var_name": "users"
     },
     {
+      "name": "users",
+      "desc": "Get users",
       "reg_exp": "Accepted publickey for ([A-Za-z0-9-_]*\\.?[A-Za-z0-9-_]+) from ",
       "var_name": "users"
     },
     {
+      "name": "users",
+      "desc": "Get users",
       "reg_exp": "Failed password for ([A-Za-z0-9-_]*\\.?[A-Za-z0-9-_]+) from ",
       "var_name": "users"
     },
     {
+      "name": "ip4s",
+      "desc": "Get IP4 addresses",
       "reg_exp": "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
       "var_name": "ip4s"
     }
