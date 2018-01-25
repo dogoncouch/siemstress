@@ -38,7 +38,6 @@ class SIEMMgr:
         """Initialize the SIEM manager"""
 
         self.db = db
-        self.table = None
 
 
     def create_event_table(self, table):

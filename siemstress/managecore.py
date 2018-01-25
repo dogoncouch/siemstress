@@ -134,7 +134,21 @@ class ManageCore:
         try:
             self.get_args()
             self.get_config()
-            # Clear:
+            # Create tables:
+            if self.args.eventtable:
+                mgr = SIEMMgr(self.db)
+                mgr.create_event_table(self.args.eventtable)
+            if self.args.ruleeventtable:
+                mgr = SIEMMgr(self.db)
+                mgr.create_ruleevent_table(self.args.ruleeventtable)
+            if self.args.ruletable:
+                mgr = SIEMMgr(self.db)
+                mgr.create_rule_table(self.args.ruletable)
+            if self.args.helpertable:
+                mgr = SIEMMgr(self.db)
+                mgr.create_helper_table(self.args.helpertable)
+            
+            # Drop tables:
             if self.args.clearsiem:
                 if self.args.force:
                     mgr = SIEMMgr(self.db)
