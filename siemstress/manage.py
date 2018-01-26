@@ -45,7 +45,7 @@ class SIEMMgr:
         con = mdb.connect(self.db['host'], self.db['user'],
                 self.db['password'], self.db['database'])
         with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
+            cur = con.cursor()
             if intstamps:
                 cur.execute('CREATE TABLE IF NOT EXISTS ' + table + \
                         '(id INT PRIMARY KEY AUTO_INCREMENT, ' + \

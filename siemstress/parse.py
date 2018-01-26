@@ -23,6 +23,7 @@
 #_SOFTWARE.
 
 from siemstress import __version__
+import siemstress.manage
 import logdissect.parsers
 import time
 from datetime import datetime
@@ -69,6 +70,19 @@ class LiveParser:
 
     def parse_entries(self, inputfile, intstamps=False):
         """Parse log entries from a file like object"""
+
+        # Make sure the table exists:
+        siemstress.manage.create_event_table(self.table,
+                useintstamps=intstamps)
+        siemstress.manage.create_helper_table(self.helpers)
+        con = mdb.connect(self.db['host'], self.db['user'],
+                self.db['password'], self.db['database'])
+        cur = con.cursor()
+        cur.execute( 'SELECT * FROM ' + self.helpers)
+        helpers = cur.fetchall()
+        cur.close()
+        con.close()
+        
 
         # Get hostname, file name, tzone:
         parsepath = os.path.abspath(inputfile.name)

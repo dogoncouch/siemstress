@@ -35,6 +35,7 @@ import json
 import threading
 import os
 from sys import exit
+import siemstress.manage
 #import signal
 
 
@@ -140,6 +141,9 @@ class SiemTrigger:
 
 def start_rule(db, rule, oneshot):
     """Initialize trigger object and start watching"""
+    
+    # Make sure the table exists:
+    siemstress.manage.create_ruleevent_table(rule['out_table'])
 
     sentry = SiemTrigger(db, rule)
 
