@@ -4,8 +4,6 @@ Change log for [siemstress](https://github.com/dogoncouch/siemstress)
 ## [Unreleased]
 ### Changed
 - Keep database connection between consecutive entries
-- Move table creation to siemmanage
-- Update database columns
 
 ## [0.8-alpha] - 2018-01-10
 ### Changed
