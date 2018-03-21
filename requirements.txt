@@ -1,1 +1,1 @@
-logdissect
+logdissect==2.2.1
