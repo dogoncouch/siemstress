@@ -31,8 +31,6 @@ Siemstress is designed to parse data, and organize it into prioritized, manageab
 
 Parsing data from specific applications is left to user configurable parse helpers, and user interfaces beyond the command line are left to other programs. Core functions are contained in modules that are meant to be as useful to other programs as they are to ours.
 
-Siemstress was originally designed as a basis for artificial intelligence research, and has since been used for network security, physical security, and data collection.
-
 #### Database
 Siemstress uses a database (MariaDB) to store the following information:
 
